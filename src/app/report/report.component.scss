@@ -18,3 +18,20 @@
   margin: 3rem auto 1rem auto;
   width: 95%;
 }
+
+.no-content {
+  p {
+    margin: 1rem;
+    color: rgb(0 0 0 / 30%);
+    text-align: center;
+    position: relative;
+  }
+
+  .no-data-image img {
+    position: absolute;
+    width: 40%;
+    z-index: -1;
+    top: 8%;
+    left: 30%;
+  }
+}

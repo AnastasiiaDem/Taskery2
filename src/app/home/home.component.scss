@@ -2,16 +2,21 @@
   width: 85%;
   margin: 3rem auto;
   display: flex;
-  height: 300px;
+  position: relative;
+  height: 500px;
 
   .description {
     padding: 5% 0 0 0;
+    width: 45%;
   }
 
   .home-image img {
-    width: 70%;
     transform: scale(1.4);
-    float: right;
+    position: absolute;
+    right: 0;
+    width: 45%;
+    z-index: -1;
+    top: 0;
   }
 }
 

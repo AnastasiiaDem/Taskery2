@@ -31,7 +31,10 @@
     </e-accordionitems>
   </ejs-accordion>
   
-  <div style="margin: 80px; color: rgb(0 0 0 / 26%); text-align: center" *ngIf="!isProjects">
-    There is no data to display
+  <div class="no-content" *ngIf="!isProjects">
+      <p>There is no data to display</p>
+    <div class="no-data-image">
+      <img src="./assets/images/Elements17.svg" alt="">
+    </div>
   </div>
 </div>

@@ -74,12 +74,12 @@ export class ReportComponent implements OnInit, AfterViewChecked {
     };
     this.taskService.getTasks()
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(tasks => {
-          this.tasks = tasks;
+      .subscribe(res => {
+          this.tasks = res.tasks;
           this.projectService.getProjects()
             .pipe(takeUntil(this.unsubscribe))
-            .subscribe(projects => {
-                this.projects = projects.filter(project => this.tasks.find(task => task.projectId == project.id));
+            .subscribe(res => {
+                this.projects = res.projects.filter(project => this.tasks.find(task => task.projectId == project.id));
                 this.isProjects = !!this.projects.length;
                 this.projects.forEach((project, idx) => {
                   this.reportData[idx] = this.tasks.filter(task => task.projectId == project.id);
