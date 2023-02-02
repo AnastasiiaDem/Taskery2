@@ -1,0 +1,15 @@
+<nav class="navbar navbar-expand">
+  <div class="navbar-nav">
+    <a class="nav-item nav-link" routerLink="/">
+      <img src="./assets/images/taskery.png" alt="" width="130">
+    </a>
+    <div style="display: flex; margin-right: 5rem;">
+      <a class="nav-item nav-link project-list" routerLink="/">Home</a>
+      <a class="nav-item nav-link project-list" routerLink="/projects">Project list</a>
+      <a class="nav-item nav-link report" routerLink="/report" *ngIf="this.currentUser.role == 'ProjectManager'">Report</a>
+    </div>
+    <a class="nav-item nav-link" (click)="logout()">
+      Logout <img src="./assets/images/icons8-logout-rounded-30.png" alt="" style="width: 15px; padding-bottom: 1.5px">
+    </a>
+  </div>
+</nav>

@@ -1,0 +1,46 @@
+﻿<div class="page-holder align-items-center py-2 bg-gray-100">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 px-lg-4">
+        <div class="card">
+          <div class="card-header px-lg-5">
+            <div class="card-heading text-primary">Taskery Login</div>
+          </div>
+          <div class="card-body" style="padding: 2.5rem!important;">
+            <h3 class="mb-4">Hi, welcome to the Taskery!<span class="wave">👋</span></h3>
+            <p class="text-muted text-sm mb-5">Taskery is designed to ensure that every member of your
+              development team can plan, track, and deliver great software.</p>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+              <div class="form-floating mb-3">
+                <input class="form-control" formControlName="email" type="email"
+                       placeholder="name@example.com"
+                       [ngClass]="{ 'is-invalid': submitted && f.email.errors }" required>
+                <label>Email address</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input class="form-control" formControlName="password" type="password"
+                       placeholder="Password"
+                       [ngClass]="{ 'is-invalid': submitted && f.password.errors }" required>
+                <label>Password</label>
+              </div>
+              <button class="btn btn-primary" type="submit">Login</button>
+            </form>
+          </div>
+          <div class="card-footer px-lg-5"
+               style="padding-top: 1rem!important; padding-bottom: 1rem!important;">
+            <div class="text-sm text-muted">Don't have an account? <a routerLink="/register"
+                                                                      href="/register">Register</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-xl-5 ms-xl-auto px-lg-4 text-center text-primary">
+        <img src="./assets/images/the-importance-of-a-website-for-a-business-1768668%20(1).svg" alt=""
+             style="transform: scale(1.4);">
+        <h1 class="mb-4">Taskery.com <br class="d-none d-lg-inline">your free assistant.</h1>
+        <p class="lead text-muted" style="font-size: 1.1rem!important;">The best project management tool for
+          high quality development.</p>
+      </div>
+    </div>
+  </div>
+</div>

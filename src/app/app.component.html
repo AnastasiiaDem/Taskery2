@@ -1,0 +1,9 @@
+<header *ngIf="currentUser"></header>
+<div class="main-body-contents w3-animate-opacity">
+  <router-outlet></router-outlet>
+</div>
+<footer class="footer" [ngStyle]="{'display': currentUser ? 'block' : 'none'}">
+  <p class="site">Taskery.com</p>
+  <p> © All rights reserved.</p>
+</footer>
+

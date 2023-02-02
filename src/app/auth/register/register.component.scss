@@ -1,0 +1,16 @@
+.role-toggle {
+  border: solid 0.5px #8f8f8f30;
+  border-radius: 5px 0 0 5px;
+  border-right: none;
+}
+
+.role-toggle2 {
+  border: solid 0.5px #8f8f8f30;
+  border-radius: 0 5px 5px 0;
+  border-right: solid 0.5px #8f8f8f30;
+  border-left: none !important;
+}
+
+mat-error {
+  font-size: 12px;
+}

@@ -1,0 +1,37 @@
+<div class="w3-animate-opacity">
+  <ejs-accordion expandMode='Single' *ngIf="isProjects">
+    <e-accordionitems>
+      <e-accordionitem *ngFor="let project of projects; let i = index">
+        <ng-template #header>
+          <div style="font-weight: 500;">{{project.projectName}}</div>
+        </ng-template>
+        <ng-template #content>
+          <div style="max-height: 450px; width: 100%;">
+            <h4 class="dist">Tasks distribution</h4>
+            <button class="btn btn-primary" type="button" (click)="export()">print</button>
+            <div class="chart">
+              <ejs-accumulationchart #chart [id]="'chart-container_' + i" [width]="'400'" [tooltip]="{enable: true}"
+                                     [legendSettings]="legendSettings">
+                <e-accumulation-series-collection>
+                  <e-accumulation-series
+                      [explode]="true"
+                      [explodeIndex]="0"
+                      [explodeOffset]="'10%'"
+                      [pointColorMapping]='"fill"'
+                      [dataLabel]='{visible: true, name: "text", position: "Inside"}'
+                      [palettes]="['rgba(124,189,252,0.58)','rgba(253,144,125,0.65)','rgba(133,126,253,0.64)','rgba(127,253,163,0.64)']"
+                      [dataSource]='pieData[i]' xName='x' yName='y' type='Pie'>
+                  </e-accumulation-series>
+                </e-accumulation-series-collection>
+              </ejs-accumulationchart>
+            </div>
+          </div>
+        </ng-template>
+      </e-accordionitem>
+    </e-accordionitems>
+  </ejs-accordion>
+  
+  <div style="margin: 80px; color: rgb(0 0 0 / 26%); text-align: center" *ngIf="!isProjects">
+    There is no data to display
+  </div>
+</div>

@@ -1,0 +1,185 @@
+/* You can add global styles to this file, and also import other style files */
+
+*, html {
+  margin: 0;
+  padding: 0;
+  font-family: "Sofia Sans", serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Sofia Sans", serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  user-select: none;
+ }
+
+#loading-bar .bar {
+  background: #d35400;
+}
+
+#loading-bar-spinner .spinner-icon {
+  border-top-color: #d35400;
+  border-left-color: #d35400;
+}
+
+#loading-bar .peg {
+  -moz-box-shadow: #d35400 1px 0 6px 1px;
+  -ms-box-shadow: #d35400 1px 0 6px 1px;
+  -webkit-box-shadow: #d35400 1px 0 6px 1px;
+  box-shadow: #d35400 1px 0 6px 1px;
+}
+
+.loading-spinner {
+  -webkit-animation: spin 2s linear infinite;
+  -moz-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+/* Start Spinner Loader */
+.spinner-background {
+  height: 100%;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #d35400;
+  padding: 0;
+  margin: 0;
+  color: #fff;
+  font: 14px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+  line-height: 1.5em;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.spinner {
+  background-color: #ffffff;
+  position: fixed;
+  z-index: 999;
+  height: 4em;
+  width: 4em;
+  overflow: inherit;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  -webkit-animation: sk-rotateplane 1.2s infinite ease-in-out;
+  animation: sk-rotateplane 1.2s infinite ease-in-out;
+}
+
+mat-button-toggle-group {
+    height: 30px !important;
+}
+
+mat-button-toggle {
+  font-size: 12px !important;
+  text-align: center;
+}
+
+.mat-button-toggle-button {
+  margin-top: -15px !important;
+  margin-left: -10px !important;
+}
+
+.mat-button-toggle:active {
+    background-color: #e6edfa !important;
+}
+
+.mat-button-toggle-checked {
+  background: #e6edfa !important;
+}
+
+@-webkit-keyframes sk-rotateplane {
+  0% {
+    -webkit-transform: perspective(120px)
+  }
+  50% {
+    -webkit-transform: perspective(120px) rotateY(180deg)
+  }
+  100% {
+    -webkit-transform: perspective(120px) rotateY(180deg) rotateX(180deg)
+  }
+}
+
+@keyframes sk-rotateplane {
+  0% {
+    transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg)
+  }
+  50% {
+    transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
+  }
+  100% {
+    transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+  }
+}
+
+ng-select2 {
+  .select2-selection {
+    height: 56px !important;
+
+    .select2-selection__rendered {
+      line-height: 54px !important;
+    }
+
+    .select2-selection__arrow {
+      height: 54px !important;
+    }
+  }
+}
+
+.select2-container {
+  z-index: 1055;
+
+  .select2-dropdown .select2-search--dropdown {
+    display: none !important;
+  }
+}
+
+.select2-container--default .select2-selection--single {
+  border: 1px solid #CED4DA !important;
+}
+
+.e-dlg-container {
+  display: none !important;
+}
+
+.modal-dialog {
+  max-width: 650px !important;
+}
+
+.modal-content {
+  border: 0 !important;
+}
+
+.e-dlg-target.e-scroll-disabled {
+  overflow: scroll !important;
+}
+
+.e-kanban .e-kanban-table.e-content-table .e-card.e-selection {
+  background-color: #fff !important;
+}
+
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card {
+  border-radius: 10px !important;
+}
+
+.e-accordion .e-acrdn-item.e-select.e-selected.e-expand-state > .e-acrdn-header .e-acrdn-header-icon, .e-accordion .e-acrdn-item.e-select.e-selected.e-expand-state > .e-acrdn-header .e-acrdn-header-content, .e-accordion .e-acrdn-item.e-select.e-expand-state > .e-acrdn-header .e-acrdn-header-icon, .e-accordion .e-acrdn-item.e-select.e-expand-state > .e-acrdn-header .e-acrdn-header-content {
+  color: #1172fd;
+}
+
+@import '../node_modules/@syncfusion/ej2-base/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-buttons/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-dropdowns/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-inputs/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-layouts/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-navigations/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-popups/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-angular-kanban/styles/material.css';
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";

@@ -1,0 +1,20 @@
+.chart {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  transition: all 0.5s ease-in-out;
+  margin-top: -10px;
+}
+
+.dist {
+  text-align: center;
+}
+
+.btn {
+  line-height: 1.2rem !important;
+}
+
+.w3-animate-opacity {
+  margin: 3rem auto 1rem auto;
+  width: 95%;
+}
