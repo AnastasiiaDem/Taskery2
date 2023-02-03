@@ -10,6 +10,7 @@ import * as $ from 'jquery';
 import {Subject, takeUntil} from 'rxjs';
 import {Role} from '../shared/models/user.model';
 import {UserService} from '../shared/services/user.service';
+import {IDropdownSettings} from 'ng-multiselect-dropdown';
 
 @Component({
   selector: 'app-projects',
@@ -17,16 +18,23 @@ import {UserService} from '../shared/services/user.service';
   styleUrls: ['./projects.component.scss'],
 })
 export class ProjectsComponent implements OnInit, AfterViewChecked {
-  
   projects: ProjectModel[] = [];
   currentProject: { description: string; projectName: string; status: StatusEnum; assignedUsers: [] };
   projectForm: FormGroup;
   statusData: Array<Select2OptionData> = [];
   tasksData: Array<Select2OptionData> = [];
-  usersData: Array<Select2OptionData> = [];
-  firstUserId: string = '';
+  usersData: Array<{ id: string; text: string; }> = [];
   addTaskFlag: boolean;
   private readonly unsubscribe: Subject<void> = new Subject();
+  public dropdownSettings: IDropdownSettings = {};
+  currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: Role; } = {
+    _id: 0,
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    role: Role.ProjectManager
+  };
   
   get f() {
     return this.projectForm.controls;
@@ -62,6 +70,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
       {id: StatusEnum.onReview, text: StatusEnum.onReview},
       {id: StatusEnum.done, text: StatusEnum.done}
     ];
+    this.getCurrentUser();
     this.getAllProjects();
     this.getAllUsers();
     this.getAllTasks();
@@ -70,8 +79,19 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
       projectName: ['', Validators.required],
       description: [''],
       status: ['', Validators.required],
-      assignedUsers: ['', Validators.required]
+      assignedUsers: [[], Validators.required]
     });
+    
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'id',
+      textField: 'text',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      enableCheckAll: false,
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
   }
   
   ngAfterViewChecked() {
@@ -102,8 +122,9 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
     this.projectService.getProjects()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(res => {
-          debugger
-          res.projects.forEach(project => {
+          res.projects.filter(p => {
+            return (p.userId == this.currentUser._id || p.assignedUsers.find(u => u.id == this.currentUser._id));
+          }).forEach(project => {
             this.projects.unshift({
               id: project._id,
               userId: project.userId,
@@ -154,20 +175,33 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
     this.userService.getUsers()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(users => {
-          this.usersData = users.filter(user => user.role != Role.ProjectManager).map(user => {
+          this.usersData = users.filter(user => {
+            return (user.role != Role.ProjectManager) && (user._id != this.currentUser._id);
+          }).map((user, i) => {
             return {
               id: user._id,
               text: user.firstName + ' ' + user.lastName
             };
           });
-          this.firstUserId = this.usersData[0].id;
         },
         err => {
           console.log(err);
         });
   }
   
-  addProject(content) {
+  getCurrentUser() {
+    this.userService.getCurrentUser()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(user => {
+          this.currentUser = user;
+        },
+        err => {
+          console.log(err);
+        });
+  }
+  
+  addProject(content, e) {
+    e.preventDefault();
     this.projects.length = (this.projects.length == undefined) ? 0 : this.projects.length;
     let currentProject = {
       id: this.projects.length + 1,
@@ -222,13 +256,14 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
     modal.close();
   }
   
-  updateProject(content, task) {
+  updateProject(content, project) {
     this.addTaskFlag = false;
     this.projectForm.setValue({
-      id: task.id || task._id,
-      projectName: task.projectName,
-      description: task.description,
-      status: task.status
+      id: project.id || project._id,
+      projectName: project.projectName,
+      description: project.description,
+      status: project.status,
+      assignedUsers: project.assignedUsers
     });
     this.modalService.open(content, {centered: true});
   }
@@ -244,7 +279,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
             id: this.projects.length + 1,
             projectName: '',
             description: '',
-            status: StatusEnum.todo
+            status: StatusEnum.todo,
+            assignedUsers: []
           };
           this.projectForm.setValue(currentTask);
           modal.close();

@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
+import {map} from 'rxjs/operators';
 
 const apiUrl = 'http://localhost:1100/api';
 const options = {
@@ -16,6 +17,10 @@ export class UserService {
   
   getUsers(): Observable<any> {
     return this.http.get(`${apiUrl}/users`, options);
+  }
+  
+  getCurrentUser() {
+    return this.http.get<any>(`${apiUrl}/currentUser`, options);
   }
   
   addUser(body: Object): Observable<any> {

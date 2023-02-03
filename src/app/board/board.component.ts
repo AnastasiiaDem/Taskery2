@@ -181,7 +181,6 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   openModal(content, task) {
-    debugger
     this.addTaskFlag = false;
     this.taskForm.setValue(task.data);
     this.modalService.open(content, {centered: true});
@@ -203,8 +202,16 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       this.taskService.addTask(this.taskForm.value)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(task => {
-            this.tasks.push(task);
-            this.kanban.addCard(task);
+            this.tasks.push({
+              id: task._id,
+              title: task.title,
+              description: task.description,
+              status: task.status,
+              duration: task.duration,
+              employeeId: task.employeeId,
+              projectId: task.projectId
+            });
+          this.kanban.addCard(task);
           },
           err => {
             console.log(err);

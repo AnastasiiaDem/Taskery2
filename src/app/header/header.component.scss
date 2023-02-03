@@ -1,0 +1,74 @@
+.avatar {
+  height: 30px;
+  width: 30px;
+  background: url("../../assets/images/icons8-spinning-circle-100 (1).png") no-repeat;
+  background-size: 30px;
+  display: inline-block;
+  margin-right: 25px;
+  transition: 1s;
+  border: none !important;
+}
+
+.avatar:hover {
+  background: url("../../assets/images/icons8-spinning-circle-100.png") no-repeat;
+  background-size: 30px;
+}
+
+.avatar-active {
+  background: url("../../assets/images/icons8-spinning-circle-100.png") no-repeat;
+  background-size: 30px;
+  height: 30px;
+  width: 30px;
+  display: inline-block;
+  margin-right: 25px;
+  transition: 1s;
+  border: none !important;
+}
+
+.avatar::after {
+  display: none;
+}
+
+.avatar-active::after {
+  display: none;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 40px;
+  width: 200px;
+  font-size: 15px;
+}
+
+.settings-btn {
+  color: black;
+  font-size: 15px;
+  padding: 3px 0 3px 3px !important;
+  width: 100%;
+  border: 0;
+  text-align: left;
+  background: #fff;
+
+  img {
+    width: 15px;
+    margin: 0 0 2px 0;
+  }
+}
+
+.settings-btn:hover {
+  background: rgba(220, 236, 255, 0.6);
+  border-radius: 8px;
+}
+
+.settings-block {
+  display: flex!important;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.p-email {
+  color: #B3BAC5;
+  font-size: 13px;
+  margin-bottom: 0;
+}

@@ -1,4 +1,4 @@
-<div class="box circle" (click)="addProject(content)">
+<div class="box circle" (click)="addProject(content, $event)">
   <span class="tooltiptext">Add new project</span>
   <p class="add">&#65291;</p>
 </div>
@@ -6,7 +6,7 @@
 <img src="./assets/images/Scenes05.svg" alt="" class="scene5">
 <div class="projects-wrapper w3-animate-opacity" *ngIf="!!projects.length">
   <div *ngFor="let  project of  projects; let idx = index">
-    <div class="container" (dblclick)="updateProject(content, project)">
+    <div class="container" (dblclick)="this.currentUser.role == 'ProjectManager' ? updateProject(content, project) : ''">
       <div class="card" [ngStyle]="{'margin': idx < 1 ? '0' : '0 auto', 'width': idx >= 1 ? '80%' : '60%'}">
         <div class="card-header px-lg-5">
           <p style="float: right; margin: 0;">{{project.status}}</p>
@@ -30,7 +30,7 @@
     <div class="row align-items-center">
       <div class="card-header px-lg-5">
         <div class="card-heading text-primary">{{addTaskFlag ? 'Add new project' : 'Update the project'}}
-          <img *ngIf="!addTaskFlag" src="./assets/images/icons8-trash-can.svg" alt="" class="trash"
+          <img *ngIf="!addTaskFlag" src="./assets/images/icons8-trash-can-480.png" alt="" class="trash"
                (click)="deleteProject(modal)">
         </div>
       </div>
@@ -53,7 +53,13 @@
             </ng-select2>
           </div>
           <div class="form-floating right-field" style="margin-left: 0 !important;">
-          
+            <ng-multiselect-dropdown
+                [placeholder]="'Assign this project to the employees'"
+                [settings]="dropdownSettings"
+                [data]="usersData"
+                formControlName="assignedUsers"
+            >
+            </ng-multiselect-dropdown>
           </div>
           <button class="btn btn-primary close-button" type="submit"
                   [disabled]="projectForm.invalid">submit

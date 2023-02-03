@@ -8,6 +8,14 @@
   .description {
     padding: 5% 0 0 0;
     width: 45%;
+
+    h1 {
+      font-weight: 700 !important;
+    }
+
+    p {
+      font-family: 'Source Sans Pro', sans-serif;
+    }
   }
 
   .home-image img {
@@ -24,6 +32,14 @@
   text-align: center;
   height: max-content;
   margin: 10rem auto;
+
+  h2 {
+    font-weight: 600 !important;
+  }
+
+  p {
+    font-family: 'Source Sans Pro', sans-serif;
+  }
 }
 
 .background {

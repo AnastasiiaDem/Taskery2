@@ -15,7 +15,7 @@ const routes: Routes = [
     {path: 'register', component: RegisterComponent, data: { animation: 'register' }},
     {path: 'board', component: BoardComponent, data: { animation: 'board' }},
     {path: 'projects', component: ProjectsComponent, data: { animation: 'projects' }},
-    {path: 'report', component: ReportComponent, canActivate: [AuthGuard], data: { role: [Role.ProjectManager], animation: 'report' }}
+    {path: 'report', component: ReportComponent, canActivate: [AuthGuard], data: { animation: 'report' }}
 ];
 
 @NgModule({

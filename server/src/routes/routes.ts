@@ -2,7 +2,7 @@ import express from "express";
 import createUser from "../controllers/registerController";
 import loginUser from "../controllers/loginController";
 import refreshToken from "../controllers/refreshTokenController";
-import getAllUsers from "../controllers/userController";
+import {getAllUsers, getCurrentUser} from '../controllers/userController';
 import logoutUser from "../controllers/logoutController";
 import {createProject, deleteProject, getProjects, updateProject} from '../controllers/projectController';
 import {createTask, deleteTask, getTasks, updateTask} from '../controllers/taskController';
@@ -29,6 +29,7 @@ routes.put('/task/update/:id', updateTask);
 routes.delete('/task/delete/:id', deleteTask);
 
 routes.get("/users", getAllUsers);
+routes.get("/currentUser", getCurrentUser);
 module.exports = routes;
 
 

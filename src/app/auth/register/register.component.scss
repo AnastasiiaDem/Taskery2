@@ -14,3 +14,14 @@
 mat-error {
   font-size: 12px;
 }
+
+.idea {
+  height: 15px;
+  margin-left: 10px;
+}
+
+::ng-deep .mat-tooltip {
+  background: grey;
+  font-size: 11px;
+  font-weight: 300 !important;
+}

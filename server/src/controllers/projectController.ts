@@ -111,7 +111,7 @@ export const getProjects = async (req: express.Request, res: express.Response) =
   if (!foundUser) return res.status(403).json({error: 'error user not found'});
   
   try {
-    const projects = await Project.find({userId: foundUser._id});
+    const projects = await Project.find({});
   
     if (projects.length == 0) return res.status(400).json({message: 'No content'});
     

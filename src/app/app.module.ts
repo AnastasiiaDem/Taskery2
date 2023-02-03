@@ -30,6 +30,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 import {HeaderComponent} from './header/header.component';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -60,7 +62,9 @@ import {HeaderComponent} from './header/header.component';
     AccumulationChartModule,
     AccordionModule,
     MatButtonToggleModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    NgMultiSelectDropDownModule.forRoot(),
+    MatTooltipModule
   ],
   providers: [HttpClientModule, TaskService, UserService, ProjectsService, AlertService, AuthService,
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
