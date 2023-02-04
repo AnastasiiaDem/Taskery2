@@ -37,6 +37,7 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatInputModule} from '@angular/material/input';
 import {MatNativeDateModule} from '@angular/material/core';
+import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import {MatNativeDateModule} from '@angular/material/core';
     FontAwesomeModule,
     MatDatepickerModule,
     MatInputModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MdbAccordionModule
   ],
   providers: [HttpClientModule, TaskService, UserService, ProjectsService, AlertService, AuthService, DatePipe,
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}

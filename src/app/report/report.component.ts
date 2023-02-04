@@ -58,7 +58,7 @@ export class ReportComponent implements OnInit, AfterViewChecked {
   private readonly unsubscribe: Subject<void> = new Subject();
   
   projects: ProjectModel[];
-  tasks: TaskModel[];
+  tasks: TaskModel[] = [];
   reportData: TaskModel[][] = [[]];
   legendSettings;
   isProjects: boolean = false;
@@ -75,11 +75,32 @@ export class ReportComponent implements OnInit, AfterViewChecked {
     this.taskService.getTasks()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(res => {
-          this.tasks = res.tasks;
+        res.tasks.forEach(t => {
+          this.tasks.push({
+            id: t._id,
+            title: t.title,
+            description: t.description,
+            status: t.status,
+            deadline: t.deadline,
+            employeeId: t.employeeId,
+            projectId: t.projectId
+          });
+        });
           this.projectService.getProjects()
             .pipe(takeUntil(this.unsubscribe))
             .subscribe(res => {
-                this.projects = res.projects.filter(project => this.tasks.find(task => task.projectId == project.id));
+                let projectsList = [];
+                res.projects.forEach(p => {
+                  projectsList.push({
+                    id: p._id,
+                    userId: p.userId,
+                    projectName: p.projectName,
+                    description: p.description,
+                    status: p.status,
+                    assignedUsers: p.assignedUsers
+                  });
+                });
+                this.projects = projectsList.filter(project => this.tasks.find(task => task.projectId == project.id));
                 this.isProjects = !!this.projects.length;
                 this.projects.forEach((project, idx) => {
                   this.reportData[idx] = this.tasks.filter(task => task.projectId == project.id);
