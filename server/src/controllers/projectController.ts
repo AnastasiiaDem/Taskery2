@@ -122,3 +122,29 @@ export const getProjects = async (req: express.Request, res: express.Response) =
   }
 };
 
+export const getCurrentProject = async (req: express.Request, res: express.Response) => {
+  const id = req.params.id;
+  
+  !id && res.status(400).json({error: 'no id'});
+  
+  const cookies = req.cookies;
+  
+  if (!cookies?.token) return res.status(401).json({error: 'error no cookies'});
+  
+  const refreshToken = cookies.token;
+  const foundToken = await Token.findOne({refreshToken: refreshToken}).exec();
+  const foundUser = await User.findById(foundToken?.userId);
+  
+  if (!foundUser) return res.status(403).json({error: 'error user not found'});
+ 
+  try {
+    const project = await Project.findById(id);
+    if (!project) return res.status(400).json({message: 'No content'});
+    
+    res.status(200).json(project);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({error: error});
+  }
+};
+

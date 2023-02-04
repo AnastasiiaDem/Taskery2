@@ -50,8 +50,11 @@
               <div class="form-floating mb-3">
                 <input class="form-control" formControlName="password" type="password"
                        placeholder="Password"
+                       [type]="fieldTextType ? 'text' : 'password'"
                        [ngClass]="{ 'is-invalid': submitted && f.password.errors }" required>
                 <label>Password</label>
+                <fa-icon [icon]="faIcon" (click)="toggleFieldTextType()"></fa-icon>
+
                 <mat-error class="error-message" *ngIf="f.password.errors && f.password.errors.minlength">
                   Password must be at least 6 characters long
                   <br>
@@ -81,7 +84,7 @@
       </div>
       <div class="col-lg-6 col-xl-5 ms-xl-auto px-lg-4 text-center text-primary">
         <img src="./assets/images/the-importance-of-a-website-for-a-business-1768668%20(1).svg" alt=""
-             style="transform: scale(1.4);">
+             class="business-img">
         <h1 class="mb-4">Taskery.com <br class="d-none d-lg-inline">your free assistant.</h1>
         <p class="lead text-muted" style="font-size: 1.1rem!important;">The best project management tool for
           high quality development.</p>

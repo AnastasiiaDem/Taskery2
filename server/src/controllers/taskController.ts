@@ -5,7 +5,7 @@ import Task from '../model/TaskModel';
 import mongoose from 'mongoose';
 
 export const createTask = async (req: express.Request, res: express.Response) => {
-  const {employeeId, projectId, title, description, status, duration} = req.body;
+  const {employeeId, projectId, title, description, status, deadline} = req.body;
   
   const cookies = req.cookies;
   
@@ -17,7 +17,7 @@ export const createTask = async (req: express.Request, res: express.Response) =>
   
   if (!foundUser) return res.status(403).json({error: 'error user not found'});
   
-  if (!title || !description || !status || !duration)
+  if (!title || !description || !status || !deadline)
     return res.status(400).json({message: `Properties are required`});
   
   const id = new mongoose.Types.ObjectId();
@@ -29,7 +29,7 @@ export const createTask = async (req: express.Request, res: express.Response) =>
     title: title,
     description: description,
     status: status,
-    duration: duration
+    deadline: deadline
   });
   
   newTask.save((err, data) => {
@@ -45,7 +45,7 @@ export const updateTask = async (req: express.Request, res: express.Response) =>
   
   !id && res.status(400).json({error: 'no id'});
   
-  const {title, description, status, duration} = req.body;
+  const {title, description, status, deadline} = req.body;
   
   const cookies = req.cookies;
   if (!cookies?.token) return res.status(401).json({error: 'error no cookies'});
@@ -56,14 +56,14 @@ export const updateTask = async (req: express.Request, res: express.Response) =>
   
   if (!foundUser) return res.status(403).json({error: 'error user not found'});
   
-  if (!title || !description || !status || !duration)
+  if (!title || !description || !status || !deadline)
     return res.status(400).json({message: `Properties are required`});
   
   const update = {
     ...(title ? {title: title} : {}),
     ...(description ? {description: description} : {}),
     ...(status ? {status: status} : {}),
-    ...(duration ? {duration: duration} : {})
+    ...(deadline ? {deadline: deadline} : {})
   };
   
   try {
@@ -100,7 +100,7 @@ export const deleteTask = async (req: express.Request, res: express.Response) =>
 };
 
 export const getTasks = async (req: express.Request, res: express.Response) => {
-  const {title, description, status, duration} = req.query;
+  const {title, description, status, deadline} = req.query;
   
   const cookies = req.cookies;
 
@@ -118,7 +118,7 @@ export const getTasks = async (req: express.Request, res: express.Response) => {
         {...(title ? {title: title} : {})},
         {...(description ? {description: description} : {})},
         {...(status ? {status: status} : {})},
-        {...(duration ? {duration: duration} : {})}
+        {...(deadline ? {deadline: deadline} : {})}
       ],
     });
   

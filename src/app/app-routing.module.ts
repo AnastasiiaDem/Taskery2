@@ -8,6 +8,7 @@ import { HomeComponent } from './home/home.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { ReportComponent } from './report/report.component';
 import {Role} from './shared/models/user.model';
+import {AccountComponent} from './account/account.component';
 
 const routes: Routes = [
     {path: '', component: HomeComponent, canActivate: [AuthGuard]},
@@ -15,6 +16,7 @@ const routes: Routes = [
     {path: 'register', component: RegisterComponent, data: { animation: 'register' }},
     {path: 'board', component: BoardComponent, data: { animation: 'board' }},
     {path: 'projects', component: ProjectsComponent, data: { animation: 'projects' }},
+    {path: 'account', component: AccountComponent, data: { animation: 'account' }},
     {path: 'report', component: ReportComponent, canActivate: [AuthGuard], data: { animation: 'report' }}
 ];
 

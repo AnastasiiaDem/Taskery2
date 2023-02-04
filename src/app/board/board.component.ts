@@ -11,6 +11,10 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {Subject, takeUntil} from 'rxjs';
 import {Role} from '../shared/models/user.model';
+import {ProjectsService} from '../shared/services/project.service';
+import {ProjectModel} from '../shared/models/project.model';
+import {faCalendarDays} from '@fortawesome/free-solid-svg-icons';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-board',
@@ -33,8 +37,19 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   selectedProjectId: number;
   firstUserId: string = '';
   setBackground = false;
-  
   private readonly unsubscribe: Subject<void> = new Subject();
+  currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: Role; } = {
+    _id: 0,
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    role: Role.ProjectManager
+  };
+  currentProject: ProjectModel;
+  calendarIcon;
+  currentDate;
+  onlyMyIssues = false;
   
   get f() {
     return this.taskForm.controls;
@@ -45,6 +60,8 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               private modalService: NgbModal,
               private userService: UserService,
               private route: ActivatedRoute,
+              private projectsService: ProjectsService,
+              private datepipe: DatePipe,
               private elementRef: ElementRef) {
     this.route.params
       .pipe(takeUntil(this.unsubscribe))
@@ -54,14 +71,16 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   ngOnInit() {
+    this.currentDate = this.datepipe.transform(new Date(), 'YYYY-MM-dd');
+    
+    this.calendarIcon = faCalendarDays;
     this.statusData = [
       {id: StatusEnum.todo, text: StatusEnum.todo},
       {id: StatusEnum.inProgress, text: StatusEnum.inProgress},
       {id: StatusEnum.onReview, text: StatusEnum.onReview},
       {id: StatusEnum.done, text: StatusEnum.done}
     ];
-    this.getAllUsers();
-    this.getAllTasks();
+    this.getCurrentProject();
     this.taskForm = this.formBuilder.group({
       id: [''],
       employeeId: ['', Validators.required],
@@ -69,7 +88,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       title: ['', Validators.required],
       description: ['', {required: false}],
       status: ['', Validators.required],
-      duration: ['', [Validators.required, Validators.min(1)]],
+      deadline: [this.currentDate, [Validators.required]],
     });
   }
   
@@ -120,6 +139,31 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.unsubscribe.complete();
   }
   
+  getCurrentProject() {
+    this.projectsService.getCurrentProject(this.selectedProjectId)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(project => {
+          this.currentProject = project;
+          this.getCurrentUser();
+          this.getAllUsers();
+          this.getAllTasks();
+        },
+        err => {
+          console.log(err);
+        });
+  }
+  
+  getCurrentUser() {
+    this.userService.getCurrentUser()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(user => {
+          this.currentUser = user;
+        },
+        err => {
+          console.log(err);
+        });
+  }
+  
   getAllTasks() {
     this.taskService.getTasks()
       .pipe(takeUntil(this.unsubscribe))
@@ -131,7 +175,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               title: task.title,
               description: task.description,
               status: task.status,
-              duration: task.duration,
+              deadline: task.deadline,
               employeeId: task.employeeId,
               projectId: task.projectId
             });
@@ -143,7 +187,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
             title: '',
             description: '',
             status: StatusEnum.todo,
-            duration: 0
+            deadline: this.currentDate
           };
           this.taskForm.setValue(currentTask);
         },
@@ -156,11 +200,15 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.userService.getUsers()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(users => {
-          this.employeeData = users.filter(user => user.role != Role.ProjectManager).map(user => {
-            return {
-              id: user._id,
-              text: user.firstName + ' ' + user.lastName
-            };
+          this.currentProject.assignedUsers?.forEach(u => {
+            users.forEach(user => {
+              if (user._id == u.id) {
+                this.employeeData.push({
+                  id: user._id,
+                  text: user.firstName + ' ' + user.lastName
+                });
+              }
+            });
           });
           this.firstUserId = this.employeeData[0].id;
         },
@@ -202,16 +250,17 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       this.taskService.addTask(this.taskForm.value)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(task => {
-            this.tasks.push({
+            let newTask = {
               id: task._id,
               title: task.title,
               description: task.description,
               status: task.status,
-              duration: task.duration,
+              deadline: task.deadline,
               employeeId: task.employeeId,
               projectId: task.projectId
-            });
-          this.kanban.addCard(task);
+            };
+            this.tasks.push(newTask);
+            this.kanban.addCard(newTask);
           },
           err => {
             console.log(err);
@@ -226,7 +275,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       title: '',
       description: '',
       status: StatusEnum.todo,
-      duration: 0,
+      deadline: this.currentDate,
       employeeId: this.firstUserId,
       projectId: this.selectedProjectId
     };
@@ -247,5 +296,44 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
           console.log(err);
         });
     modal.close();
+  }
+  
+  updateKanban() {
+    this.onlyMyIssues = !this.onlyMyIssues;
+    this.taskService.getTasks()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(res => {
+          this.tasks = [];
+          res.tasks.filter(task => {
+            if (this.onlyMyIssues == true) {
+              return task.projectId == this.selectedProjectId && task.employeeId == this.currentUser._id;
+            } else {
+              return task.projectId == this.selectedProjectId;
+            }
+          }).forEach(task => {
+            this.tasks.push({
+              id: task._id,
+              title: task.title,
+              description: task.description,
+              status: task.status,
+              deadline: task.deadline,
+              employeeId: task.employeeId,
+              projectId: task.projectId
+            });
+          });
+          let currentTask = {
+            id: Math.floor(Math.random() * 100),
+            employeeId: this.firstUserId,
+            projectId: this.selectedProjectId,
+            title: '',
+            description: '',
+            status: StatusEnum.todo,
+            deadline: this.currentDate
+          };
+          this.taskForm.setValue(currentTask);
+        },
+        err => {
+          console.log(err);
+        });
   }
 }

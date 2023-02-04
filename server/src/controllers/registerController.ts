@@ -13,7 +13,7 @@ const createUser = async (req: express.Request, res: express.Response) => {
   if (await User.findOne({email: email}).exec())
     return res.status(409).json({message: `User with such email (${email}) exists`});
   
-  const hashPassword = await bcrypt.hashSync(password, 8);
+  // const hashPassword = await bcrypt.hashSync(password, 8);
   const id = new mongoose.Types.ObjectId();
   
   const newUser = new User({
@@ -21,7 +21,7 @@ const createUser = async (req: express.Request, res: express.Response) => {
     firstName: firstName,
     lastName: lastName,
     email: email,
-    password: hashPassword,
+    password: password,
     role: role
   });
   

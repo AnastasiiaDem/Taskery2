@@ -4,6 +4,7 @@
 </div>
 
 <div class="w3-animate-opacity" style="margin: 0 auto; width: 95%;">
+  <button [ngClass]="onlyMyIssues ? 'my-tasks' : 'all-tasks'" (click)="updateKanban()">Only My Issues</button>
   <ejs-kanban #kanban keyField='status'
               [dataSource]='tasks'
               [cardSettings]='cardSettings'
@@ -22,6 +23,7 @@
           <tr>
             <td class="CardHeader">
               {{data.title}}
+              <p class="card-deadline">{{data.deadline | date}}</p>
             </td>
           </tr>
           <tr>
@@ -52,8 +54,8 @@
             </div>
           </div>
           <div class="form-floating mb-3">
-                        <textarea class="form-control" style="padding-top: 0.5rem;" cols="2" rows="5"
-                                  formControlName="description" placeholder="Description"></textarea>
+            <textarea class="form-control" style="padding-top: 0.5rem;" cols="2" rows="5" formControlName="description"
+                      placeholder="Description"></textarea>
           </div>
           <div class="form-floating mb-3">
             <ng-select2 formControlName="employeeId" [width]="'100%'" [data]="employeeData">
@@ -61,10 +63,9 @@
           </div>
           <div style="display: flex; align-items: center; margin-bottom: 1rem;">
             <div class="form-floating mb-3" style="width: 30%;">
-              <input class="form-control" type="number" placeholder="Duration"
-                     formControlName="duration"
-                     [ngClass]="{ 'is-invalid': taskForm.invalid && f.duration.errors }" required>
-              <label>Duration</label>
+              <input class="form-control" type="date" placeholder="Deadline date" formControlName="deadline"
+                     [ngClass]="{ 'is-invalid': taskForm.invalid && f.deadline.errors }" required>
+              <label>Deadline date</label>
             </div>
             <div class="form-floating right-field" style="width: 70%;">
               <ng-select2 formControlName="status" [width]="'100%'" [data]="statusData">

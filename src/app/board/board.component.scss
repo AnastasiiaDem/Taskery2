@@ -133,7 +133,7 @@ a {
 
 .right-field {
   margin-bottom: 1rem !important;
-  margin-left: 1rem !important;
+  margin-left: 0.5rem !important;
 }
 
 .fab {
@@ -255,6 +255,11 @@ a {
   background: #fff !important;
   font-size: 1rem;
   font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 
 .CardBody {
@@ -265,4 +270,46 @@ a {
   word-wrap: break-word;
   -webkit-box-orient: vertical;
   margin-bottom: 0;
+}
+
+.all-tasks {
+  position: absolute;
+  top: 30%;
+  left: 5%;
+  border: none;
+  padding: 2px 5px;
+  background: #ededed;
+  color: #666666;
+  font-size: 12px;
+  border-radius: 4px;
+  transition: 0.5s;
+}
+
+.all-tasks:hover {
+  background: #0d6efd;
+  border: none;
+  color: #fff;
+}
+
+.my-tasks {
+  position: absolute;
+  top: 30%;
+  left: 5%;
+  border: none;
+  padding: 2px 5px;
+  font-size: 12px;
+  border-radius: 4px;
+  transition: 0.5s;
+  background: #0d6efd;
+  color: #fff;
+}
+
+.card-deadline {
+  font-size: 10px;
+  margin: 0;
+  font-weight: 600;
+  color: #66666666;
+  font-style: italic;
+  padding-right: 2px;
+  margin-top: -15px;
 }

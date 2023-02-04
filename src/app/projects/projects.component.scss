@@ -264,7 +264,7 @@ a {
 .scene5 {
   position: absolute;
   left: 60%;
-  top: 15%;
+  top: 16%;
   width: 33%;
   transform: scale(1.4);
   z-index: -1;
@@ -344,3 +344,14 @@ a {
   padding-top: 10px !important;
 }
 
+.created-by {
+  color: #282a2ba8;
+  font-size: 9px;
+  line-height: 9px;
+  text-align: right;
+  position: absolute;
+  top: 13%;
+  font-weight: 600;
+  right: 5%;
+  font-family: "Source Sans Pro", sans-serif;
+}

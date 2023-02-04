@@ -2,9 +2,15 @@ import express from "express";
 import createUser from "../controllers/registerController";
 import loginUser from "../controllers/loginController";
 import refreshToken from "../controllers/refreshTokenController";
-import {getAllUsers, getCurrentUser} from '../controllers/userController';
+import {getAllUsers, getCurrentUser, updateUser} from '../controllers/userController';
 import logoutUser from "../controllers/logoutController";
-import {createProject, deleteProject, getProjects, updateProject} from '../controllers/projectController';
+import {
+  createProject,
+  deleteProject,
+  getCurrentProject,
+  getProjects,
+  updateProject
+} from '../controllers/projectController';
 import {createTask, deleteTask, getTasks, updateTask} from '../controllers/taskController';
 
 const routes = require("express").Router();
@@ -19,6 +25,7 @@ routes.get("/logout", logoutUser);
 routes.get("/refresh", refreshToken);
 
 routes.get('/projects', getProjects);
+routes.get('/project/current/:id', getCurrentProject);
 routes.post('/project/create', createProject);
 routes.put('/project/update/:id', updateProject);
 routes.delete('/project/delete/:id', deleteProject);
@@ -29,7 +36,8 @@ routes.put('/task/update/:id', updateTask);
 routes.delete('/task/delete/:id', deleteTask);
 
 routes.get("/users", getAllUsers);
-routes.get("/currentUser", getCurrentUser);
+routes.get("/user/current", getCurrentUser);
+routes.put("/user/update", updateUser);
 module.exports = routes;
 
 

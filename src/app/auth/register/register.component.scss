@@ -25,3 +25,20 @@ mat-error {
   font-size: 11px;
   font-weight: 300 !important;
 }
+
+.business-img {
+  transform: scale(1.4);
+}
+
+fa-icon {
+  position: absolute;
+  top: 17px;
+  right: 30px;
+  color: #949ba5;
+}
+
+@media (max-width: 1024px) {
+  .business-img {
+    margin-top: 70px;
+  }
+}

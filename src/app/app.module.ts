@@ -14,7 +14,7 @@ import {ProjectsService} from './shared/services/project.service';
 import {AlertService} from './shared/services/alert.service';
 import {AuthService} from './shared/services/auth.service';
 import {ErrorInterceptor} from './shared/services/error.interceptor';
-import {CommonModule} from '@angular/common';
+import {CommonModule, DatePipe} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
@@ -32,6 +32,11 @@ import {MatIconModule} from '@angular/material/icon';
 import {HeaderComponent} from './header/header.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {AccountComponent} from './account/account.component';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatInputModule} from '@angular/material/input';
+import {MatNativeDateModule} from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -42,7 +47,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     HomeComponent,
     ProjectsComponent,
     ReportComponent,
-    HeaderComponent
+    HeaderComponent,
+    AccountComponent
   ],
   imports: [
     BrowserModule,
@@ -64,9 +70,13 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatButtonToggleModule,
     MatFormFieldModule,
     NgMultiSelectDropDownModule.forRoot(),
-    MatTooltipModule
+    MatTooltipModule,
+    FontAwesomeModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatNativeDateModule
   ],
-  providers: [HttpClientModule, TaskService, UserService, ProjectsService, AlertService, AuthService,
+  providers: [HttpClientModule, TaskService, UserService, ProjectsService, AlertService, AuthService, DatePipe,
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]

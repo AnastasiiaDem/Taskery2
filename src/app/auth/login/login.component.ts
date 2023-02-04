@@ -9,6 +9,7 @@ import {UserService} from '../../shared/services/user.service';
 import {Select2OptionData} from 'ng-select2';
 import {UserModel} from '../../shared/models/user.model';
 import {TokenStorageService} from '../../shared/services/token.service';
+import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -24,6 +25,8 @@ export class LoginComponent implements OnInit {
   userList: UserModel[] = [];
   employeeData: Array<Select2OptionData> = [];
   private readonly unsubscribe: Subject<void> = new Subject();
+  fieldTextType: boolean;
+  faIcon;
   
   constructor(private formBuilder: FormBuilder,
               private route: ActivatedRoute,
@@ -38,6 +41,8 @@ export class LoginComponent implements OnInit {
   }
   
   ngOnInit() {
+    this.faIcon = faEye;
+    
     this.loginForm = this.formBuilder.group({
       email: ['', Validators.required],
       password: ['', Validators.required]
@@ -80,5 +85,10 @@ export class LoginComponent implements OnInit {
           this.alertService.error(error);
           this.loading = false;
         });
+  }
+  
+  toggleFieldTextType() {
+    this.fieldTextType = !this.fieldTextType;
+    this.faIcon = this.fieldTextType ? faEyeSlash : faEye;
   }
 }

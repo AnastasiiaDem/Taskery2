@@ -1,0 +1,95 @@
+<div class="page-holder align-items-center py-2 bg-gray-100">
+  <div class="container">
+    <h3 class="mb-4" style="font-weight: 900; color: #212529;">User Settings</h3>
+    <div class="row align-items-flex-start justify-content-center gx-3">
+      <div class="col-6 col-sm-4 col-md-4 col-xl-4">
+        <div class="card">
+          <div class="card-body" style="padding: 1.5rem!important; text-align: center;">
+            <img src="./assets/images/user-circle.svg" alt="" style="margin-top: -20px; height: 180px;">
+            <div class="name-block">
+              <p class="p-role">{{currentUserData.role}}</p>
+              <p style="line-height: 25px">{{currentUserData.firstName}} {{currentUserData.lastName}}</p>
+              <p class="p-email">{{currentUserData.email}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8 col-sm-8 text-center text-primary">
+        <div class="card card2">
+          <div class="card-body" style="padding: 1.5rem!important;">
+            <form [formGroup]="userSettingsForm" (ngSubmit)="''">
+              <div class="form-floating mb-3">
+                <input class="form-control col-sm-4" formControlName="firstName" type="text"
+                       placeholder="First Name" style="width: 97%;" id="firstName" [readOnly]="true" disabled="true"
+                       [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" required>
+                <label>First Name</label>
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                  <fa-icon [icon]="(editStatus && this.fieldType == 'firstName') ? checkIcon : pencilIcon"
+                           (click)="(editStatus && fieldType == 'firstName') ? updateField('firstName') : editField('firstName')"
+                           class="pencil fa-sm"></fa-icon>
+                  <fa-icon *ngIf="editStatus && this.fieldType == 'firstName'" [icon]="xIcon"
+                           (click)="resetChanges('firstName')" class="x"></fa-icon>
+                </div>
+              </div>
+              <div class="form-floating mb-3">
+                <input class="form-control" formControlName="lastName" type="text"
+                       placeholder="Last Name" style="width: 97%;" id="lastName" [readOnly]="true" disabled="true"
+                       [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" required>
+                <label>Last Name</label>
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                  <fa-icon [icon]="(editStatus && this.fieldType == 'lastName') ? checkIcon : pencilIcon"
+                           (click)="(editStatus && fieldType == 'lastName') ? updateField('lastName') : editField('lastName')"
+                           class="pencil fa-sm"></fa-icon>
+                  <fa-icon *ngIf="editStatus && this.fieldType == 'lastName'" [icon]="xIcon"
+                           (click)="resetChanges('lastName')" class="x"></fa-icon>
+                </div>
+              </div>
+              <div class="form-floating ">
+                <input class="form-control" formControlName="email" type="email"
+                       placeholder="name@example.com" style="width: 97%;" id="email" [readOnly]="true" disabled="true"
+                       [ngClass]="{ 'is-invalid': submitted && f.email.errors }" required>
+                <label>Email</label>
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                  <fa-icon [icon]="(editStatus && this.fieldType == 'email') ? checkIcon : pencilIcon"
+                           (click)="(editStatus && fieldType == 'email') ? updateField('email') : editField('email')"
+                           class="pencil fa-sm"></fa-icon>
+                  <fa-icon *ngIf="editStatus && this.fieldType == 'email'" [icon]="xIcon"
+                           (click)="resetChanges('email')" class="x"></fa-icon>
+                </div>
+              </div>
+              <div style="text-align: left;">
+                <mat-error class="error-message" *ngIf="f.email.errors && f.email.errors.email">
+                  Email must be valid
+                </mat-error>
+              </div>
+              <div class="form-floating mt-3">
+                <input class="form-control" formControlName="password" type="password"
+                       placeholder="Password" style="width: 97%;" id="password" [readOnly]="true" disabled="true"
+                       [type]="fieldTextType ? 'text' : 'password'"
+                       [ngClass]="{ 'is-invalid': submitted && f.password.errors }" required>
+                <label>Password</label>
+                <fa-icon [icon]="faIcon" (click)="toggleFieldTextType()" class="eye"></fa-icon>
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                  <fa-icon [icon]="(editStatus && fieldType == 'password') ? checkIcon : pencilIcon"
+                           (click)="(editStatus && fieldType == 'password') ? updateField('password') : editField('password')"
+                           class="pencil fa-sm"></fa-icon>
+                  <fa-icon *ngIf="editStatus && this.fieldType == 'password'" [icon]="xIcon"
+                           (click)="resetChanges('password')" class="x"></fa-icon>
+                </div>
+              </div>
+              <div style="text-align: left;">
+                <mat-error class="error-message" *ngIf="f.password.errors && f.password.errors.minlength">
+                  Password must be at least 6 characters long
+                  <br>
+                </mat-error>
+                <mat-error class="error-message" *ngIf="f.password.errors && f.password.errors.pattern">
+                  Your password must contain at least one uppercase, one lowercase, and one number
+                </mat-error>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

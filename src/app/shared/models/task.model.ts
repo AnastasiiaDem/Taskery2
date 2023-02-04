@@ -7,5 +7,5 @@ export class TaskModel {
   title: string;
   description: string;
   status: StatusEnum;
-  duration: number;
+  deadline: string;
 }

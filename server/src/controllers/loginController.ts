@@ -17,9 +17,9 @@ const loginUser = async (req: express.Request, res: express.Response) => {
   
   if (!foundUser) return res.status(409).json({message: `Incorrect password or email`});
   
-  const validPassword = await bcrypt.compare(password, foundUser.password);
+  // const validPassword = await bcrypt.compare(password, foundUser.password);
   
-  if (validPassword) {
+  if (password == foundUser.password) {
     const role = foundUser.role;
     
     const accessToken = jwt.sign(

@@ -20,7 +20,11 @@ export class UserService {
   }
   
   getCurrentUser() {
-    return this.http.get<any>(`${apiUrl}/currentUser`, options);
+    return this.http.get<any>(`${apiUrl}/user/current`, options);
+  }
+  
+  updateUser(body: Object): Observable<any> {
+    return this.http.put(`${apiUrl}/user/update`, body, options);
   }
   
   addUser(body: Object): Observable<any> {

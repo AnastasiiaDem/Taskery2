@@ -87,4 +87,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userSettings(content) {
     this.modalService.open(content, {centered: true});
   }
+  
+  goToUserSettings() {
+    this.router.navigate(['/account']);
+    setTimeout(() => {
+      document.getElementById('ngbDropdownMenu').classList.remove('show');
+    }, 500);
+  }
+  
+  getUpdatedData() {
+    this.getCurrentUser();
+  }
 }

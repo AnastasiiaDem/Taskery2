@@ -15,7 +15,7 @@ interface ITask {
   title: string;
   description: string;
   status: StatusEnum;
-  duration: number;
+  deadline: string;
 }
 
 export const TaskSchema = new Schema<ITask>({
@@ -25,7 +25,7 @@ export const TaskSchema = new Schema<ITask>({
   title: { type: String, require: true },
   description: { type: String, required: true },
   status: { type: String, enum: StatusEnum, required: true },
-  duration: { type: Number, require: true }
+  deadline: { type: String, require: true }
 });
 
 const Task = mongoose.model<ITask>("Task", TaskSchema);

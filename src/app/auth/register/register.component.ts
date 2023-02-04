@@ -7,6 +7,7 @@ import {UserService} from '../../shared/services/user.service';
 import {AlertService} from '../../shared/services/alert.service';
 import {Role, UserModel} from 'src/app/shared/models/user.model';
 import {Subject, takeUntil} from 'rxjs';
+import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-register',
@@ -20,6 +21,8 @@ export class RegisterComponent implements OnInit {
   userList: UserModel[] = [];
   private readonly unsubscribe: Subject<void> = new Subject();
   selectedVal: string;
+  fieldTextType: boolean;
+  faIcon;
   
   constructor(private formBuilder: FormBuilder,
               private router: Router,
@@ -32,6 +35,8 @@ export class RegisterComponent implements OnInit {
   }
   
   ngOnInit() {
+    this.faIcon = faEye;
+    
     this.registerForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -110,5 +115,10 @@ export class RegisterComponent implements OnInit {
   
   onValChange(value: any) {
     this.selectedVal = value;
+  }
+  
+  toggleFieldTextType() {
+    this.fieldTextType = !this.fieldTextType;
+    this.faIcon = this.fieldTextType ? faEyeSlash : faEye;
   }
 }

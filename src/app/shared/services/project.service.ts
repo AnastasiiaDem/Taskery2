@@ -19,6 +19,10 @@ export class ProjectsService {
     return this.http.get(`${apiUrl}/projects`, options);
   }
   
+  getCurrentProject(projectId: number): Observable<any> {
+    return this.http.get(`${apiUrl}/project/current/${projectId}`, options);
+  }
+  
   addProject(body: ProjectModel): Observable<any> {
     return this.http.post(`${apiUrl}/project/create`, body, options);
   }

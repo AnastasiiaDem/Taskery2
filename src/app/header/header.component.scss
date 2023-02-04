@@ -9,7 +9,7 @@
   border: none !important;
 }
 
-.avatar:hover {
+.avatar:hover, .avatar:focus {
   background: url("../../assets/images/icons8-spinning-circle-100.png") no-repeat;
   background-size: 30px;
 }
@@ -71,4 +71,10 @@
   color: #B3BAC5;
   font-size: 13px;
   margin-bottom: 0;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
 }
