@@ -1,7 +1,7 @@
 .avatar {
   height: 30px;
   width: 30px;
-  background: url("../../assets/images/icons8-spinning-circle-100 (1).png") no-repeat;
+  background: url("../../assets/images/icons8-spinning-circle-100.png") no-repeat;
   background-size: 30px;
   display: inline-block;
   margin-right: 25px;
@@ -10,12 +10,12 @@
 }
 
 .avatar:hover, .avatar:focus {
-  background: url("../../assets/images/icons8-spinning-circle-100.png") no-repeat;
+  background: url("../../assets/images/icons8-spinning-circle-100 (1).png") no-repeat;
   background-size: 30px;
 }
 
 .avatar-active {
-  background: url("../../assets/images/icons8-spinning-circle-100.png") no-repeat;
+  background: url("../../assets/images/icons8-spinning-circle-100 (1).png") no-repeat;
   background-size: 30px;
   height: 30px;
   width: 30px;

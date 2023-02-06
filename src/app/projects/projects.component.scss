@@ -293,8 +293,7 @@ a {
 }
 
 .corner {
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
+  border-radius: 0 0 calc(1rem - 1px) calc(1rem - 1px);
   font-size: 0.7rem;
   padding: 3px;
   text-decoration: none !important;

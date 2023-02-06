@@ -1,5 +1,5 @@
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -37,7 +37,11 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatInputModule} from '@angular/material/input';
 import {MatNativeDateModule} from '@angular/material/core';
-import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {NgChartsConfiguration, NgChartsModule} from 'ng2-charts';
+import {ChartsModule} from '@progress/kendo-angular-charts';
+import {NgApexchartsModule} from 'ng-apexcharts';
+import {NgxSpinnerModule} from 'ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -76,10 +80,15 @@ import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
     MatDatepickerModule,
     MatInputModule,
     MatNativeDateModule,
-    MdbAccordionModule
+    MatExpansionModule,
+    ChartsModule,
+    NgChartsModule,
+    NgApexchartsModule,
+    NgxSpinnerModule,
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [HttpClientModule, TaskService, UserService, ProjectsService, AlertService, AuthService, DatePipe,
-    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
   ],
   bootstrap: [AppComponent]
 })

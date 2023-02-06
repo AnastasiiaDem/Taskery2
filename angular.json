@@ -34,10 +34,12 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/ngx-toastr/toastr.css",
               "node_modules/select2/dist/css/select2.min.css",
+              "node_modules/ngx-spinner/animations/ball-atom.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
-              "node_modules/select2/dist/js/select2.min.js"
+              "node_modules/select2/dist/js/select2.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ]
           },
           "configurations": {
@@ -103,10 +105,12 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/ngx-toastr/toastr.css",
               "node_modules/select2/dist/css/select2.min.css",
+              "node_modules/ngx-spinner/animations/ball-atom.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
-              "node_modules/select2/dist/js/select2.min.js"
+              "node_modules/select2/dist/js/select2.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ]
           }
         }

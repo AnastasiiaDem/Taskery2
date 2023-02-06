@@ -16,6 +16,20 @@ body {
   user-select: none;
  }
 
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #666666;
+  border-radius: 10px;
+}
+
 #loading-bar .bar {
   background: #d35400;
 }
@@ -155,6 +169,8 @@ ng-select2 {
 
 .modal-content {
   border: 0 !important;
+  border-radius: calc(1rem - 1px) !important;
+
 }
 
 .e-dlg-target.e-scroll-disabled {
