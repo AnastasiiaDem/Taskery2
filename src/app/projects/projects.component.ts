@@ -7,11 +7,12 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Select2OptionData} from 'ng-select2';
 import {TaskService} from '../shared/services/task.service';
 import * as $ from 'jquery';
-import {Subject, takeUntil} from 'rxjs';
+import {finalize, Subject, takeUntil} from 'rxjs';
 import {Role} from '../shared/models/user.model';
 import {UserService} from '../shared/services/user.service';
 import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {FocusMonitor} from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-projects',
@@ -61,10 +62,16 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
               private taskService: TaskService,
               private projectService: ProjectsService,
               private userService: UserService,
-              private elementRef: ElementRef) {
+              private elementRef: ElementRef,
+              private _focusMonitor: FocusMonitor,
+              private spinner: NgxSpinnerService) {
   }
   
   ngOnInit() {
+    this.spinner.show();
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1000);
     this.statusData = [
       {id: StatusEnum.todo, text: StatusEnum.todo},
       {id: StatusEnum.inProgress, text: StatusEnum.inProgress},
@@ -96,6 +103,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
   }
   
   ngAfterViewChecked() {
+    this._focusMonitor.stopMonitoring(document.getElementById('mat-btn'));
+  
     const dom: HTMLElement = this.elementRef.nativeElement;
     dom.querySelectorAll('.card-header').forEach(el => {
       if (el.innerHTML.includes(StatusEnum.todo)) {

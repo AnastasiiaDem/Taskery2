@@ -1,7 +1,15 @@
-<div class="box circle" (click)="addTask(content)">
-  <span class="tooltiptext">Add new task</span>
-  <p class="add">&#65291;</p>
-</div>
+<!--<div class="box circle" (click)="addTask(content)">-->
+<!--  <span class="tooltiptext">Add new task</span>-->
+<!--  <p class="add">&#65291;</p>-->
+<!--</div>-->
+
+
+    <div style="margin: 3rem auto 1rem; text-align: center;">
+      <span class="tooltiptext">Add new task</span>
+      <button (click)="addTask(content)" mat-mini-fab aria-label="Create new task" class="add-btn" id="mat-btn">
+        <mat-icon style="color: #666666 !important;">add</mat-icon>
+      </button>
+    </div>
 
 <div class="w3-animate-opacity" style="margin: 0 auto; width: 95%;">
   <button [ngClass]="onlyMyIssues ? 'my-tasks' : 'all-tasks'" (click)="updateKanban()">Only My Issues</button>
@@ -82,3 +90,4 @@
   </div>
 </ng-template>
 
+<ngx-spinner bdColor = "rgb(170 170 170 / 50%)" size = "default" color = "rgb(32 32 32)" type = "ball-atom" [fullScreen] = "true"></ngx-spinner>

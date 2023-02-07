@@ -163,7 +163,7 @@ a {
   width: 50px;
   height: 50px;
   text-align: center;
-  background-color: #F4F5F7;
+  background-color: #F4F5F7 !important;
   box-shadow: 6px 6px 17px rgb(163 177 198 / 68%), -9px -9px 16px rgb(234 234 234 / 84%);
   transition: all .2s ease-in-out;
 
@@ -353,4 +353,12 @@ a {
   font-weight: 600;
   right: 5%;
   font-family: "Source Sans Pro", sans-serif;
+}
+
+.add-btn {
+  background-color: #F4F5F7 !important;
+
+  &:hover {
+    background-color: rgb(237 237 237) !important;
+  }
 }

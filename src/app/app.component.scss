@@ -180,7 +180,7 @@ ngb-carousel .picsum-img-wrapper>img {
 
 .navbar-expand {
   padding-top: 1rem;
-  padding-bottom: 2rem;
+  padding-bottom: 1rem;
 
   .navbar-nav {
     width: 100%;
@@ -196,21 +196,26 @@ ngb-carousel .picsum-img-wrapper>img {
     }
 
     a {
-      color: #5E6C84;
+      color: rgb(30, 120, 253);
       font-size: 15px;
 
       &:hover, &:active {
-        color: rgba(123, 130, 143, 0.61);
+        color: rgba(30, 120, 253, 0.7);
       }
     }
 
     .project-list, .report {
       color: #0D6EFD;
       font-weight: 600;
-      border-bottom: 1.5px solid;
+      border: solid 2px #fff;
+      border-radius: 20px;
+      transition: 1s;
+      margin: 1px;
 
       &:hover {
-        color: #9BB1D6;
+        color: #0D6EFD;
+        border: solid 2px #1e78fd;
+        border-radius: 20px;
       }
     }
   }

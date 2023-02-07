@@ -1,6 +1,8 @@
-<div class="box circle" (click)="addProject(content, $event)" *ngIf="currentUser.role == 'ProjectManager'">
+<div style="margin: 3rem auto 2rem; text-align: center;" *ngIf="currentUser.role == 'ProjectManager'">
   <span class="tooltiptext">Add new project</span>
-  <p class="add">&#65291;</p>
+  <button (click)="addProject(content, $event)" mat-mini-fab aria-label="Create new task" class="add-btn" id="mat-btn">
+    <mat-icon style="color: #666666 !important;">add</mat-icon>
+  </button>
 </div>
 
 <img src="./assets/images/Scenes05.svg" alt="" class="scene5">
@@ -70,3 +72,5 @@
     </div>
   </div>
 </ng-template>
+
+<ngx-spinner bdColor = "rgb(170 170 170 / 50%)" size = "default" color = "rgb(32 32 32)" type = "ball-atom" [fullScreen] = "true"></ngx-spinner>

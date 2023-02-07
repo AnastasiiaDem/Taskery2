@@ -85,7 +85,7 @@ import {EmailService} from './shared/services/email.service';
     ChartsModule,
     NgChartsModule,
     NgApexchartsModule,
-    NgxSpinnerModule,
+    NgxSpinnerModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [HttpClientModule, TaskService, UserService, ProjectsService, AlertService, AuthService, DatePipe, EmailService,

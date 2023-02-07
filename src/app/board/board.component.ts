@@ -15,6 +15,8 @@ import {ProjectsService} from '../shared/services/project.service';
 import {ProjectModel} from '../shared/models/project.model';
 import {faCalendarDays} from '@fortawesome/free-solid-svg-icons';
 import {DatePipe} from '@angular/common';
+import {FocusMonitor} from '@angular/cdk/a11y';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'app-board',
@@ -62,6 +64,8 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               private route: ActivatedRoute,
               private projectsService: ProjectsService,
               private datepipe: DatePipe,
+              private _focusMonitor: FocusMonitor,
+              private spinner: NgxSpinnerService,
               private elementRef: ElementRef) {
     this.route.params
       .pipe(takeUntil(this.unsubscribe))
@@ -71,6 +75,10 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   ngOnInit() {
+    this.spinner.show();
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 1000);
     this.currentDate = this.datepipe.transform(new Date(), 'YYYY-MM-dd');
     
     this.calendarIcon = faCalendarDays;
@@ -93,6 +101,8 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   ngAfterViewChecked() {
+    this._focusMonitor.stopMonitoring(document.getElementById('mat-btn'));
+    
     const dom: HTMLElement = this.elementRef.nativeElement;
     dom.querySelectorAll('.e-item-count').forEach(el => {
       el.innerHTML = el.innerHTML.replace('items', 'tasks');
