@@ -10,6 +10,7 @@ import {Select2OptionData} from 'ng-select2';
 import {UserModel} from '../../shared/models/user.model';
 import {TokenStorageService} from '../../shared/services/token.service';
 import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
+import {EmailService} from '../../shared/services/email.service';
 
 
 @Component({

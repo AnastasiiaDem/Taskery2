@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {TaskService} from '../shared/services/task.service';
 import {finalize, Subject, takeUntil} from 'rxjs';
 import {ProjectModel} from '../shared/models/project.model';
@@ -10,6 +10,19 @@ import {ApexChart} from 'ng-apexcharts';
 import {ApexFill, ApexStroke} from 'ng-apexcharts/lib/model/apex-types';
 import {printDiv} from './print-div';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {EmailService} from '../shared/services/email.service';
+import {AlertService} from '../shared/services/alert.service';
+import {ToastrService} from 'ngx-toastr';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import {Role} from '../shared/models/user.model';
+import {UserService} from '../shared/services/user.service';
+
+declare var require: any;
+const htmlToPdfmake = require('html-to-pdfmake');
+
+(pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
+
 
 export type barChartOptions = {
   series: ApexAxisChartSeries;
@@ -38,20 +51,21 @@ export type pieChartOptions = {
   labels: any;
   colors: any[];
   stroke: ApexStroke;
+  dataLabels: ApexDataLabels;
 };
 
-export let chosenProject;
-
+export let project;
+export let colorValue;
+colorValue;
 
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.scss']
 })
-export class ReportComponent implements OnInit {
+export class ReportComponent implements OnInit, OnDestroy {
   
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
-  
   private readonly unsubscribe: Subject<void> = new Subject();
   public barChartOptions: Array<Partial<barChartOptions>> = [];
   public pieChartOptions: Array<Partial<pieChartOptions>> = [];
@@ -62,16 +76,46 @@ export class ReportComponent implements OnInit {
   pieData = [];
   legendSettings;
   exportStatus;
-  
+  loading = false;
+  currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: Role; } = {
+    _id: 0,
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    role: Role.ProjectManager
+  };
   
   constructor(public taskService: TaskService,
               public projectService: ProjectsService,
+              private emailService: EmailService,
+              private alertService: AlertService,
+              private toastr: ToastrService,
+              private elementRef: ElementRef,
+              private userService: UserService,
               private spinner: NgxSpinnerService) {
   }
   
   ngOnInit(): void {
     this.spinner.show();
+    this.getCurrentUser();
     this.taskAndProjectData();
+  }
+  
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+  }
+  
+  getCurrentUser() {
+    this.userService.getCurrentUser()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(user => {
+          this.currentUser = user;
+        },
+        err => {
+          console.log(err);
+        });
   }
   
   taskAndProjectData() {
@@ -80,8 +124,7 @@ export class ReportComponent implements OnInit {
         finalize(() => {
           setTimeout(() => {
             this.spinner.hide();
-          },
-            );
+          }, 700);
         }),
         takeUntil(this.unsubscribe)
       )
@@ -101,7 +144,9 @@ export class ReportComponent implements OnInit {
             .pipe(takeUntil(this.unsubscribe))
             .subscribe(res => {
                 let projectsList = [];
-                res.projects.forEach((p, i) => {
+                res.projects.filter(p => {
+                  return (p.userId == this.currentUser._id || p.assignedUsers.find(u => u.id == this.currentUser._id));
+                }).forEach((p, i) => {
                   projectsList.push({
                     id: p._id,
                     userId: p.userId,
@@ -129,13 +174,27 @@ export class ReportComponent implements OnInit {
       this.pieChartOptions.push({
         series: [],
         colors: [
-          'rgba(57,196,254,0.5)',
-          'rgba(253,148,119,0.6)',
-          'rgba(101,85,254,0.5)',
-          'rgba(58,223,104,0.5)'
+          'rgba(57,196,254,0.4)',
+          'rgba(253,148,119,0.4)',
+          'rgba(101,85,254,0.4)',
+          'rgba(58,223,104,0.4)'
         ],
         stroke: {
           show: false
+        },
+        dataLabels: {
+          enabled: true,
+          style: {
+            colors: [
+              'rgb(57,196,254)',
+              'rgb(253,148,119)',
+              'rgb(101,85,254)',
+              'rgb(58,223,104)'
+            ]
+          },
+          dropShadow: {
+            enabled: false,
+          }
         },
         chart: {
           width: '100%',
@@ -166,7 +225,7 @@ export class ReportComponent implements OnInit {
         labels: ['To Do', 'In Progress', 'On Review', 'Done'],
         title: {
           align: 'left',
-          text: 'Distribution Of All Tasks By Status',
+          text: 'Task Status %',
           offsetY: -5,
           style: {
             fontSize: '20px',
@@ -183,10 +242,10 @@ export class ReportComponent implements OnInit {
       this.barChartOptions.push({
         series: [],
         colors: [
-          'rgba(57,196,254,0.5)',
-          'rgba(253,148,119,0.6)',
-          'rgba(101,85,254,0.5)',
-          'rgba(58,223,104,0.5)'
+          'rgba(57,196,254,0.4)',
+          'rgba(253,148,119,0.4)',
+          'rgba(101,85,254,0.4)',
+          'rgba(58,223,104,0.4)'
         ],
         grid: {
           show: false,
@@ -198,6 +257,20 @@ export class ReportComponent implements OnInit {
           padding: {
             top: 3,
             bottom: 45,
+          }
+        },
+        dataLabels: {
+          enabled: true,
+          style: {
+            colors: [
+              'rgb(57,196,254)',
+              'rgb(253,148,119)',
+              'rgb(101,85,254)',
+              'rgb(58,223,104)'
+            ]
+          },
+          dropShadow: {
+            enabled: false,
           }
         },
         chart: {
@@ -240,7 +313,7 @@ export class ReportComponent implements OnInit {
           colors: ['#fff']
         },
         title: {
-          text: 'Distribution Of Tasks Of Each Employee According To Status',
+          text: 'Employees Task Status %',
           offsetY: 16,
           style: {
             fontSize: '20px',
@@ -346,8 +419,21 @@ export class ReportComponent implements OnInit {
     });
   }
   
-  export(name) {
-    chosenProject = name;
+  export(p) {
+    project = p;
+    if (project.status === StatusEnum.todo) {
+      colorValue = 'rgb(57 197 255)';
+    }
+    if (project.status === StatusEnum.inProgress) {
+      colorValue = 'rgb(255 149 119)';
+    }
+    if (project.status === StatusEnum.onReview) {
+      colorValue = 'rgb(101 85 255)';
+    }
+    if (project.status === StatusEnum.done) {
+      colorValue = 'rgb(58 224 104)';
+    }
+    
     this.barChartOptions.forEach(bar => {
       bar.chart.toolbar.show = false;
       bar.colors = [
@@ -358,6 +444,7 @@ export class ReportComponent implements OnInit {
       ];
       bar.title.style.fontSize = '14px';
     });
+    
     this.pieChartOptions.forEach(pie => {
       pie.chart.toolbar.show = false;
       pie.colors = [
@@ -368,13 +455,15 @@ export class ReportComponent implements OnInit {
       ];
       pie.title.style.fontSize = '14px';
     });
+    
     this.chart?.chart.update();
     
     setTimeout(() => {
       this.exportStatus = true;
     }, 1900);
+    
     setTimeout(() => {
-      printDiv('printBody');
+      printDiv(`printBody_${p.id}`);
       this.barChartOptions.forEach(bar => {
         bar.chart.toolbar.show = true;
         bar.colors = [
@@ -400,8 +489,16 @@ export class ReportComponent implements OnInit {
     }, 2000);
   }
   
-  email(name) {
-    // chosenProject = name;
-    // window.print();
+  email(p) {
+    // this.emailService.sendEmail()
+    //   .pipe(takeUntil(this.unsubscribe))
+    //   .subscribe(response => {
+    //       console.log(response.message);
+    //       this.toastr.success(response.message);
+    //     },
+    //     error => {
+    //       console.log(error);
+    //       this.toastr.error(error);
+    //     });
   }
 }

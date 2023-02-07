@@ -42,6 +42,7 @@ import {NgChartsConfiguration, NgChartsModule} from 'ng2-charts';
 import {ChartsModule} from '@progress/kendo-angular-charts';
 import {NgApexchartsModule} from 'ng-apexcharts';
 import {NgxSpinnerModule} from 'ngx-spinner';
+import {EmailService} from './shared/services/email.service';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,7 @@ import {NgxSpinnerModule} from 'ngx-spinner';
     NgxSpinnerModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [HttpClientModule, TaskService, UserService, ProjectsService, AlertService, AuthService, DatePipe,
+  providers: [HttpClientModule, TaskService, UserService, ProjectsService, AlertService, AuthService, DatePipe, EmailService,
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
   ],
   bootstrap: [AppComponent]

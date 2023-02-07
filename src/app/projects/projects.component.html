@@ -1,10 +1,10 @@
-<div class="box circle" (click)="addProject(content, $event)">
+<div class="box circle" (click)="addProject(content, $event)" *ngIf="currentUser.role == 'ProjectManager'">
   <span class="tooltiptext">Add new project</span>
   <p class="add">&#65291;</p>
 </div>
 
 <img src="./assets/images/Scenes05.svg" alt="" class="scene5">
-<div class="projects-wrapper w3-animate-opacity" *ngIf="!!projects.length">
+<div class="projects-wrapper w3-animate-opacity" *ngIf="!!projects.length" [style]="currentUser.role == 'ProjectManager' ? '' : 'margin-top: 8rem;'">
   <div *ngFor="let  project of  projects; let idx = index">
     <div class="container" (dblclick)="this.currentUser.role == 'ProjectManager' ? updateProject(content, project) : ''">
       <div class="card" [ngStyle]="{'margin': idx < 1 ? '0' : '0 auto', 'width': idx >= 1 ? '80%' : '60%'}">

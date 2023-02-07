@@ -1,9 +1,9 @@
-import express from "express";
-import createUser from "../controllers/registerController";
-import loginUser from "../controllers/loginController";
-import refreshToken from "../controllers/refreshTokenController";
+import express from 'express';
+import createUser from '../controllers/registerController';
+import loginUser from '../controllers/loginController';
+import refreshToken from '../controllers/refreshTokenController';
 import {getAllUsers, getCurrentUser, updateUser} from '../controllers/userController';
-import logoutUser from "../controllers/logoutController";
+import logoutUser from '../controllers/logoutController';
 import {
   createProject,
   deleteProject,
@@ -12,17 +12,20 @@ import {
   updateProject
 } from '../controllers/projectController';
 import {createTask, deleteTask, getTasks, updateTask} from '../controllers/taskController';
+import {sendEmail} from '../controllers/emailController';
 
-const routes = require("express").Router();
+require('dotenv').config();
 
-routes.get("/", (req: express.Request, res: express.Response) => {
-  res.send("Test endpoint");
+const routes = require('express').Router();
+
+routes.get('/', (req: express.Request, res: express.Response) => {
+  res.send('Test endpoint');
 });
 
-routes.post("/register", createUser);
-routes.post("/login", loginUser);
-routes.get("/logout", logoutUser);
-routes.get("/refresh", refreshToken);
+routes.post('/register', createUser);
+routes.post('/login', loginUser);
+routes.get('/logout', logoutUser);
+routes.get('/refresh', refreshToken);
 
 routes.get('/projects', getProjects);
 routes.get('/project/current/:id', getCurrentProject);
@@ -35,9 +38,12 @@ routes.post('/task/create', createTask);
 routes.put('/task/update/:id', updateTask);
 routes.delete('/task/delete/:id', deleteTask);
 
-routes.get("/users", getAllUsers);
-routes.get("/user/current", getCurrentUser);
-routes.put("/user/update", updateUser);
+routes.get('/users', getAllUsers);
+routes.get('/user/current', getCurrentUser);
+routes.put('/user/update', updateUser);
+
+routes.get('/email', sendEmail);
+
 module.exports = routes;
 
 

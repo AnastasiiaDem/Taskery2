@@ -1,4 +1,4 @@
-import {chosenProject} from './report.component';
+import {colorValue, project} from './report.component';
 
 export function printDiv(divId: string) {
   const css = `<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
@@ -6,13 +6,13 @@ export function printDiv(divId: string) {
   
   const printContents = document.getElementById(divId).innerHTML;
   const pageContent = `
-      <!DOCTYPE html><html lang="">
+      <!DOCTYPE html>
+      <html lang="" style="margin: 20px">
       <head>
       <style>
         *, html {
           font-family: 'Source Sans Pro', sans-serif;
         }
-        
         .body-content {
           display: flex;
           margin: 20px 30px 0 20px;
@@ -41,24 +41,48 @@ export function printDiv(divId: string) {
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      margin: 20px 20px 0;
       ">
-      <h1 style="
-      font-weight: 700;
+      <div style="
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
       width: 100%;
-      text-align: left;
-      padding-bottom: 10px;
-      margin: 20px 0 10px 50px;
       ">
-      Project Status Report
-      </h1>
+        <h1 style="
+              font-weight: 700;
+              width: 100%;
+              text-align: left;
+              padding-bottom: 10px;
+              color: #373d3f;
+              ">
+        <hr style="
+        width: 100px;
+        height: 3px;
+        margin: 0 0 -5px 0;
+        background-color: ${colorValue};
+        border: 0 none;
+        border-radius: 10px;
+        "/>
+          PROJECT <p style="color: ${colorValue}; display: inline-block; padding: 0; margin: 0;">DASHBOARD</p>
+        </h1>
+      <p style="
+            width: 100px;
+            color: ${colorValue};
+            font-weight: 700;
+        ">
+          ${project.status}
+        </p>
+      </div>
       <h2 style="
-      font-weight: 700;
-      width: 100%;
-      text-align: center;
-      color: #0D6EFD;
+        font-weight: 900;
+        width: 100%;
+        text-align: center;
+        color: #373d3f;
       ">
-      ${chosenProject}
-         <p style="font-weight: 500; font-size: 12px; color: #C2C2C2; font-style: italic;">
+      ${project.projectName}
+         <p style="font-weight: 500; font-size: 13px; color: #C2C2C2; font-style: italic; margin: 0; padding: 0;">
             <script>
                   let mydate = new Date();
                   let day = mydate.getDay();
@@ -79,6 +103,7 @@ export function printDiv(divId: string) {
       justify-content: center;
       align-items: center;
       height: 100%">${printContents}</div>
+      </body>
       </html>`;
   
   let popupWindow: Window;
