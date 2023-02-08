@@ -124,7 +124,7 @@ export class ReportComponent implements OnInit, OnDestroy {
         finalize(() => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 700);
+          }, 500);
         }),
         takeUntil(this.unsubscribe)
       )

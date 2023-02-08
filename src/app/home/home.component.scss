@@ -17,14 +17,16 @@
       //font-weight: 700 !important;
       font-weight: 900 !important;
       font-family: 'Inter', serif;
-      font-size: 95px;
-      //font-size: 85px;
+      //font-size: 95px;
+      font-size: 85px;
       line-height: 90px;
+      //display: inline;
+      margin: 0;
     }
 
     .body-text {
-      width: 52%;
-      //width: 56%;
+      //width: 52%;
+      width: 56%;
       font-size: 14px;
       color: rgba(55, 61, 63, 0.8);
       font-weight: 500;
@@ -39,8 +41,28 @@
         font-family: 'Libre Baskerville', serif;
         font-style: italic;
         font-size: 15px;
+        //color: rgb(76 126 253);
       }
     }
+  }
+
+  //.task-span {
+  //  //width: 405px;
+  //  position: absolute;
+  //  color: rgb(76 126 253);
+  //  font-weight: 900 !important;
+  //  font-family: 'Inter', serif;
+  //  transform: translate(-21px, -57px);
+  //  font-size: 15px;
+  //  margin: 0;
+  //  line-height: 20px;
+  //  //top: 42px;
+  //}
+
+  .task-span {
+    position: absolute;
+    width: 405px;
+    color: rgb(76 126 253);
   }
 
   .second-head-text {
@@ -76,8 +98,8 @@
   }
 
   .image2 {
-    left: 23%;
-    //left: 18%;
+    //left: 23%;
+    left: 18%;
     top: 52%;
   }
 }

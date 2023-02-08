@@ -71,7 +71,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
     this.spinner.show();
       setTimeout(() => {
         this.spinner.hide();
-      }, 1000);
+      }, 500);
     this.statusData = [
       {id: StatusEnum.todo, text: StatusEnum.todo},
       {id: StatusEnum.inProgress, text: StatusEnum.inProgress},

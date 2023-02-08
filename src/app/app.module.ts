@@ -1,9 +1,9 @@
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { LoginComponent } from './auth/login/login.component';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {LoginComponent} from './auth/login/login.component';
 import {RegisterComponent} from './auth/register/register.component';
 import {BoardComponent} from './board/board.component';
 import {HomeComponent} from './home/home.component';
@@ -24,13 +24,13 @@ import {AccumulationChartModule} from '@syncfusion/ej2-angular-charts';
 import {AccordionModule} from '@syncfusion/ej2-angular-navigations';
 import {NgSelect2Module} from 'ng-select2';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import { ToastrModule } from 'ngx-toastr';
+import {ToastrModule} from 'ngx-toastr';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {MatButtonModule} from '@angular/material/button';
 import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 import {HeaderComponent} from './header/header.component';
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {AccountComponent} from './account/account.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
@@ -38,7 +38,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatInputModule} from '@angular/material/input';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatExpansionModule} from '@angular/material/expansion';
-import {NgChartsConfiguration, NgChartsModule} from 'ng2-charts';
+import {NgChartsModule} from 'ng2-charts';
 import {ChartsModule} from '@progress/kendo-angular-charts';
 import {NgApexchartsModule} from 'ng-apexcharts';
 import {NgxSpinnerModule} from 'ngx-spinner';
@@ -85,12 +85,14 @@ import {EmailService} from './shared/services/email.service';
     ChartsModule,
     NgChartsModule,
     NgApexchartsModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [HttpClientModule, TaskService, UserService, ProjectsService, AlertService, AuthService, DatePipe, EmailService,
+  providers: [HttpClientModule, TaskService, UserService, ProjectsService,
+    AlertService, AuthService, DatePipe, EmailService,
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

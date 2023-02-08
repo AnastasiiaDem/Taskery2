@@ -62,3 +62,10 @@ mat-error {
     cursor: pointer;
   }
 }
+
+.page-holder {
+  height: 401px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,5 +1,5 @@
 <div class="w3-animate-opacity">
-  <mat-accordion *ngIf="isProjects">
+  <mat-accordion *ngIf="isProjects == true">
     <mat-expansion-panel *ngFor="let project of projects; let i = index">
       <mat-expansion-panel-header>
         <mat-panel-title>
@@ -56,7 +56,7 @@
     </mat-expansion-panel>
   </mat-accordion>
   
-  <div class="no-content" *ngIf="!isProjects">
+  <div class="no-content" *ngIf="isProjects == false">
     <p>There is no data to display</p>
     <div class="no-data-image">
       <img src="./assets/images/Elements17.svg" alt="">

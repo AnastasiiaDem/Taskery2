@@ -17,7 +17,6 @@ import {faCheck, faEye, faEyeSlash, faPencil, faXmark} from '@fortawesome/free-s
 })
 export class AccountComponent implements OnInit, OnDestroy {
   private readonly unsubscribe: Subject<void> = new Subject();
-  private subscription: Subscription;
   currentUser: UserModel;
   messageText: string;
   message: any;
@@ -62,7 +61,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.xIcon = faXmark;
     
     this.getCurrentUser();
-    this.getAlert();
     this.userSettingsForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -74,26 +72,6 @@ export class AccountComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
-    this.subscription.unsubscribe();
-  }
-  
-  getAlert() {
-    this.subscription = this.alertService.getAlert()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(message => {
-        switch (message && message.type) {
-          case 'success':
-            message.cssClass = 'alert alert-success';
-            this.toastr.success(message.text);
-            break;
-          case 'error':
-            message.cssClass = 'alert alert-danger';
-            this.messageText = typeof (message.text) == 'string' ? message.text : message.text.error.message;
-            this.toastr.error(this.messageText);
-            break;
-        }
-        this.message = message;
-      });
   }
   
   getCurrentUser() {

@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subject, Subscription, takeUntil} from 'rxjs';
+import {Subject, takeUntil} from 'rxjs';
 import {AlertService} from '../shared/services/alert.service';
 import {ToastrService} from 'ngx-toastr';
 import {Role, UserModel} from '../shared/models/user.model';
@@ -12,14 +12,14 @@ import {FormBuilder} from '@angular/forms';
 @Component({
   selector: 'header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss', '../app.component.scss']
+  styleUrls: ['./header.component.scss', '../app.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   private readonly unsubscribe: Subject<void> = new Subject();
-  private subscription: Subscription;
   currentUser: UserModel;
   messageText: string;
   message: any;
+  url;
   currentUserData: UserModel = {
     id: 0,
     firstName: '',
@@ -43,22 +43,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   
   ngOnInit() {
     this.getCurrentUser();
-    this.subscription = this.alertService.getAlert()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(message => {
-        switch (message && message.type) {
-          case 'success':
-            message.cssClass = 'alert alert-success';
-            this.toastr.success(message.text);
-            break;
-          case 'error':
-            message.cssClass = 'alert alert-danger';
-            this.messageText = typeof (message.text) == 'string' ? message.text : message.text.error.message;
-            this.toastr.error(this.messageText);
-            break;
-        }
-        this.message = message;
-      });
   }
   
   getCurrentUser() {
@@ -66,6 +50,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(user => {
           this.currentUserData = user;
+          this.url = this.router.url;
         },
         err => {
           console.log(err);
@@ -81,7 +66,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
-    this.subscription.unsubscribe();
   }
   
   userSettings(content) {
@@ -89,13 +73,52 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
   
   goToUserSettings() {
-    this.router.navigate(['/account']);
-    setTimeout(() => {
-      document.getElementById('ngbDropdownMenu').classList.remove('show');
-    }, 500);
+    if (this.url != '/') {
+      this.url = '/account';
+      this.router.navigate(['/account']);
+    } else {
+      this.url = '/account';
+      setTimeout(() => {
+        this.router.navigate(['/account']);
+        setTimeout(() => {
+          document.getElementById('ngbDropdownMenu').classList.remove('show');
+        }, 500);
+      }, 1000);
+    }
   }
   
   getUpdatedData() {
     this.getCurrentUser();
+  }
+  
+  home() {
+    this.router.navigate(['/']);
+    setTimeout(() => {
+      this.url = '/';
+    }, 100);
+  }
+  
+  projectList() {
+    if (this.url != '/') {
+      this.url = '/projects';
+      this.router.navigate(['/projects']);
+    } else {
+      this.url = '/projects';
+      setTimeout(() => {
+        this.router.navigate(['/projects']);
+      }, 1000);
+    }
+  }
+  
+  report() {
+    if (this.url != '/') {
+      this.url = '/report';
+      this.router.navigate(['/report']);
+    } else {
+      this.url = '/report';
+      setTimeout(() => {
+        this.router.navigate(['/report']);
+      }, 1000);
+    }
   }
 }
