@@ -13,15 +13,9 @@ import {NgxSpinnerService} from 'ngx-spinner';
 import {EmailService} from '../shared/services/email.service';
 import {AlertService} from '../shared/services/alert.service';
 import {ToastrService} from 'ngx-toastr';
-import * as pdfMake from 'pdfmake/build/pdfmake';
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import {Role} from '../shared/models/user.model';
 import {UserService} from '../shared/services/user.service';
-
-declare var require: any;
-const htmlToPdfmake = require('html-to-pdfmake');
-
-(pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
+import {DatePipe} from '@angular/common';
 
 
 export type barChartOptions = {
@@ -76,6 +70,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   pieData = [];
   legendSettings;
   exportStatus;
+  currentDate;
   loading = false;
   currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: Role; } = {
     _id: 0,
@@ -91,6 +86,7 @@ export class ReportComponent implements OnInit, OnDestroy {
               private emailService: EmailService,
               private alertService: AlertService,
               private toastr: ToastrService,
+              private datepipe: DatePipe,
               private elementRef: ElementRef,
               private userService: UserService,
               private spinner: NgxSpinnerService) {
@@ -105,6 +101,30 @@ export class ReportComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe.next();
     this.unsubscribe.complete();
+  }
+  
+  tasksNumber(p) {
+    return this.tasks.filter(t => t.projectId == p.id).length;
+  }
+  
+  overdueTasksNumber(p) {
+    this.currentDate = this.datepipe.transform(new Date(), 'YYYY-MM-dd');
+    return this.tasks.filter(t => (t.projectId == p.id && this.datepipe.transform(t.deadline, 'YYYY-MM-dd') < this.currentDate && t.status != StatusEnum.done)).length;
+  }
+  
+  statusEllipse(p) {
+    if (p.status == StatusEnum.todo) {
+      return 'Ellipse6';
+    }
+    if (p.status == StatusEnum.inProgress) {
+      return 'Ellipse5';
+    }
+    if (p.status == StatusEnum.onReview) {
+      return 'Ellipse3';
+    }
+    if (p.status == StatusEnum.done) {
+      return 'Ellipse4';
+    }
   }
   
   getCurrentUser() {
@@ -124,7 +144,7 @@ export class ReportComponent implements OnInit, OnDestroy {
         finalize(() => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 500);
+          }, 1000);
         }),
         takeUntil(this.unsubscribe)
       )
@@ -153,7 +173,8 @@ export class ReportComponent implements OnInit, OnDestroy {
                     projectName: p.projectName,
                     description: p.description,
                     status: p.status,
-                    assignedUsers: p.assignedUsers
+                    assignedUsers: p.assignedUsers,
+                    createdAt: p.createdAt
                   });
                 });
                 this.projects = projectsList.filter(project => this.tasks.find(task => task.projectId == project.id));
@@ -198,6 +219,7 @@ export class ReportComponent implements OnInit, OnDestroy {
         },
         chart: {
           width: '100%',
+          height: '300px',
           type: 'donut',
           toolbar: {
             show: true,
@@ -277,6 +299,7 @@ export class ReportComponent implements OnInit, OnDestroy {
           type: 'bar',
           stacked: true,
           width: '100%',
+          height: '350px',
           stackType: '100%',
           offsetY: -21,
           toolbar: {
@@ -501,4 +524,5 @@ export class ReportComponent implements OnInit, OnDestroy {
     //       this.toastr.error(error);
     //     });
   }
+  
 }

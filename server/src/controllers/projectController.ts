@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 import Task from '../model/TaskModel';
 
 export const createProject = async (req: express.Request, res: express.Response) => {
-  const {projectName, description, status, assignedUsers} = req.body;
+  const {projectName, description, status, assignedUsers, createdAt} = req.body;
   
   const cookies = req.cookies;
   
@@ -18,7 +18,7 @@ export const createProject = async (req: express.Request, res: express.Response)
   
   if (!foundUser) return res.status(403).json({error: 'error user not found'});
   
-  if (!projectName || !description || !status)
+  if (!projectName || !description || !status || !createdAt)
     return res.status(400).json({message: `Properties are required`});
   
   const id = new mongoose.Types.ObjectId();
@@ -29,7 +29,8 @@ export const createProject = async (req: express.Request, res: express.Response)
     projectName: projectName,
     description: description,
     status: status,
-    assignedUsers: assignedUsers
+    assignedUsers: assignedUsers,
+    createdAt: createdAt
   });
   
   newProject.save((err, data) => {
@@ -45,7 +46,7 @@ export const updateProject = async (req: express.Request, res: express.Response)
   
   !id && res.status(400).json({error: 'no id'});
   
-  const {projectName, description, status, assignedUsers} = req.body;
+  const {projectName, description, status, assignedUsers, createdAt} = req.body;
   
   const cookies = req.cookies;
   if (!cookies?.token) return res.status(401).json({error: 'error no cookies'});
@@ -56,7 +57,7 @@ export const updateProject = async (req: express.Request, res: express.Response)
   
   if (!foundUser) return res.status(403).json({error: 'error user not found'});
   
-  if (!projectName || !description || !status)
+  if (!projectName || !description || !status || !createdAt)
     return res.status(400).json({message: `Properties are required`});
   
   const update = {
@@ -64,6 +65,7 @@ export const updateProject = async (req: express.Request, res: express.Response)
     ...(description ? {description: description} : {}),
     ...(status ? {status: status} : {}),
     ...(assignedUsers ? {assignedUsers: assignedUsers} : {}),
+    ...(createdAt ? {createdAt: createdAt} : {}),
   };
   
   try {

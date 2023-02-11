@@ -1,54 +1,88 @@
-<div class="w3-animate-opacity">
+<div class="w3-animate-opacity"
+     [ngStyle]="{'margin': isProjects == true ? '3rem auto 1rem auto' : '0', 'width': isProjects == true ? '95%' : '100%'}">
   <mat-accordion *ngIf="isProjects == true">
     <mat-expansion-panel *ngFor="let project of projects; let i = index">
       <mat-expansion-panel-header>
         <mat-panel-title>
           <div style="font-weight: 800;" class="title">{{project.projectName}}</div>
         </mat-panel-title>
-        <mat-panel-description>
-          <p id="status" style="font-size: 12px; text-align: right; width: 100%; margin: 0 30px 0 0;">
-            <b style="font-size: 10px;">{{project.status}}</b>
-          </p>
-        </mat-panel-description>
       </mat-expansion-panel-header>
       <div class="panel-body">
         <button class="btn btn-outline-primary" type="button" (click)="export(project)">print</button>
-<!--        <button class="btn btn-outline-primary" style="margin-left: 10px" type="button"-->
-<!--                (click)="email(project)">email-->
-<!--        </button>-->
-        <div class="body-content" [id]="'printBody_' + project.id">
-          <div class="chart">
-            <div class="chart-wrapper">
-              <apx-chart
-                  [series]="pieChartOptions[i].series"
-                  [chart]="pieChartOptions[i].chart"
-                  [labels]="pieChartOptions[i].labels"
-                  [title]="pieChartOptions[i].title"
-                  [responsive]="pieChartOptions[i].responsive"
-                  [legend]="pieChartOptions[i].legend"
-                  [colors]="pieChartOptions[i].colors"
-                  [stroke]="pieChartOptions[i].stroke"
-                  [dataLabels]="pieChartOptions[i].dataLabels"
-              ></apx-chart>
+        <!--        <button class="btn btn-outline-primary" style="margin-left: 10px" type="button"-->
+        <!--                (click)="email(project)">email-->
+        <!--        </button>-->
+        <div [id]="'printBody_' + project.id">
+          <div class="body-content" style="height: 150px; margin-top: 20px;">
+            <div class="block1">
+              <div class="info-wrapper">
+                <p>Tasks</p>
+                <p class="info-data">{{tasksNumber(project)}}</p>
+              </div>
+              <img src="./assets/images/Ellipse.png" alt="">
+            </div>
+            <div class="block2">
+              <div class="info-wrapper">
+                <p>Overdue Tasks</p>
+                <p class="info-data">{{overdueTasksNumber(project)}}</p>
+              </div>
+              <img src="./assets/images/Ellipse2.png" alt="">
+            </div>
+            <div class="block3">
+              <!--              [ngStyle]="{'width': (project.status == 'Done' || project.status == 'To Do') ? '25%' : '40%'}"-->
+              <div class="info-wrapper">
+                <p>Status</p>
+                <p class="info-data">{{project.status}}</p>
+              </div>
+              <img src='{{ "./assets/images/" + statusEllipse(project) + ".png" }}' alt="">
+            </div>
+            <div class="block4">
+              <div class="date-block">
+                <div class="info-wrapper date-block-wrapper" style="margin-bottom: 3px;">
+                  <p>Project Start</p>
+                  <p class="date">{{project.createdAt | date: 'short'}}</p>
+                </div>
+                <div class="info-wrapper date-block-wrapper" style="margin-top: 3px;">
+                  <p>Current Date</p>
+                  <p class="date">{{currentDate | date: 'short'}}</p>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="chart2">
-            <div class="chart-wrapper">
-              <apx-chart
-                  [series]="barChartOptions[i].series"
-                  [chart]="barChartOptions[i].chart"
-                  [dataLabels]="barChartOptions[i].dataLabels"
-                  [plotOptions]="barChartOptions[i].plotOptions"
-                  [xaxis]="barChartOptions[i].xaxis"
-                  [stroke]="barChartOptions[i].stroke"
-                  [fill]="barChartOptions[i].fill"
-                  [yaxis]="barChartOptions[i].yaxis"
-                  [title]="barChartOptions[i].title"
-                  [tooltip]="barChartOptions[i].tooltip"
-                  [colors]="barChartOptions[i].colors"
-                  [grid]="barChartOptions[i].grid"
-                  [legend]="barChartOptions[i].legend"
-              ></apx-chart>
+          <div class="body-content">
+            <div class="chart">
+              <div class="chart-wrapper">
+                <apx-chart
+                    [series]="pieChartOptions[i].series"
+                    [chart]="pieChartOptions[i].chart"
+                    [labels]="pieChartOptions[i].labels"
+                    [title]="pieChartOptions[i].title"
+                    [responsive]="pieChartOptions[i].responsive"
+                    [legend]="pieChartOptions[i].legend"
+                    [colors]="pieChartOptions[i].colors"
+                    [stroke]="pieChartOptions[i].stroke"
+                    [dataLabels]="pieChartOptions[i].dataLabels"
+                ></apx-chart>
+              </div>
+            </div>
+            <div class="chart2">
+              <div class="chart-wrapper">
+                <apx-chart
+                    [series]="barChartOptions[i].series"
+                    [chart]="barChartOptions[i].chart"
+                    [dataLabels]="barChartOptions[i].dataLabels"
+                    [plotOptions]="barChartOptions[i].plotOptions"
+                    [xaxis]="barChartOptions[i].xaxis"
+                    [stroke]="barChartOptions[i].stroke"
+                    [fill]="barChartOptions[i].fill"
+                    [yaxis]="barChartOptions[i].yaxis"
+                    [title]="barChartOptions[i].title"
+                    [tooltip]="barChartOptions[i].tooltip"
+                    [colors]="barChartOptions[i].colors"
+                    [grid]="barChartOptions[i].grid"
+                    [legend]="barChartOptions[i].legend"
+                ></apx-chart>
+              </div>
             </div>
           </div>
         </div>
@@ -57,11 +91,11 @@
   </mat-accordion>
   
   <div class="no-content" *ngIf="isProjects == false">
-    <p>There is no data to display</p>
-    <div class="no-data-image">
-      <img src="./assets/images/Elements17.svg" alt="">
-    </div>
+    <p>There is no data to display, you don't have any project😢</p>
+    <!--    <div class="no-data-image">-->
+    <!--      <img src="./assets/images/Elements17.svg" alt="">-->
+    <!--    </div>-->
   </div>
 </div>
 
-<ngx-spinner bdColor = "rgb(170 170 170 / 50%)" size = "default" color = "rgb(32 32 32)" type = "ball-atom" [fullScreen] = "true"></ngx-spinner>
+<ngx-spinner bdColor="rgb(170 170 170 / 50%)" size="default" color="rgb(32 32 32)" type="ball-atom"></ngx-spinner>

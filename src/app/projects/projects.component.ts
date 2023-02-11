@@ -13,6 +13,7 @@ import {UserService} from '../shared/services/user.service';
 import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {FocusMonitor} from '@angular/cdk/a11y';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-projects',
@@ -21,12 +22,13 @@ import {FocusMonitor} from '@angular/cdk/a11y';
 })
 export class ProjectsComponent implements OnInit, AfterViewChecked {
   projects: ProjectModel[] = [];
-  currentProject: { description: string; projectName: string; status: StatusEnum; assignedUsers: [] };
+  currentProject: { description: string; projectName: string; status: StatusEnum; assignedUsers: [], createdAt: string};
   projectForm: FormGroup;
   statusData: Array<Select2OptionData> = [];
   tasksData: Array<Select2OptionData> = [];
   usersData: Array<{ id: string; text: string; }> = [];
-  addTaskFlag: boolean;
+  addProjectFlag: boolean;
+  currentDate;
   private readonly unsubscribe: Subject<void> = new Subject();
   public dropdownSettings: IDropdownSettings = {};
   currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: Role; } = {
@@ -63,15 +65,17 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
               private projectService: ProjectsService,
               private userService: UserService,
               private elementRef: ElementRef,
+              private datepipe: DatePipe,
               private _focusMonitor: FocusMonitor,
               private spinner: NgxSpinnerService) {
   }
   
   ngOnInit() {
+    this.currentDate = this.datepipe.transform(new Date(), 'YYYY-MM-dd');
     this.spinner.show();
       setTimeout(() => {
         this.spinner.hide();
-      }, 500);
+      }, 1000);
     this.statusData = [
       {id: StatusEnum.todo, text: StatusEnum.todo},
       {id: StatusEnum.inProgress, text: StatusEnum.inProgress},
@@ -87,7 +91,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
       projectName: ['', Validators.required],
       description: [''],
       status: ['', Validators.required],
-      assignedUsers: [[], Validators.required]
+      assignedUsers: [[], Validators.required],
+      createdAt: [this.currentDate, Validators.required],
     });
     
     this.dropdownSettings = {
@@ -141,7 +146,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
               projectName: project.projectName,
               description: project.description,
               status: project.status,
-              assignedUsers: project.assignedUsers
+              assignedUsers: project.assignedUsers,
+              createdAt: project.createdAt
             });
           });
           
@@ -150,7 +156,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
             projectName: '',
             description: '',
             status: StatusEnum.todo,
-            assignedUsers: []
+            assignedUsers: [],
+            createdAt: this.currentDate
           };
         },
         err => {
@@ -173,7 +180,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
             projectName: '',
             description: '',
             status: StatusEnum.todo,
-            assignedUsers: []
+            assignedUsers: [],
+            createdAt: this.currentDate
           };
         },
         err => {
@@ -218,10 +226,11 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
       projectName: '',
       description: '',
       status: StatusEnum.todo,
-      assignedUsers: []
+      assignedUsers: [],
+      createdAt: this.currentDate
     };
     this.projectForm.setValue(currentProject);
-    this.addTaskFlag = true;
+    this.addProjectFlag = true;
     this.modalService.open(content, {centered: true});
   }
   
@@ -236,7 +245,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
   }
   
   onSubmit(modal) {
-    if (!this.addTaskFlag) {
+    if (!this.addProjectFlag) {
       this.projectService.updateProject(this.projectForm.value)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(data => {
@@ -256,7 +265,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
               description: p.description,
               projectName: p.projectName,
               status: p.status,
-              assignedUsers: p.assignedUsers
+              assignedUsers: p.assignedUsers,
+              createdAt: p.createdAt
             });
           },
           err => {
@@ -267,13 +277,14 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
   }
   
   updateProject(content, project) {
-    this.addTaskFlag = false;
+    this.addProjectFlag = false;
     this.projectForm.setValue({
       id: project.id || project._id,
       projectName: project.projectName,
       description: project.description,
       status: project.status,
-      assignedUsers: project.assignedUsers
+      assignedUsers: project.assignedUsers,
+      createdAt: project.createdAt
     });
     this.modalService.open(content, {centered: true});
   }
@@ -285,14 +296,15 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
           this.projects = this.projects.filter(project => project.id !== this.projectForm.value.id);
           console.log(data.message);
           this.projects.length = (this.projects.length == undefined) ? 0 : this.projects.length;
-          let currentTask = {
+          let currentProject = {
             id: this.projects.length + 1,
             projectName: '',
             description: '',
             status: StatusEnum.todo,
-            assignedUsers: []
+            assignedUsers: [],
+            createdAt: this.currentDate
           };
-          this.projectForm.setValue(currentTask);
+          this.projectForm.setValue(currentProject);
           modal.close();
         },
         err => {

@@ -7,4 +7,5 @@ export class ProjectModel {
   description: string;
   status: StatusEnum;
   assignedUsers: Array<any>;
+  createdAt: string;
 }

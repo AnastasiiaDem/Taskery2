@@ -83,7 +83,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         setTimeout(() => {
           document.getElementById('ngbDropdownMenu').classList.remove('show');
         }, 500);
-      }, 1000);
+      }, 910);
     }
   }
   
@@ -106,7 +106,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.url = '/projects';
       setTimeout(() => {
         this.router.navigate(['/projects']);
-      }, 1000);
+      }, 910);
     }
   }
   
@@ -118,7 +118,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.url = '/report';
       setTimeout(() => {
         this.router.navigate(['/report']);
-      }, 1000);
+      }, 950);
     }
   }
 }

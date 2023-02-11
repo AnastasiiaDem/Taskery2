@@ -17,6 +17,8 @@ import {faCalendarDays} from '@fortawesome/free-solid-svg-icons';
 import {DatePipe} from '@angular/common';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {IDropdownSettings} from 'ng-multiselect-dropdown';
+import {Query} from '@syncfusion/ej2-data';
 
 @Component({
   selector: 'app-board',
@@ -29,6 +31,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   taskForm: FormGroup;
   tasks: TaskModel[] = [];
+  tasksList: TaskModel[] = [];
   cardSettings: CardSettingsModel = {
     contentField: 'description',
     headerField: 'id'
@@ -36,9 +39,12 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   addTaskFlag: boolean;
   statusData: Array<Select2OptionData> = [];
   employeeData: Array<Select2OptionData> = [];
+  usersData: Array<{ id: string; text: string; }> = [];
   selectedProjectId: number;
   firstUserId: string = '';
   setBackground = false;
+  filterStatus = false;
+  public dropdownSettings: IDropdownSettings = {};
   private readonly unsubscribe: Subject<void> = new Subject();
   currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: Role; } = {
     _id: 0,
@@ -52,6 +58,16 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   calendarIcon;
   currentDate;
   onlyMyIssues = false;
+  overdue: boolean = false;
+  selectedUser;
+  dateFilterValue;
+  dateFilterData;
+  isFrom: boolean;
+  isTo: boolean;
+  date1Value;
+  date2Value;
+  searchText;
+  
   
   get f() {
     return this.taskForm.controls;
@@ -75,6 +91,30 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   ngOnInit() {
+    this.dateFilterData = [
+      {id: 'equal', text: 'equal'},
+      {id: 'between', text: 'between'},
+      {id: 'before', text: 'before'},
+      {id: 'after', text: 'after'}
+    ];
+  
+    this.selectedUser = null;
+    this.dateFilterValue = null;
+    this.searchText = null;
+    this.isFrom = true;
+    this.isTo = true;
+    this.date1Value = '';
+    this.date2Value = '';
+    this.dropdownSettings = {
+      singleSelection: true,
+      idField: 'id',
+      textField: 'text',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      enableCheckAll: false,
+      itemsShowLimit: 1,
+      allowSearchFilter: true
+    };
     this.spinner.show();
     setTimeout(() => {
       this.spinner.hide();
@@ -157,6 +197,11 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
           this.getCurrentUser();
           this.getAllUsers();
           this.getAllTasks();
+          setTimeout(() => {
+            this.tasks = this.tasksList.filter(task => {
+              return task.projectId == this.selectedProjectId;
+            });
+          }, 100);
         },
         err => {
           console.log(err);
@@ -178,9 +223,10 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.taskService.getTasks()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(res => {
+          this.tasksList = [];
           this.tasks = [];
-          res.tasks.filter(task => (task.projectId == this.selectedProjectId)).forEach(task => {
-            this.tasks.push({
+          res.tasks.forEach(task => {
+            this.tasksList.push({
               id: task._id,
               title: task.title,
               description: task.description,
@@ -190,6 +236,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               projectId: task.projectId
             });
           });
+          
           let currentTask = {
             id: Math.floor(Math.random() * 100),
             employeeId: this.firstUserId,
@@ -270,7 +317,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               projectId: task.projectId
             };
             this.tasks.push(newTask);
-            this.kanban.addCard(newTask);
+            this.kanban.render();
           },
           err => {
             console.log(err);
@@ -308,42 +355,136 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     modal.close();
   }
   
-  updateKanban() {
+  findMyIssues() {
     this.onlyMyIssues = !this.onlyMyIssues;
-    this.taskService.getTasks()
+    this.tasks = [];
+    this.tasksList = [];
+    this.getAllTasks();
+    setTimeout(() => {
+      this.tasks = this.tasksList.filter(task => {
+        if (this.onlyMyIssues == true) {
+          return task.projectId == this.selectedProjectId && task.employeeId == this.currentUser._id;
+        } else {
+          return task.projectId == this.selectedProjectId;
+        }
+      });
+    }, 100);
+  }
+  
+  overdueDateStyle(task) {
+    this.overdue = this.datepipe.transform(task.deadline, 'YYYY-MM-dd') < this.currentDate;
+    if (this.overdue && task.status != StatusEnum.done) {
+      return {'color': 'rgb(221 4 38 / 70%)'};
+    } else {
+      return {'color': '#66666666'};
+    }
+  }
+  
+  filterMenu() {
+    this.filterStatus = !this.filterStatus;
+    this.userService.getUsers()
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(res => {
-          this.tasks = [];
-          res.tasks.filter(task => {
-            if (this.onlyMyIssues == true) {
-              return task.projectId == this.selectedProjectId && task.employeeId == this.currentUser._id;
-            } else {
-              return task.projectId == this.selectedProjectId;
-            }
-          }).forEach(task => {
-            this.tasks.push({
-              id: task._id,
-              title: task.title,
-              description: task.description,
-              status: task.status,
-              deadline: task.deadline,
-              employeeId: task.employeeId,
-              projectId: task.projectId
+      .subscribe(users => {
+          this.usersData = [];
+          this.currentProject.assignedUsers?.forEach(u => {
+            users.forEach(user => {
+              if (user._id == u.id) {
+                this.usersData.push({
+                  id: user._id,
+                  text: user.firstName + ' ' + user.lastName
+                });
+              }
             });
           });
-          let currentTask = {
-            id: Math.floor(Math.random() * 100),
-            employeeId: this.firstUserId,
-            projectId: this.selectedProjectId,
-            title: '',
-            description: '',
-            status: StatusEnum.todo,
-            deadline: this.currentDate
-          };
-          this.taskForm.setValue(currentTask);
         },
         err => {
           console.log(err);
         });
+  }
+  
+  selectUser(e) {
+    let filterQuery: Query = new Query();
+    if (!!e) {
+      filterQuery = new Query().where('employeeId', 'equal', e);
+    }
+    this.kanban.query = filterQuery;
+  }
+  
+  search(e) {
+    let searchValue: string = (<HTMLInputElement>e.target).value;
+    let searchQuery: Query = new Query();
+    if (searchValue !== '') {
+      searchQuery = new Query().search(searchValue, ['title'], 'contains', true);
+    }
+    this.kanban.query = searchQuery;
+  }
+  
+  dateFilter(e) {
+    if (!!e) {
+      if (e == 'between') {
+        this.isFrom = false;
+        this.isTo = false;
+      } else if (e == 'before' || e == 'equal') {
+        this.isFrom = true;
+        this.isTo = false;
+        this.date1Value = null;
+      } else if (e == 'after') {
+        this.isFrom = false;
+        this.isTo = true;
+        this.date2Value = null;
+      } else {
+        this.isFrom = true;
+        this.isTo = true;
+        this.date1Value = null;
+        this.date2Value = null;
+      }
+    }
+  }
+  
+  dateCompare() {
+    if (!!this.dateFilterValue) {
+      let filterQuery: Query = new Query();
+      if (!!this.date1Value && !!this.date2Value) {
+        filterQuery = new Query().where('deadline', 'before', this.date1Value).where('deadline', 'after', this.date2Value);
+      } else if (!!this.date2Value) {
+        if (this.dateFilterValue == 'equal') {
+          filterQuery = new Query().where('deadline', this.dateFilterValue, this.date2Value);
+        } else if (this.dateFilterValue == 'before') {
+          filterQuery = new Query().where('deadline', this.dateFilterValue, this.date2Value);
+        }
+      } else if (!!this.date1Value) {
+          filterQuery = new Query().where('deadline', this.dateFilterValue, this.date1Value);
+      }
+      this.kanban.query = filterQuery;
+    }
+  }
+  
+  
+  filter(e, type) {
+    // let filterQuery: Query = new Query();
+    if(type == 'employee' && !this.searchText && !this.dateFilterValue && !this.date1Value && !this.date2Value) {
+      this.selectUser(e);
+    } else if(type == 'search' && !this.selectedUser && !this.dateFilterValue && !this.date1Value && !this.date2Value) {
+      this.search(e);
+    } else if(type == 'date' && !this.searchText && !this.selectedUser) {
+      this.dateCompare();
+    }
+    // else if(type == 'employee' && !!this.searchText && !this.dateFilterValue && !this.date1Value && !this.date2Value) {
+    //   if (!!e) {
+    //     filterQuery = new Query().where('employeeId', 'equal', e);
+    //   }
+    //   let searchValue: string = (<HTMLInputElement>e.target).value;
+    //
+    //   if (searchValue !== '') {
+    //     filterQuery = filterQuery.search(searchValue, ['title'], 'contains', true);
+    //   }
+    // }
+    // else if(type == 'search' && !this.selectedUser && !this.dateFilterValue && !this.date1Value && !this.date2Value) {
+    //   this.search(e);
+    // } else if(type == 'date' && !this.searchText && !this.selectedUser) {
+    //   this.dateCompare();
+    // }
+    
+    // this.kanban.query = filterQuery;
   }
 }

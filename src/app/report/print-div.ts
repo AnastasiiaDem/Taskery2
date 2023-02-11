@@ -6,37 +6,196 @@ export function printDiv(divId: string) {
   
   const printContents = document.getElementById(divId).innerHTML;
   const pageContent = `
-      <!DOCTYPE html>
-      <html lang="" style="margin: 20px">
-      <head>
+     <!doctype html>
+<html lang="en" style="margin: 20px">
+<head>
+  <meta charset="utf-8">
+  <title>Taskery</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap"
+      rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <style>
         *, html {
           font-family: 'Source Sans Pro', sans-serif;
         }
         .body-content {
           display: flex;
-          margin: 20px 30px 0 20px;
+          margin: 0 30px 0 20px;
           justify-content: space-between;
-          height: 280px;
+          height: 350px;
         }
-        .chart, .chart2 {
+        
+        .chart, .chart2, .block1, .block2, .block3 {
+          width: 40%;
           padding: 30px;
           display: flex;
           justify-content: center;
           transition: all 0.5s ease-in-out;
           border-radius: 20px;
           box-shadow: 0 1px 22px -12px #607D8B;
-          margin: 10px;
+          margin: 7px;
           align-items: center;
         }
-        .chart-wrapper {
-          height: 280px;
+        
+        .date-block {
+          display: flex;
+          flex-direction: column;
         }
+        
+        .date-block-wrapper {
+          padding: 10px;
+          display: flex;
+          justify-content: center;
+          transition: all 0.5s ease-in-out;
+          border-radius: 20px;
+          box-shadow: 0 1px 22px -12px #607D8B;
+          margin: 7px;
+          align-items: center !important;
+          height: 65px !important
+        }
+        
+        .chart2 {
+          width: 60%;
+        }
+        
+        .block1, .block2, .block3, .block4 {
+          width: 25%;
+        
+          img {
+            height: 70px;
+          }
+        
+          p {
+            font-family: "Source Sans Pro", sans-serif;
+            text-anchor: start;
+            dominant-baseline: auto;
+            font-size: 20px;
+            font-weight: 700;
+            color: rgb(55, 61, 63);
+            margin-bottom: 0;
+          }
+        }
+        
+        .info-data {
+          font-size: 45px !important;
+          font-weight: 900 !important;
+        }
+        
+        .block1 {
+          width: 220px;
+        }
+        
+        .block2 {
+          width: 290px;
+        }
+        
+        .block3 {
+          width: 400px;
+        }
+        
+        .block4 {
+          width: 180px;
+        
+          .date {
+            font-size: 15px;
+            font-weight: 500;
+          }
+        }
+        
+        .info-img-block {
+          background: rgba(88, 227, 128, 0.2);
+          border-radius: 100%;
+          padding: 40px;
+          filter: blur(4px);
+        }
+        
+        .info-img {
+          position: absolute;
+          bottom: 10px;
+          left: 12px;
+        }
+        
+        .chart-wrapper {
+          width: 100%;
+          height: 100%;
+        }
+        
+        .info-wrapper {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: flex-start;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+        
+        .dist {
+          text-align: center;
+        }
+        
+        .btn {
+          line-height: 1rem !important;
+        }
+        
+        .w3-animate-opacity {
+          margin: 3rem auto 1rem auto;
+          width: 95%;
+        }
+        
+        .no-content {
+          font-family: 'Libre Baskerville', serif !important;
+          height: 360px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 13px;
+        
+          p {
+            color: rgb(0 0 0 / 40%);
+            text-align: center;
+            position: relative;
+            margin-bottom: 0;
+          }
+        
+          .no-data-image img {
+            position: absolute;
+            width: 40%;
+            z-index: -1;
+            top: 8%;
+            left: 30%;
+          }
+        }
+        
+        .panel-body {
+          max-height: 450px;
+          padding: 10px 0 20px 0;
+          width: 100%;
+          overflow-y: scroll;
+          overflow-x: hidden;
+        }
+        
+        .btn {
+          transition: 0.5s;
+        }
+
       </style>
-      <title></title>
-        ${css}
+       ${css}
       </head>
-      <body onload="window.print()" style="
+<script src="https://kit.fontawesome.com/7baa072388.js" crossorigin="anonymous"></script>
+<script src="https://fastly.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+<body onload="window.print()" style="
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -82,36 +241,27 @@ export function printDiv(divId: string) {
         color: #373d3f;
       ">
       ${project.projectName}
-         <p style="font-weight: 500; font-size: 13px; color: #C2C2C2; font-style: italic; margin: 0; padding: 0;">
-            <script>
-                  let mydate = new Date();
-                  let day = mydate.getDay();
-                  let month = mydate.getMonth();
-                  let year = mydate.getFullYear();
-                  let d = mydate.getDate();
-                  let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                  let monthShortNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                
-                  document.write(monthNames[month] + " " + d + ', ' + year)
-              </script>
-              </p>
       </h2>
+      
       <div style="
       margin: 20px auto 0 auto;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100%">${printContents}</div>
-      </body>
-      </html>`;
+      height: 100%">
+${printContents}
+      </div>
+  </body>
+</html>`;
+  
   
   let popupWindow: Window;
   if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
     popupWindow = window.open(
       '',
       '_blank',
-      'width=600,height=600,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no'
+      'width=1200,height=600,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no'
     );
     popupWindow.window.focus();
     popupWindow.document.write(pageContent);
@@ -124,7 +274,7 @@ export function printDiv(divId: string) {
       popupWindow.close();
     };
   } else {
-    popupWindow = window.open('', '_blank', 'width=600,height=600');
+    popupWindow = window.open('', '_blank', 'width=1200,height=600');
     popupWindow.document.open();
     popupWindow.document.write(pageContent);
     popupWindow.document.close();

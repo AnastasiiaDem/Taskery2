@@ -39,7 +39,6 @@ import {MatInputModule} from '@angular/material/input';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {NgChartsModule} from 'ng2-charts';
-import {ChartsModule} from '@progress/kendo-angular-charts';
 import {NgApexchartsModule} from 'ng-apexcharts';
 import {NgxSpinnerModule} from 'ngx-spinner';
 import {EmailService} from './shared/services/email.service';
@@ -82,12 +81,11 @@ import {EmailService} from './shared/services/email.service';
     MatInputModule,
     MatNativeDateModule,
     MatExpansionModule,
-    ChartsModule,
     NgChartsModule,
     NgApexchartsModule,
     NgxSpinnerModule,
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  // schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [HttpClientModule, TaskService, UserService, ProjectsService,
     AlertService, AuthService, DatePipe, EmailService,
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},

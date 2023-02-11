@@ -14,7 +14,8 @@ body {
   margin: 0;
   padding: 0;
   user-select: none;
- }
+  min-height: 100vh;
+}
 
 ::-webkit-scrollbar {
   width: 5px;
@@ -85,7 +86,7 @@ body {
 }
 
 mat-button-toggle-group {
-    height: 30px !important;
+  height: 30px !important;
 }
 
 mat-button-toggle {
@@ -99,7 +100,7 @@ mat-button-toggle {
 }
 
 .mat-button-toggle:active {
-    background-color: #e6edfa !important;
+  background-color: #e6edfa !important;
 }
 
 .mat-button-toggle-checked {

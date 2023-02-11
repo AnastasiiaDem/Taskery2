@@ -14,6 +14,7 @@ interface IProject {
   description: string;
   status: StatusEnum;
   assignedUsers: Array<any>;
+  createdAt: string;
 }
 
 export const ProjectSchema = new Schema<IProject>({
@@ -23,6 +24,7 @@ export const ProjectSchema = new Schema<IProject>({
   status: { type: String, enum: StatusEnum, required: true },
   description: { type: String, required: true },
   assignedUsers: { type: [], required: true },
+  createdAt: { type: String, required: true },
 });
 
 const Project = mongoose.model<IProject>("Project", ProjectSchema);

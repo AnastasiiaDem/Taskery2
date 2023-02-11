@@ -1,18 +1,60 @@
-<!--<div class="box circle" (click)="addTask(content)">-->
-<!--  <span class="tooltiptext">Add new task</span>-->
-<!--  <p class="add">&#65291;</p>-->
-<!--</div>-->
+<div style="margin: 3rem auto 1rem; text-align: center;">
+  <span class="tooltiptext">Add new task</span>
+  <button (click)="addTask(content)" mat-mini-fab aria-label="Create new task" class="add-btn" id="mat-btn">
+    <mat-icon style="color: #666666 !important;">add</mat-icon>
+  </button>
+</div>
 
-
-    <div style="margin: 3rem auto 1rem; text-align: center;">
-      <span class="tooltiptext">Add new task</span>
-      <button (click)="addTask(content)" mat-mini-fab aria-label="Create new task" class="add-btn" id="mat-btn">
-        <mat-icon style="color: #666666 !important;">add</mat-icon>
-      </button>
-    </div>
 
 <div class="w3-animate-opacity" style="margin: 0 auto; width: 95%;">
-  <button [ngClass]="onlyMyIssues ? 'my-tasks' : 'all-tasks'" (click)="updateKanban()">Only My Issues</button>
+  <div style="display: flex; align-items: flex-end; margin-bottom: 10px;">
+    
+    <div ngbDropdown class="d-inline-block" placement="right-top" [autoClose]="false"
+         style="height: 23px !important;">
+      <button (click)="filterMenu()" id="dropdown" ngbDropdownToggle class="filter-btn">
+        <mat-icon style="font-size: 20px; height: auto !important;">filter_list</mat-icon>
+      </button>
+      <div ngbDropdownMenu aria-labelledby="dropdown" id="ngbDropdownMenu" style="transform: translate(50px, 0px)">
+        <div class="px-4 py-3">
+          <div class="form-group form-floating mb-3 select-container">
+            <ng-select2 [placeholder]="'Employee Filter'" [allowClear]="true" [(ngModel)]="selectedUser" [width]="'100%'"
+                        [data]="usersData" (valueChanged)="filter($event, 'employee')">
+            </ng-select2>
+          </div>
+          <hr style="color: rgb(136 136 136);">
+          <div class="form-group form-floating mb-3 select-container">
+            <input class="form-control" type="text" placeholder="Search Task" style="height: 40px;" [(ngModel)]="searchText"                 (keyup)="filter($event, 'search')">
+            <label>Search Task</label>
+          </div>
+          <hr style="color: rgb(136 136 136);">
+          <div class="form-group form-floating mb-1 select-container" style="width: 100%;">
+            <ng-select2 [placeholder]="'Date Filter'" [allowClear]="true" [(ngModel)]="dateFilterValue" [width]="'100%'"
+                        [data]="dateFilterData" (valueChanged)="dateFilter($event)">
+            </ng-select2>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div class="form-floating" style="width: 49%;">
+              <input [disabled]="isFrom" class="form-control" type="date" placeholder="from" [(ngModel)]="date1Value"
+                     style="height: 40px; font-size: 12px;" id="date1" (change)="filter(null, 'date')">
+              <label>from</label>
+            </div>
+            <div class="form-floating" style="width: 49%;">
+              <input [disabled]="isTo" class="form-control" type="date" placeholder="to" [(ngModel)]="date2Value"
+                     style="height: 40px; font-size: 12px;" id="date2" (change)="filter(null, 'date')">
+              <label>to</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <button *ngIf="currentUser.role != 'ProjectManager'" [ngClass]="onlyMyIssues ? 'my-tasks' : 'all-tasks'"
+            style="font-size: 11px; height: 22px;" (click)="findMyIssues()">
+      Only My Issues
+    </button>
+  </div>
+  
+  
   <ejs-kanban #kanban keyField='status'
               [dataSource]='tasks'
               [cardSettings]='cardSettings'
@@ -31,7 +73,7 @@
           <tr>
             <td class="CardHeader">
               {{data.title}}
-              <p class="card-deadline">{{data.deadline | date}}</p>
+              <p class="card-deadline" [ngStyle]="overdueDateStyle(data)">{{data.deadline | date}}</p>
             </td>
           </tr>
           <tr>
@@ -48,7 +90,9 @@
     <div class="row align-items-center">
       <div class="card-header px-lg-5">
         <div class="card-heading text-primary">{{addTaskFlag ? 'Add new task' : 'Update the task'}}
-          <img *ngIf="!addTaskFlag" src="./assets/images/icons8-trash-can-480.png" alt="" class="trash"
+          <img *ngIf="!addTaskFlag"
+               src="https://img.icons8.com/ios-glyphs/30/444444/delete.png" alt=""
+               class="trash"
                (click)="deleteTask(modal)">
         </div>
       </div>
@@ -90,4 +134,4 @@
   </div>
 </ng-template>
 
-<ngx-spinner bdColor = "rgb(170 170 170 / 50%)" size = "default" color = "rgb(32 32 32)" type = "ball-atom" [fullScreen] = "true"></ngx-spinner>
+<ngx-spinner bdColor="rgb(170 170 170 / 50%)" size="default" color="rgb(32 32 32)" type="ball-atom"></ngx-spinner>
