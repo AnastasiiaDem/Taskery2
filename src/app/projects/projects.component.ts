@@ -275,7 +275,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
             });
   
           p.assignedUsers?.forEach(u => {
-            this.email(u.id, 'You have been assigned to the project ' + p.projectName)
+            this.email(u, p, 'You have been assigned to the project ' + p.projectName)
           });
           
           },
@@ -322,8 +322,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
         });
   }
   
-  email(userId, text) {
-    this.emailService.sendEmail(userId, text)
+  email(user, project, text) {
+    this.emailService.sendEmail(user, project, text)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(response => {
           console.log(response.message);
