@@ -97,7 +97,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       {id: 'before', text: 'before'},
       {id: 'after', text: 'after'}
     ];
-  
+    
     this.selectedUser = null;
     this.dateFilterValue = null;
     this.searchText = null;
@@ -119,7 +119,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     setTimeout(() => {
       this.spinner.hide();
     }, 1000);
-    this.currentDate = this.datepipe.transform(new Date(), 'YYYY-MM-dd');
+    this.currentDate = new Date();
     
     this.calendarIcon = faCalendarDays;
     this.statusData = [
@@ -372,7 +372,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   overdueDateStyle(task) {
-    this.overdue = this.datepipe.transform(task.deadline, 'YYYY-MM-dd') < this.currentDate;
+    this.overdue = task.deadline < this.currentDate;
     if (this.overdue && task.status != StatusEnum.done) {
       return {'color': 'rgb(221 4 38 / 70%)'};
     } else {
@@ -420,40 +420,53 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   dateFilter(e) {
-    if (!!e) {
-      if (e == 'between') {
-        this.isFrom = false;
-        this.isTo = false;
-      } else if (e == 'before' || e == 'equal') {
-        this.isFrom = true;
-        this.isTo = false;
-        this.date1Value = null;
-      } else if (e == 'after') {
-        this.isFrom = false;
-        this.isTo = true;
-        this.date2Value = null;
-      } else {
-        this.isFrom = true;
-        this.isTo = true;
-        this.date1Value = null;
-        this.date2Value = null;
-      }
+    if (e == 'between') {
+      this.isFrom = false;
+      this.isTo = false;
+    } else if (e == 'before' || e == 'equal') {
+      this.isFrom = true;
+      this.isTo = false;
+      this.date1Value = null;
+    } else if (e == 'after') {
+      this.isFrom = false;
+      this.isTo = true;
+      this.date2Value = null;
+    } else {
+      this.isFrom = true;
+      this.isTo = true;
+      this.date1Value = null;
+      this.date2Value = null;
     }
+    this.filter(e, 'dateFilter');
   }
+  
+  // '<': ' lt ',
+  // '>': ' gt ',
+  // '<=': ' le ',
+  // '>=': ' ge ',
+  // '==': ' eq ',
+  // '!=': ' ne ',
+  // 'lessthan': ' lt ',
+  // 'lessthanorequal': ' le ',
+  // 'greaterthan': ' gt ',
+  // 'greaterthanorequal': ' ge ',
+  // 'equal': ' eq ',
+  // 'notequal': ' ne '
   
   dateCompare() {
     if (!!this.dateFilterValue) {
       let filterQuery: Query = new Query();
       if (!!this.date1Value && !!this.date2Value) {
-        filterQuery = new Query().where('deadline', 'before', this.date1Value).where('deadline', 'after', this.date2Value);
+        filterQuery = new Query().where('deadline', 'greaterthanorequal', this.date1Value);
+        filterQuery = filterQuery.where('deadline', 'lessthanorequal', this.date2Value);
       } else if (!!this.date2Value) {
         if (this.dateFilterValue == 'equal') {
-          filterQuery = new Query().where('deadline', this.dateFilterValue, this.date2Value);
+          filterQuery = new Query().where('deadline', 'equal', this.date2Value);
         } else if (this.dateFilterValue == 'before') {
-          filterQuery = new Query().where('deadline', this.dateFilterValue, this.date2Value);
+          filterQuery = new Query().where('deadline', 'lessthanorequal', this.date2Value);
         }
       } else if (!!this.date1Value) {
-          filterQuery = new Query().where('deadline', this.dateFilterValue, this.date1Value);
+        filterQuery = new Query().where('deadline', 'greaterthanorequal', this.date1Value);
       }
       this.kanban.query = filterQuery;
     }
@@ -461,30 +474,75 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   
   filter(e, type) {
-    // let filterQuery: Query = new Query();
-    if(type == 'employee' && !this.searchText && !this.dateFilterValue && !this.date1Value && !this.date2Value) {
+    if (type == 'employee' && !this.searchText && !this.dateFilterValue && !this.date1Value && !this.date2Value) {
       this.selectUser(e);
-    } else if(type == 'search' && !this.selectedUser && !this.dateFilterValue && !this.date1Value && !this.date2Value) {
+    } else if (type == 'search' && !this.selectedUser && !this.dateFilterValue && !this.date1Value && !this.date2Value) {
       this.search(e);
-    } else if(type == 'date' && !this.searchText && !this.selectedUser) {
+    } else if (type == 'date' && !this.searchText && !this.selectedUser) {
       this.dateCompare();
+    } else {
+      if ((type == 'employee' || type == 'search') && !this.dateFilterValue && !this.date1Value && !this.date2Value) {
+        let filterQuery: Query = new Query();
+        
+        if (type == 'employee' && !!e) {
+          filterQuery = filterQuery.where('employeeId', 'equal', e);
+        } else if (!!this.selectedUser) {
+          filterQuery = filterQuery.where('employeeId', 'equal', this.selectedUser);
+        }
+        
+        if (!!this.searchText) {
+          filterQuery = filterQuery.search(this.searchText, ['title'], 'contains', true);
+        }
+        this.kanban.query = filterQuery;
+        
+      } else {
+        
+        let filterQuery: Query = new Query();
+        
+        if (type == 'employee' && !!e) {
+          filterQuery = filterQuery.where('employeeId', 'equal', e);
+        } else if (!!this.selectedUser) {
+          filterQuery = filterQuery.where('employeeId', 'equal', this.selectedUser);
+        }
+        
+        if (!!this.searchText) {
+          filterQuery = filterQuery.search(this.searchText, ['title'], 'contains', true);
+        }
+        
+        if (!!this.dateFilterValue) {
+          if (this.dateFilterValue == 'between') {
+            this.isFrom = false;
+            this.isTo = false;
+          } else if (this.dateFilterValue == 'before' || this.dateFilterValue == 'equal') {
+            this.isFrom = true;
+            this.isTo = false;
+            this.date1Value = null;
+          } else if (this.dateFilterValue == 'after') {
+            this.isFrom = false;
+            this.isTo = true;
+            this.date2Value = null;
+          } else {
+            this.isFrom = true;
+            this.isTo = true;
+            this.date1Value = null;
+            this.date2Value = null;
+          }
+          
+          if (!!this.date1Value && !!this.date2Value) {
+            filterQuery = filterQuery.where('deadline', 'greaterthanorequal', this.date1Value);
+            filterQuery = filterQuery.where('deadline', 'lessthanorequal', this.date2Value);
+          } else if (!!this.date2Value) {
+            if (this.dateFilterValue == 'equal') {
+              filterQuery = filterQuery.where('deadline', 'equal', this.date2Value);
+            } else if (this.dateFilterValue == 'before') {
+              filterQuery = filterQuery.where('deadline', 'lessthanorequal', this.date2Value);
+            }
+          } else if (!!this.date1Value) {
+            filterQuery = filterQuery.where('deadline', 'greaterthanorequal', this.date1Value);
+          }
+        }
+        this.kanban.query = filterQuery;
+      }
     }
-    // else if(type == 'employee' && !!this.searchText && !this.dateFilterValue && !this.date1Value && !this.date2Value) {
-    //   if (!!e) {
-    //     filterQuery = new Query().where('employeeId', 'equal', e);
-    //   }
-    //   let searchValue: string = (<HTMLInputElement>e.target).value;
-    //
-    //   if (searchValue !== '') {
-    //     filterQuery = filterQuery.search(searchValue, ['title'], 'contains', true);
-    //   }
-    // }
-    // else if(type == 'search' && !this.selectedUser && !this.dateFilterValue && !this.date1Value && !this.date2Value) {
-    //   this.search(e);
-    // } else if(type == 'date' && !this.searchText && !this.selectedUser) {
-    //   this.dateCompare();
-    // }
-    
-    // this.kanban.query = filterQuery;
   }
 }

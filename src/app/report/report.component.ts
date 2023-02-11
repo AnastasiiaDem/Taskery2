@@ -108,8 +108,8 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
   
   overdueTasksNumber(p) {
-    this.currentDate = this.datepipe.transform(new Date(), 'YYYY-MM-dd');
-    return this.tasks.filter(t => (t.projectId == p.id && this.datepipe.transform(t.deadline, 'YYYY-MM-dd') < this.currentDate && t.status != StatusEnum.done)).length;
+    this.currentDate = new Date();
+    return this.tasks.filter(t => (t.projectId == p.id && t.deadline < this.currentDate && t.status != StatusEnum.done)).length;
   }
   
   statusEllipse(p) {

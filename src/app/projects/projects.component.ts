@@ -71,7 +71,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
   }
   
   ngOnInit() {
-    this.currentDate = this.datepipe.transform(new Date(), 'YYYY-MM-dd');
+    this.currentDate = new Date();
+    this.currentDate = new Date();
     this.spinner.show();
       setTimeout(() => {
         this.spinner.hide();

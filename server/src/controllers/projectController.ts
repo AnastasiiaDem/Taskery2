@@ -3,7 +3,6 @@ import Token from '../model/TokenModel';
 import express from 'express';
 import Project from '../model/ProjectModel';
 import mongoose from 'mongoose';
-import Task from '../model/TaskModel';
 
 export const createProject = async (req: express.Request, res: express.Response) => {
   const {projectName, description, status, assignedUsers, createdAt} = req.body;
@@ -114,7 +113,7 @@ export const getProjects = async (req: express.Request, res: express.Response) =
   
   try {
     const projects = await Project.find({});
-  
+    
     if (projects.length == 0) return res.status(400).json({message: 'No content'});
     
     res.status(200).json({projects: projects});
@@ -138,7 +137,7 @@ export const getCurrentProject = async (req: express.Request, res: express.Respo
   const foundUser = await User.findById(foundToken?.userId);
   
   if (!foundUser) return res.status(403).json({error: 'error user not found'});
- 
+  
   try {
     const project = await Project.findById(id);
     if (!project) return res.status(400).json({message: 'No content'});
