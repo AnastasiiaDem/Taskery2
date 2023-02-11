@@ -511,18 +511,4 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.exportStatus = false;
     }, 2000);
   }
-  
-  email(p) {
-    // this.emailService.sendEmail()
-    //   .pipe(takeUntil(this.unsubscribe))
-    //   .subscribe(response => {
-    //       console.log(response.message);
-    //       this.toastr.success(response.message);
-    //     },
-    //     error => {
-    //       console.log(error);
-    //       this.toastr.error(error);
-    //     });
-  }
-  
 }

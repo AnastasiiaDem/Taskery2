@@ -7,13 +7,15 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Select2OptionData} from 'ng-select2';
 import {TaskService} from '../shared/services/task.service';
 import * as $ from 'jquery';
-import {finalize, Subject, takeUntil} from 'rxjs';
+import {Subject, takeUntil} from 'rxjs';
 import {Role} from '../shared/models/user.model';
 import {UserService} from '../shared/services/user.service';
 import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {DatePipe} from '@angular/common';
+import {EmailService} from '../shared/services/email.service';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-projects',
@@ -22,7 +24,7 @@ import {DatePipe} from '@angular/common';
 })
 export class ProjectsComponent implements OnInit, AfterViewChecked {
   projects: ProjectModel[] = [];
-  currentProject: { description: string; projectName: string; status: StatusEnum; assignedUsers: [], createdAt: string};
+  currentProject: { description: string; projectName: string; status: StatusEnum; assignedUsers: [], createdAt: string };
   projectForm: FormGroup;
   statusData: Array<Select2OptionData> = [];
   tasksData: Array<Select2OptionData> = [];
@@ -66,6 +68,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
               private userService: UserService,
               private elementRef: ElementRef,
               private datepipe: DatePipe,
+              private toastr: ToastrService,
+              private emailService: EmailService,
               private _focusMonitor: FocusMonitor,
               private spinner: NgxSpinnerService) {
   }
@@ -74,9 +78,9 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
     this.currentDate = new Date();
     this.currentDate = new Date();
     this.spinner.show();
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1000);
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 1000);
     this.statusData = [
       {id: StatusEnum.todo, text: StatusEnum.todo},
       {id: StatusEnum.inProgress, text: StatusEnum.inProgress},
@@ -110,7 +114,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
   
   ngAfterViewChecked() {
     this._focusMonitor.stopMonitoring(document.getElementById('mat-btn'));
-  
+    
     const dom: HTMLElement = this.elementRef.nativeElement;
     dom.querySelectorAll('.card-header').forEach(el => {
       if (el.innerHTML.includes(StatusEnum.todo)) {
@@ -269,6 +273,11 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
               assignedUsers: p.assignedUsers,
               createdAt: p.createdAt
             });
+  
+          p.assignedUsers?.forEach(u => {
+            this.email(u.id, 'You have been assigned to the project ' + p.projectName)
+          });
+          
           },
           err => {
             console.log(err);
@@ -310,6 +319,19 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
         },
         err => {
           console.log(err);
+        });
+  }
+  
+  email(userId, text) {
+    this.emailService.sendEmail(userId, text)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(response => {
+          console.log(response.message);
+          // this.toastr.success(response.message);
+        },
+        error => {
+          console.log(error);
+          // this.toastr.error(error);
         });
   }
 }

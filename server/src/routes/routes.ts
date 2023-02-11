@@ -42,7 +42,7 @@ routes.get('/users', getAllUsers);
 routes.get('/user/current', getCurrentUser);
 routes.put('/user/update', updateUser);
 
-routes.get('/email', sendEmail);
+routes.post('/email', sendEmail);
 
 module.exports = routes;
 

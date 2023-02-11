@@ -1,7 +1,18 @@
 import express from 'express';
 import nodemailer from 'nodemailer';
+import User from '../model/UserModel';
 
-export const sendEmail = (req: express.Request, res: express.Response) => {
+export const sendEmail = async (req: express.Request, res: express.Response) => {
+  const {userId, text} = req.body;
+  
+  if (!userId || !text) return res.status(400).json({message: `Incorrect password or email`});
+  
+  const foundUser = await User.findOne({_id: userId}).exec();
+  
+  
+  if (!foundUser) return res.status(409).json({message: `Incorrect password or email`});
+  
+  
   return new Promise<any>((resolve, reject) => {
     var transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -12,9 +23,9 @@ export const sendEmail = (req: express.Request, res: express.Response) => {
     });
     const mail_config = {
       from: process.env.USER,
-      to: 'patriciagarraway8@gmail.com',
-      subject: 'Testing Email',
-      text: 'Text of testing email',
+      to: foundUser.email,
+      subject: 'Taskery.com',
+      text: text,
       html: '',
       // attachments: [
       //   { filename: 'greetings.txt', path: '/assets/files/' },
