@@ -1,0 +1,41 @@
+<div class="page-holder align-items-center py-2 bg-gray-100">
+  <div class="container">
+    <!--    <h3 class="mb-4" style="font-weight: 900; color: #212529;">User Settings</h3>-->
+    <div class="row align-items-flex-start justify-content-center gx-3">
+      <div class="col-md-8 col-sm-8 text-center text-primary">
+        <div class="card card2">
+          <div class="card-body" style="padding: 2rem!important; text-align: left; color: #212529; font-size: 20px;">
+            <p>Send me email notification when:</p>
+            <section>
+              <mat-slide-toggle
+                  color="primary"
+                  labelPosition="before"
+                  [checked]="sendAssignedEmail"
+                  (change)="toggleNotification($event, 'sendAssignedEmail')">
+                I am assigned to the project
+              </mat-slide-toggle>
+            </section>
+            <section>
+              <mat-slide-toggle
+                  color="primary"
+                  labelPosition="before"
+                  [checked]="sendTaskEmail"
+                  (change)="toggleNotification($event, 'sendTaskEmail')">
+                I get new task
+              </mat-slide-toggle>
+            </section>
+            <section>
+              <mat-slide-toggle
+                  color="primary"
+                  labelPosition="before"
+                  [checked]="sendTaskOverdueEmail"
+                  (change)="toggleNotification($event, 'sendTaskOverdueEmail')">
+                My task is updated
+              </mat-slide-toggle>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

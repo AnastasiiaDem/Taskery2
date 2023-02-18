@@ -42,6 +42,10 @@ import {NgChartsModule} from 'ng2-charts';
 import {NgApexchartsModule} from 'ng-apexcharts';
 import {NgxSpinnerModule} from 'ngx-spinner';
 import {EmailService} from './shared/services/email.service';
+import {NotificationsComponent} from './notifications/notifications.component';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {QuillModule} from 'ngx-quill';
+import { SafeHtmlPipe } from './shared/safe-html.pipe';
 
 @NgModule({
   declarations: [
@@ -53,7 +57,9 @@ import {EmailService} from './shared/services/email.service';
     ProjectsComponent,
     ReportComponent,
     HeaderComponent,
-    AccountComponent
+    AccountComponent,
+    NotificationsComponent,
+    SafeHtmlPipe
   ],
   imports: [
     BrowserModule,
@@ -84,8 +90,9 @@ import {EmailService} from './shared/services/email.service';
     NgChartsModule,
     NgApexchartsModule,
     NgxSpinnerModule,
+    MatSlideToggleModule,
+    QuillModule.forRoot(),
   ],
-  // schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [HttpClientModule, TaskService, UserService, ProjectsService,
     AlertService, AuthService, DatePipe, EmailService,
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},

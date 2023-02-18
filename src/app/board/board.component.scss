@@ -261,6 +261,10 @@ a {
   align-items: center;
   margin-top: 5px;
   margin-bottom: 10px;
+  p {
+    margin: 0;
+    width: -webkit-fill-available;
+  }
 }
 
 .CardBody {
@@ -271,6 +275,20 @@ a {
   word-wrap: break-word;
   -webkit-box-orient: vertical;
   margin-bottom: 0;
+  max-height: 64px;
+  word-break: break-word;
+}
+
+::ng-deep #tab-panel {
+  max-height: 150px;
+}
+
+::ng-deep #emoji-palette, ::ng-deep .ql-picker-options {
+  z-index: 10000 !important;
+}
+
+::ng-deep .ql-editor p span img, ::ng-deep .ql-editor p img {
+  height: 50px;
 }
 
 .all-tasks {
@@ -284,7 +302,6 @@ a {
   transition: 0.5s;
   //margin-bottom: 10px;
   margin-left: 5px;
-
 }
 
 .all-tasks:hover {
@@ -308,11 +325,12 @@ a {
 
 .card-deadline {
   font-size: 10px;
-  margin: 0;
   font-weight: 600;
   font-style: italic;
+  width: 40% !important;
+  text-align: right;
+  padding-left: 5px;
   padding-right: 2px;
-  margin-top: -15px;
 }
 
 .add-btn {
@@ -369,8 +387,8 @@ a {
 }
 
 ::ng-deep .form-floating>label {
-  color: #999999;
-  padding: 0.7rem 0.5rem;
+  color: #999999 !important;
+  padding: 1rem .75rem;
 }
 
 mat-icon {
@@ -379,5 +397,140 @@ mat-icon {
 
 mat-icon:hover {
   transform: scale(1.4);
-  color: #0D6EFD;
+  color: #0d6efd;
+}
+
+.delete-task, .update-task {
+  border: 1px solid #fff;
+  background: #fff;
+  padding: 0 5px;
+  color: #e3cc58;
+  border-radius: 20px;
+  transition: 0.5s;
+  font-size: 13px;
+  height: 22px;
+  margin: 0 5px;
+}
+
+.delete-task {
+  color: #d90429;
+}
+
+.delete-task:hover {
+  border: 1px solid #d90429;
+}
+
+.update-task:hover {
+  border: 1px solid #e3cc58;
+}
+
+.action-btns {
+  padding: 0 2rem 2rem;
+  text-align: right;
+}
+
+.body-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.left-block {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+  padding-top: 3px;
+
+  .form-floating {
+    margin-bottom: 1rem;
+    p {
+      color: rgba(57, 57, 66, 0.5);
+      font-weight: 900;
+      font-size: 14px;
+      margin: 0;
+    }
+  }
+}
+
+.right-block {
+  padding-left: 1rem;
+  width: 80%;
+}
+
+.title-block {
+  font-size: 30px;
+  //font-weight: 600;
+  text-align: center;
+}
+
+.description-block {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+::ng-deep .ql-editor.ql-blank::before {
+  color: #999999 !important;
+  font-style: normal;
+  font-size: 1rem;
+  font-weight: 400;
+  left: 0;
+}
+
+::ng-deep .ql-toolbar.ql-snow {
+  border: none;
+  padding: 0;
+  text-align: center;
+}
+
+::ng-deep .ql-container.ql-snow {
+  border: none;
+  padding: 0;
+  height: 85px;
+}
+
+
+::ng-deep .ql-editor {
+  padding: 0;
+  margin-top: 10px;
+}
+
+::ng-deep .ql-align-center {
+  text-align: center;
+}
+
+::ng-deep .ql-align-right {
+  text-align: right;
+}
+
+::ng-deep .ql-align-justify {
+  text-align: justify;
+}
+
+::ng-deep .ql-snow .ql-picker.ql-header {
+  width: 75px;
+  text-align: left;
+}
+
+::ng-deep .ql-toolbar.ql-snow .ql-picker-label {
+  padding-left: 2px;
+}
+
+::ng-deep .ql-toolbar.ql-snow .ql-formats {
+  margin-right: 7px;
+}
+
+::ng-deep .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
+  width: 24px;
+  padding: 4px;
+}
+
+.line {
+  background: #CED4DA;
+  border: 1px solid #CED4DA;
+  border-radius: 10px;
+  margin-top: 0.2rem;
+  margin-bottom: 1rem;
 }

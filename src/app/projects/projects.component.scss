@@ -312,7 +312,7 @@ a {
   border: 1px solid #d3d8dd !important;
 
   span {
-    color: #444444 !important;
+    color: #999999 !important;
   }
 }
 
@@ -382,4 +382,9 @@ a {
     text-align: center;
     width: 600px;
   }
+}
+
+::ng-deep .form-floating>label {
+  color: #999999 !important;
+  padding: 1rem .75rem;
 }

@@ -1,4 +1,3 @@
-
 export class UserModel {
   id: number;
   firstName: string;
@@ -6,6 +5,9 @@ export class UserModel {
   email: string;
   password: string;
   role: Role;
+  sendAssignedEmail: boolean;
+  sendTaskEmail: boolean;
+  sendTaskOverdueEmail: boolean;
 }
 
 export enum Role {

@@ -1,0 +1,73 @@
+.card2 {
+  color: black;
+}
+
+.form-group {
+  text-align: right;
+}
+
+.form-floating {
+  display: flex;
+  align-items: center;
+  img {
+    height: 15px;
+    margin-left: 5px;
+    cursor: pointer;
+  }
+}
+
+.page-holder {
+  height: 401px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+section {
+  margin: 10px;
+  font-size: 15px;
+}
+
+::ng-deep .mat-slide-toggle-thumb {
+  width: 15px !important;
+  height: 15px !important;
+  transform: translate(50%, 50%);
+}
+
+::ng-deep .mat-slide-toggle-bar {
+  background-color: rgba(158, 158, 158, 0.5);
+  border: 1px solid #9e9e9e;
+  border-radius: 21px !important;
+  height: 20px !important;
+  width: 40px !important;
+}
+
+::ng-deep .mat-slide-toggle-thumb-container {
+  top: -6px !important;
+  left: -6px !important;
+}
+
+::ng-deep .mat-slide-toggle ::ng-deep .mat-slide-toggle-ripple {
+  display: none !important;
+}
+
+::ng-deep .mat-slide-toggle.mat-checked ::ng-deep .mat-slide-toggle-thumb-container {
+  transform: translate3d(20px, 0, 0) !important;
+}
+
+::ng-deep .mat-slide-toggle.mat-primary.mat-checked ::ng-deep .mat-slide-toggle-bar {
+  background-color: rgb(143 235 55 / 50%);
+  border: 1px solid rgb(118 200 39);
+}
+
+::ng-deep .mat-slide-toggle.mat-primary.mat-checked ::ng-deep .mat-slide-toggle-thumb {
+  background-color: #fff;
+}
+
+::ng-deep .mat-slide-toggle::ng-deep .mat-checked:not(::ng-deep .mat-disabled) ::ng-deep .mat-slide-toggle-bar {
+  background-color: #000;
+}
+
+::ng-deep .mat-slide-toggle::ng-deep .mat-checked:not(::ng-deep .mat-disabled) ::ng-deep .mat-slide-toggle-thumb {
+  background-color: #fff;
+}

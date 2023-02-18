@@ -19,11 +19,24 @@ import {FocusMonitor} from '@angular/cdk/a11y';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {Query} from '@syncfusion/ej2-data';
+import {EmailService} from '../shared/services/email.service';
+import {QuillModules} from 'ngx-quill/lib/quill-editor.interfaces';
+import 'quill-emoji/dist/quill-emoji.js'
+
+import * as QuillNamespace from 'quill';
+let Quill: any = QuillNamespace;
+import ImageCompress from 'quill-image-compress';
+Quill.register('modules/imageCompress', ImageCompress);
+import Emoji from "quill-emoji";
+Quill.register("modules/emoji", Emoji);
+import Mention from "quill-mention";
+Quill.register("modules/mention", Mention);
+
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
-  styleUrls: ['./board.component.scss']
+  styleUrls: ['./board.component.scss'],
 })
 export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   
@@ -42,7 +55,6 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   usersData: Array<{ id: string; text: string; }> = [];
   selectedProjectId: number;
   firstUserId: string = '';
-  setBackground = false;
   filterStatus = false;
   public dropdownSettings: IDropdownSettings = {};
   private readonly unsubscribe: Subject<void> = new Subject();
@@ -58,7 +70,6 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   calendarIcon;
   currentDate;
   onlyMyIssues = false;
-  overdue: boolean = false;
   selectedUser;
   dateFilterValue;
   dateFilterData;
@@ -67,7 +78,77 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   date1Value;
   date2Value;
   searchText;
+  overdue;
+  previewData;
+  submitted = false;
   
+  atValues = [
+    {id: 1, value: 'Fredrik Sundqvist', link: 'https://google.com'},
+    {id: 2, value: 'Patrik Sjölin'}
+  ];
+  
+  quillConfig: QuillModules = {
+    toolbar: {
+      container: [
+        ['bold', 'italic', 'underline', 'strike'],
+        ['blockquote', 'code-block'],
+        ['emoji'],
+        [{'header': [1, 2, 3, 4, 5, 6, false]}],
+        [{'list': 'ordered'}, {'list': 'bullet'}],
+        [{'indent': '-1'}, {'indent': '+1'}],
+        [{'color': []}, {'background': []}],
+        [{'align': []}],
+        ['clean'],
+        ['link', 'image']
+      ],
+      
+    },
+    imageCompress: {
+      maxWidth: 450
+    },
+    mention: {
+      allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
+      mentionDenotationChars: ['@'],
+      source: (searchTerm, renderList, mentionChar) => {
+        let values;
+        
+        if (mentionChar === '@') {
+          values = this.atValues;
+        }
+        
+        if (searchTerm.length === 0) {
+          renderList(values, searchTerm);
+        } else {
+          const matches = [];
+          for (var i = 0; i < values.length; i++)
+            if (~values[i].value.toLowerCase().indexOf(searchTerm.toLowerCase())) matches.push(values[i]);
+          renderList(matches, searchTerm);
+        }
+      },
+    },
+    'emoji-toolbar': true,
+    'emoji-textarea': false,
+    'emoji-shortname': true,
+    keyboard: {
+      bindings: {
+        // shiftEnter: {
+        //   key: 13,
+        //   shiftKey: true,
+        //   handler: (range, context) => {
+        //     // Handle shift+enter
+        //     console.log("shift+enter")
+        //   }
+        // },
+        // enter:{
+        //   key:13,
+        //   handler: (range, context)=>{
+        //     console.log("enter");
+        //     return true;
+        //   }
+        // }
+      }
+    }
+  };
   
   get f() {
     return this.taskForm.controls;
@@ -80,6 +161,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               private route: ActivatedRoute,
               private projectsService: ProjectsService,
               private datepipe: DatePipe,
+              private emailService: EmailService,
               private _focusMonitor: FocusMonitor,
               private spinner: NgxSpinnerService,
               private elementRef: ElementRef) {
@@ -288,16 +370,42 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   openModal(content, task) {
     this.addTaskFlag = false;
     this.taskForm.setValue(task.data);
+    this.previewData = {
+      title: task.data.title,
+      description: task.data.description,
+      status: task.data.status,
+      deadline: task.data.deadline,
+      employee: this.employeeData.find(e => e.id == task.data.employeeId).text
+    };
+    this.modalService.open(content, {centered: true});
+  }
+  
+  updateTask(content, modal) {
+    this.addTaskFlag = false;
+    modal.close();
+    console.log(this.taskForm.value);
     this.modalService.open(content, {centered: true});
   }
   
   onSubmit(modal) {
+    this.submitted = true;
     if (!this.addTaskFlag) {
       this.taskService.updateTask(this.taskForm.value)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(data => {
             console.log(data.message);
             this.kanban.updateCard(this.taskForm.value);
+            this.userService.getUsers()
+              .pipe(takeUntil(this.unsubscribe))
+              .subscribe(users => {
+                  let taskUser = users.find(u => u._id === this.taskForm.value.employeeId);
+                  if (taskUser.sendTaskOverdueEmail) {
+                    this.email(taskUser._id, this.currentProject, this.taskForm.value, 'taskUpdate');
+                  }
+                },
+                err => {
+                  console.log(err);
+                });
           },
           err => {
             console.log(err);
@@ -318,6 +426,17 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
             };
             this.tasks.push(newTask);
             this.kanban.render();
+            this.userService.getUsers()
+              .pipe(takeUntil(this.unsubscribe))
+              .subscribe(users => {
+                  let taskUser = users.find(u => u._id === this.taskForm.value.employeeId);
+                  if (taskUser.sendTaskEmail && this.taskForm.value.status == 'To Do') {
+                    this.email(taskUser._id, this.currentProject, this.taskForm.value, 'task');
+                  }
+                },
+                err => {
+                  console.log(err);
+                });
           },
           err => {
             console.log(err);
@@ -341,19 +460,29 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.modalService.open(content, {centered: true});
   }
   
-  deleteTask(modal) {
-    this.taskService.deleteTask(this.taskForm.value.id)
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(data => {
-          console.log(data.message);
-          this.tasks.filter(task => task.id !== this.taskForm.value.id);
-          this.kanban.deleteCard(this.taskForm.value);
-        },
-        err => {
-          console.log(err);
-        });
+  deleteTask(content, modal) {
     modal.close();
+    this.modalService.open(content, {centered: true});
   }
+  
+  isDelete(action, modal) {
+    if (action == 'confirm') {
+      this.taskService.deleteTask(this.taskForm.value.id)
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe(data => {
+            console.log(data.message);
+            this.tasks.filter(task => task.id !== this.taskForm.value.id);
+            this.kanban.deleteCard(this.taskForm.value);
+          },
+          err => {
+            console.log(err);
+          });
+      modal.close();
+    } else {
+      modal.close();
+    }
+  }
+  
   
   findMyIssues() {
     this.onlyMyIssues = !this.onlyMyIssues;
@@ -372,7 +501,10 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   overdueDateStyle(task) {
+    this.currentDate = this.datepipe.transform(new Date(), 'YYYY-MM-dd');
+    
     this.overdue = task.deadline < this.currentDate;
+    
     if (this.overdue && task.status != StatusEnum.done) {
       return {'color': 'rgb(221 4 38 / 70%)'};
     } else {
@@ -420,6 +552,9 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   dateFilter(e) {
+    this.dateFilterValue = e;
+    this.date1Value = null;
+    this.date2Value = null;
     if (e == 'between') {
       this.isFrom = false;
       this.isTo = false;
@@ -439,19 +574,6 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
     this.filter(e, 'dateFilter');
   }
-  
-  // '<': ' lt ',
-  // '>': ' gt ',
-  // '<=': ' le ',
-  // '>=': ' ge ',
-  // '==': ' eq ',
-  // '!=': ' ne ',
-  // 'lessthan': ' lt ',
-  // 'lessthanorequal': ' le ',
-  // 'greaterthan': ' gt ',
-  // 'greaterthanorequal': ' ge ',
-  // 'equal': ' eq ',
-  // 'notequal': ' ne '
   
   dateCompare() {
     if (!!this.dateFilterValue) {
@@ -510,6 +632,8 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
         }
         
         if (!!this.dateFilterValue) {
+          // this.date1Value = null;
+          // this.date2Value = null;
           if (this.dateFilterValue == 'between') {
             this.isFrom = false;
             this.isTo = false;
@@ -544,5 +668,18 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
         this.kanban.query = filterQuery;
       }
     }
+  }
+  
+  email(userId, project, task, type) {
+    this.emailService.sendEmail(userId, project, task, '', type)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(response => {
+          console.log(response.message);
+          // this.toastr.success(response.message);
+        },
+        error => {
+          console.log(error);
+          // this.toastr.error(error);
+        });
   }
 }

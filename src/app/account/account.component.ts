@@ -6,7 +6,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../shared/services/auth.service';
 import {UserService} from '../shared/services/user.service';
-import {Subject, Subscription, takeUntil} from 'rxjs';
+import {Subject, takeUntil} from 'rxjs';
 import {Role, UserModel} from '../shared/models/user.model';
 import {faCheck, faEye, faEyeSlash, faPencil, faXmark} from '@fortawesome/free-solid-svg-icons';
 
@@ -25,13 +25,16 @@ export class AccountComponent implements OnInit, OnDestroy {
   submitted = false;
   userList: UserModel[] = [];
   selectedVal: string;
-  currentUserData: { _id: string; firstName: string; lastName: string; email: string; password: string; role: Role; } = {
+  currentUserData: { _id: string; firstName: string; lastName: string; email: string; password: string; role: Role; sendAssignedEmail: boolean; sendTaskEmail: boolean; sendTaskOverdueEmail: boolean;} = {
     _id: '',
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-    role: Role.ProjectManager
+    role: Role.ProjectManager,
+    sendAssignedEmail: false,
+    sendTaskEmail: false,
+    sendTaskOverdueEmail: false
   };
   fieldTextType: boolean;
   editStatus: boolean = false;
@@ -78,14 +81,16 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.userService.getCurrentUser()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(user => {
-          console.log(user);
           this.currentUserData = {
             _id: user._id,
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
             password: user.password,
-            role: user.role
+            role: user.role,
+            sendAssignedEmail: user.sendAssignedEmail,
+            sendTaskEmail: user.sendTaskEmail,
+            sendTaskOverdueEmail: user.sendTaskOverdueEmail
           };
           this.userSettingsForm.setValue(
             {
@@ -157,5 +162,28 @@ export class AccountComponent implements OnInit, OnDestroy {
         err => {
           console.log(err);
         });
+  }
+  
+  deleteUser(content) {
+    this.modalService.open(content, {centered: true});
+  }
+  
+  isDelete(action, modal) {
+    if (action == 'confirm') {
+      this.userService.deleteUser(this.currentUserData._id)
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe(response => {
+            console.log(response);
+            this.authenticationService.logout().subscribe(sub => {
+              this.router.navigate(['/login']);
+            });
+          },
+          err => {
+            console.log(err);
+          });
+      modal.close();
+    } else {
+      modal.close();
+    }
   }
 }

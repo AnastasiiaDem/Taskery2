@@ -8,6 +8,7 @@ import {HomeComponent} from './home/home.component';
 import {ProjectsComponent} from './projects/projects.component';
 import {ReportComponent} from './report/report.component';
 import {AccountComponent} from './account/account.component';
+import {NotificationsComponent} from './notifications/notifications.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent, canActivate: [AuthGuard]},
@@ -16,6 +17,7 @@ const routes: Routes = [
   {path: 'board', component: BoardComponent, data: {animation: 'board'}},
   {path: 'projects', component: ProjectsComponent, data: {animation: 'projects'}},
   {path: 'account', component: AccountComponent, data: {animation: 'account'}},
+  {path: 'notifications', component: NotificationsComponent, data: {animation: 'notifications'}},
   {path: 'report', component: ReportComponent, canActivate: [AuthGuard], data: {animation: 'report'}}
 ];
 

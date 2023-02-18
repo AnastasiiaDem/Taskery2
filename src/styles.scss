@@ -184,10 +184,15 @@ ng-select2 {
 
 .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card {
   border-radius: 10px !important;
+  max-height: 150px;
 }
 
 .e-accordion .e-acrdn-item.e-select.e-selected.e-expand-state > .e-acrdn-header .e-acrdn-header-icon, .e-accordion .e-acrdn-item.e-select.e-selected.e-expand-state > .e-acrdn-header .e-acrdn-header-content, .e-accordion .e-acrdn-item.e-select.e-expand-state > .e-acrdn-header .e-acrdn-header-icon, .e-accordion .e-acrdn-item.e-select.e-expand-state > .e-acrdn-header .e-acrdn-header-content {
   color: #1172fd;
+}
+
+.e-card .e-card-content, .e-card .e-card-content p {
+  margin: 0 !important;
 }
 
 @import '../node_modules/@syncfusion/ej2-base/styles/material.css';
@@ -204,3 +209,7 @@ ng-select2 {
 @import "~@fortawesome/fontawesome-free/scss/solid.scss";
 @import "~@fortawesome/fontawesome-free/scss/regular.scss";
 @import "~@fortawesome/fontawesome-free/scss/brands.scss";
+@import "~quill-emoji/dist/quill-emoji.css";
+@import '~quill/dist/quill.core.css';
+@import '~quill/dist/quill.bubble.css';
+@import '~quill/dist/quill.snow.css';

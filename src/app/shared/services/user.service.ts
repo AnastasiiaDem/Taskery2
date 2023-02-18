@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 
-const apiUrl = 'http://localhost:1100/api';
+const apiUrl = 'http://localhost:2200/api';
 const options = {
   headers: {'Content-Type': 'application/json'},
   withCredentials: true
@@ -31,8 +31,7 @@ export class UserService {
     return this.http.post(`${apiUrl}/register`, body, options);
   }
   
-  deleteUser(userId: number): Observable<any> {
-    const url = `${apiUrl}/${userId}`;
-    return this.http.delete(url, options);
+  deleteUser(userId): Observable<any> {
+    return this.http.delete(`${apiUrl}/user/delete/${userId}`, options);
   }
 }

@@ -60,6 +60,9 @@ colorValue;
 export class ReportComponent implements OnInit, OnDestroy {
   
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
+  @ViewChild(BaseChartDirective) pieChart: BaseChartDirective;
+  @ViewChild(BaseChartDirective) barChart: BaseChartDirective;
+  
   private readonly unsubscribe: Subject<void> = new Subject();
   public barChartOptions: Array<Partial<barChartOptions>> = [];
   public pieChartOptions: Array<Partial<pieChartOptions>> = [];
@@ -79,6 +82,12 @@ export class ReportComponent implements OnInit, OnDestroy {
     email: '',
     password: '',
     role: Role.ProjectManager
+  };
+  report: { numberOfTasks: number; overdueTasks: number; status: string; projectStart: string; } = {
+    numberOfTasks: 0,
+    overdueTasks: 0,
+    status: '',
+    projectStart: ''
   };
   
   constructor(public taskService: TaskService,
@@ -104,12 +113,14 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
   
   tasksNumber(p) {
-    return this.tasks.filter(t => t.projectId == p.id).length;
+    this.report.numberOfTasks = this.tasks.filter(t => t.projectId == p.id).length;
+    return this.report.numberOfTasks;
   }
   
   overdueTasksNumber(p) {
     this.currentDate = new Date();
-    return this.tasks.filter(t => (t.projectId == p.id && t.deadline < this.currentDate && t.status != StatusEnum.done)).length;
+    this.report.overdueTasks = this.tasks.filter(t => (t.projectId == p.id && t.deadline < this.datepipe.transform(this.currentDate, 'YYYY-MM-dd') && t.status != StatusEnum.done)).length;
+    return this.report.overdueTasks;
   }
   
   statusEllipse(p) {
@@ -510,5 +521,21 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.chart?.chart.update();
       this.exportStatus = false;
     }, 2000);
+  }
+  
+  email(project) {
+    this.report.status = project.status;
+    this.report.projectStart = this.datepipe.transform(project.createdAt, 'YYYY-MM-dd');
+  
+    this.emailService.sendEmail(this.currentUser._id, project, '', this.report, 'report')
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(response => {
+          console.log(response.message);
+          // this.toastr.success(response.message);
+        },
+        error => {
+          console.log(error);
+          // this.toastr.error(error);
+        });
   }
 }

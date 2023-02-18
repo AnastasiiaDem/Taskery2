@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 
-const apiUrl = 'http://localhost:1100/api';
+const apiUrl = 'http://localhost:2200/api';
 const options = {
   headers: {'Content-Type': 'application/json'},
   withCredentials: true
@@ -14,7 +14,7 @@ export class EmailService {
   constructor(private http: HttpClient) {
   }
   
-  sendEmail(user, project, text): Observable<any> {
-    return this.http.post(`${apiUrl}/email`, {user: user, project: project, text: text}, options);
+  sendEmail(userId, project, task, report, content): Observable<any> {
+    return this.http.post(`${apiUrl}/email`, {userId: userId, project: project, task: task, report: report, content: content}, options);
   }
 }

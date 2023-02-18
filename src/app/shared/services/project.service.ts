@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {ProjectModel} from '../models/project.model';
 
-const apiUrl = 'http://localhost:1100/api';
+const apiUrl = 'http://localhost:2200/api';
 const options = {
   headers: {'Content-Type': 'application/json'},
   withCredentials: true

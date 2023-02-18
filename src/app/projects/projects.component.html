@@ -52,7 +52,7 @@
           <div class="form-floating" style="width: 100%; margin-bottom: 15px">
             <input class="form-control" type="text" placeholder="Project Name"
                    formControlName="projectName"
-                   [ngClass]="{ 'is-invalid': projectForm.invalid && f.projectName.errors }" required>
+                   [ngClass]="{ 'is-invalid': submitted && projectForm.invalid && f.projectName.errors }" required>
             <label>Project Name</label>
           </div>
           <!--          </div>-->

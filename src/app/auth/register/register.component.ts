@@ -8,6 +8,7 @@ import {AlertService} from '../../shared/services/alert.service';
 import {Role, UserModel} from 'src/app/shared/models/user.model';
 import {Subject, takeUntil} from 'rxjs';
 import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -26,6 +27,7 @@ export class RegisterComponent implements OnInit {
   
   constructor(private formBuilder: FormBuilder,
               private router: Router,
+              private toastr: ToastrService,
               private authenticationService: AuthService,
               private userService: UserService,
               private alertService: AlertService) {
@@ -92,6 +94,9 @@ export class RegisterComponent implements OnInit {
         lastName: this.registerForm.value.lastName,
         password: this.registerForm.value.password,
         role: this.registerForm.value.role,
+        sendAssignedEmail: false,
+        sendTaskEmail: false,
+        sendTaskOverdueEmail: false
       };
   
       this.loading = true;
@@ -103,11 +108,11 @@ export class RegisterComponent implements OnInit {
         )
         .subscribe(
           data => {
-            this.alertService.success('Registration successful', true);
+            this.toastr.success('Registration successful');
             this.router.navigate(['/login']);
           },
-          error => {
-            this.alertService.error(error);
+          err => {
+            this.toastr.error(err);
             this.loading = false;
           });
     }, 1000);

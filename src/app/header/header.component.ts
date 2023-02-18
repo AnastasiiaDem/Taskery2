@@ -26,7 +26,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     lastName: '',
     email: '',
     password: '',
-    role: Role.TeamMember
+    role: Role.TeamMember,
+    sendAssignedEmail: false,
+    sendTaskEmail: false,
+    sendTaskOverdueEmail: false
   };
   
   constructor(private alertService: AlertService,
@@ -80,6 +83,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.url = '/account';
       setTimeout(() => {
         this.router.navigate(['/account']);
+        setTimeout(() => {
+          document.getElementById('ngbDropdownMenu').classList.remove('show');
+        }, 500);
+      }, 910);
+    }
+  }
+  
+  goToNotifications() {
+    if (this.url != '/') {
+      this.url = '/notifications';
+      this.router.navigate(['/notifications']);
+    } else {
+      this.url = '/notifications';
+      setTimeout(() => {
+        this.router.navigate(['/notifications']);
         setTimeout(() => {
           document.getElementById('ngbDropdownMenu').classList.remove('show');
         }, 500);

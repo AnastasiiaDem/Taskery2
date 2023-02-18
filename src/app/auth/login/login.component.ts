@@ -10,7 +10,7 @@ import {Select2OptionData} from 'ng-select2';
 import {UserModel} from '../../shared/models/user.model';
 import {TokenStorageService} from '../../shared/services/token.service';
 import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
-import {EmailService} from '../../shared/services/email.service';
+import {ToastrService} from 'ngx-toastr';
 
 
 @Component({
@@ -32,6 +32,7 @@ export class LoginComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private route: ActivatedRoute,
               private router: Router,
+              private toastr: ToastrService,
               private userService: UserService,
               private authenticationService: AuthService,
               private tokenStorage: TokenStorageService,
@@ -75,15 +76,14 @@ export class LoginComponent implements OnInit {
         takeUntil(this.unsubscribe),
         first()
       )
-      .subscribe(
-        data => {
+      .subscribe(data => {
           this.router.navigate([this.returnUrl]);
           this.tokenStorage.saveToken(data.accessToken);
           this.tokenStorage.saveRefreshToken(data.refreshToken);
           this.tokenStorage.saveUser(data);
         },
-        error => {
-          this.alertService.error(error);
+        err => {
+          this.toastr.error(err);
           this.loading = false;
         });
   }

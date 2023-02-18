@@ -30,8 +30,8 @@
               <img src="https://img.icons8.com/ios-glyphs/30/null/settings--v1.png" alt=""> User Settings
             </button>
           </div>
-          <div class="mb-1">
-            <button class="nav-item nav-link settings-btn" (click)="''">
+          <div class="mb-1" *ngIf="this.currentUserData.role != 'ProjectManager'">
+            <button class="nav-item nav-link settings-btn" (click)="goToNotifications()">
               <img src="https://img.icons8.com/material/24/null/appointment-reminders--v1.png" alt=""> Notifications
             </button>
           </div>

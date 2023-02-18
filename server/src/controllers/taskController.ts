@@ -2,7 +2,7 @@ import User from '../model/UserModel';
 import Token from '../model/TokenModel';
 import express from 'express';
 import Task from '../model/TaskModel';
-import mongoose from 'mongoose';
+import mongoose, {Schema} from 'mongoose';
 
 export const createTask = async (req: express.Request, res: express.Response) => {
   const {employeeId, projectId, title, description, status, deadline} = req.body;
@@ -45,8 +45,8 @@ export const updateTask = async (req: express.Request, res: express.Response) =>
   
   !id && res.status(400).json({error: 'no id'});
   
-  const {title, description, status, deadline} = req.body;
-  
+  const {title, description, status, deadline, employeeId} = req.body;
+
   const cookies = req.cookies;
   if (!cookies?.token) return res.status(401).json({error: 'error no cookies'});
   
@@ -63,7 +63,8 @@ export const updateTask = async (req: express.Request, res: express.Response) =>
     ...(title ? {title: title} : {}),
     ...(description ? {description: description} : {}),
     ...(status ? {status: status} : {}),
-    ...(deadline ? {deadline: deadline} : {})
+    ...(deadline ? {deadline: deadline} : {}),
+    ...(employeeId ? {employeeId: employeeId} : {}),
   };
   
   try {

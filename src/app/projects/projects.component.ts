@@ -41,6 +41,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
     password: '',
     role: Role.ProjectManager
   };
+  submitted = false;
   
   get f() {
     return this.projectForm.controls;
@@ -250,6 +251,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
   }
   
   onSubmit(modal) {
+    this.submitted = true;
     if (!this.addProjectFlag) {
       this.projectService.updateProject(this.projectForm.value)
         .pipe(takeUntil(this.unsubscribe))
@@ -273,16 +275,25 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
               assignedUsers: p.assignedUsers,
               createdAt: p.createdAt
             });
-  
-          p.assignedUsers?.forEach(u => {
-            this.email(u, p, 'You have been assigned to the project ' + p.projectName)
-          });
-          
           },
           err => {
             console.log(err);
           });
     }
+  
+    this.userService.getUsers()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(users => {
+          this.projectForm.value.assignedUsers?.forEach(assigned => {
+            let projectUser = users.find(u => u._id === assigned.id);
+            if (projectUser.sendAssignedEmail) {
+              this.email(projectUser._id, this.projectForm.value);
+            }
+          });
+        },
+        err => {
+          console.log(err);
+        });
     modal.close();
   }
   
@@ -322,8 +333,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
         });
   }
   
-  email(user, project, text) {
-    this.emailService.sendEmail(user, project, text)
+  email(userId, project) {
+    this.emailService.sendEmail(userId, project, '', '', 'project')
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(response => {
           console.log(response.message);
