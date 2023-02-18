@@ -16,11 +16,23 @@ import {FocusMonitor} from '@angular/cdk/a11y';
 import {DatePipe} from '@angular/common';
 import {EmailService} from '../shared/services/email.service';
 import {ToastrService} from 'ngx-toastr';
+import {QuillModules} from 'ngx-quill/lib/quill-editor.interfaces';
+import 'quill-emoji/dist/quill-emoji.js'
+
+import * as QuillNamespace from 'quill';
+let Quill: any = QuillNamespace;
+import ImageCompress from 'quill-image-compress';
+Quill.register('modules/imageCompress', ImageCompress);
+import Emoji from "quill-emoji";
+Quill.register("modules/emoji", Emoji);
+import Mention from "quill-mention";
+Quill.register("modules/mention", Mention);
+
 
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.component.html',
-  styleUrls: ['./projects.component.scss'],
+  styleUrls: ['./projects.component.scss', '../board/board.component.scss'],
 })
 export class ProjectsComponent implements OnInit, AfterViewChecked {
   projects: ProjectModel[] = [];
@@ -41,11 +53,13 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
     password: '',
     role: Role.ProjectManager
   };
+  previewData;
   submitted = false;
   
-  get f() {
-    return this.projectForm.controls;
-  }
+  atValues = [
+    {id: 1, value: 'Fredrik Sundqvist', link: 'https://google.com'},
+    {id: 2, value: 'Patrik Sjölin'}
+  ];
   
   linkStyle(project) {
     if (project.status == StatusEnum.todo) {
@@ -62,6 +76,51 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
     }
   }
   
+  quillConfig: QuillModules = {
+    toolbar: {
+      container: [
+        ['bold', 'italic', 'underline', 'strike'],
+        [{'color': []}, {'background': []}],
+        [{'header': [1, 2, 3, 4, 5, 6, false]}],
+        [{'align': []}],
+        [{'indent': '-1'}, {'indent': '+1'}],
+        [{'list': 'ordered'}, {'list': 'bullet'}],
+        ['code-block'],
+        ['emoji'],
+        ['clean'],
+        ['link', 'image']
+      ],
+      
+    },
+    imageCompress: {
+      maxWidth: 450
+    },
+    mention: {
+      allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
+      mentionDenotationChars: ['@'],
+      source: (searchTerm, renderList, mentionChar) => {
+        let values;
+        
+        if (mentionChar === '@') {
+          values = this.atValues;
+        }
+        
+        if (searchTerm.length === 0) {
+          renderList(values, searchTerm);
+        } else {
+          const matches = [];
+          for (var i = 0; i < values.length; i++)
+            if (~values[i].value.toLowerCase().indexOf(searchTerm.toLowerCase())) matches.push(values[i]);
+          renderList(matches, searchTerm);
+        }
+      },
+    },
+    'emoji-toolbar': true,
+    'emoji-textarea': false,
+    'emoji-shortname': true,
+  };
+  
+  
   constructor(private formBuilder: FormBuilder,
               private modalService: NgbModal,
               private taskService: TaskService,
@@ -73,6 +132,10 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
               private emailService: EmailService,
               private _focusMonitor: FocusMonitor,
               private spinner: NgxSpinnerService) {
+  }
+  
+  get f() {
+    return this.projectForm.controls;
   }
   
   ngOnInit() {
@@ -297,7 +360,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
     modal.close();
   }
   
-  updateProject(content, project) {
+  openModal(content, project) {
     this.addProjectFlag = false;
     this.projectForm.setValue({
       id: project.id || project._id,
@@ -307,30 +370,58 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
       assignedUsers: project.assignedUsers,
       createdAt: project.createdAt
     });
+    let assignedList = '';
+
+    project.assignedUsers.forEach(u => {
+      assignedList += u.text + '<br>';
+    });
+    
+    this.previewData = {
+      projectName: project.projectName,
+      description: project.description,
+      status: project.status,
+      assignedUsers: assignedList,
+      createdAt: project.createdAt
+    };
     this.modalService.open(content, {centered: true});
   }
   
-  deleteProject(modal) {
-    this.projectService.deleteProject(this.projectForm.value.id)
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(data => {
-          this.projects = this.projects.filter(project => project.id !== this.projectForm.value.id);
-          console.log(data.message);
-          this.projects.length = (this.projects.length == undefined) ? 0 : this.projects.length;
-          let currentProject = {
-            id: this.projects.length + 1,
-            projectName: '',
-            description: '',
-            status: StatusEnum.todo,
-            assignedUsers: [],
-            createdAt: this.currentDate
-          };
-          this.projectForm.setValue(currentProject);
-          modal.close();
-        },
-        err => {
-          console.log(err);
-        });
+  updateProject(content, modal) {
+    this.addProjectFlag = false;
+    modal.close();
+    this.modalService.open(content, {centered: true});
+  }
+  
+  deleteProject(content, modal) {
+    modal.close();
+    this.modalService.open(content, {centered: true});
+  }
+  
+  isDelete(action, modal) {
+    if (action == 'confirm') {
+      this.projectService.deleteProject(this.projectForm.value.id)
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe(data => {
+            this.projects = this.projects.filter(project => project.id !== this.projectForm.value.id);
+            console.log(data.message);
+            this.projects.length = (this.projects.length == undefined) ? 0 : this.projects.length;
+            let currentProject = {
+              id: this.projects.length + 1,
+              projectName: '',
+              description: '',
+              status: StatusEnum.todo,
+              assignedUsers: [],
+              createdAt: this.currentDate
+            };
+            this.projectForm.setValue(currentProject);
+          },
+          err => {
+            console.log(err);
+          });
+      modal.close();
+    } else {
+      modal.close();
+    }
   }
   
   email(userId, project) {

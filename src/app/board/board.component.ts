@@ -91,13 +91,13 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     toolbar: {
       container: [
         ['bold', 'italic', 'underline', 'strike'],
-        ['blockquote', 'code-block'],
-        ['emoji'],
-        [{'header': [1, 2, 3, 4, 5, 6, false]}],
-        [{'list': 'ordered'}, {'list': 'bullet'}],
-        [{'indent': '-1'}, {'indent': '+1'}],
         [{'color': []}, {'background': []}],
+        [{'header': [1, 2, 3, 4, 5, 6, false]}],
         [{'align': []}],
+        [{'indent': '-1'}, {'indent': '+1'}],
+        [{'list': 'ordered'}, {'list': 'bullet'}],
+        ['code-block'],
+        ['emoji'],
         ['clean'],
         ['link', 'image']
       ],
@@ -129,30 +129,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     'emoji-toolbar': true,
     'emoji-textarea': false,
     'emoji-shortname': true,
-    keyboard: {
-      bindings: {
-        // shiftEnter: {
-        //   key: 13,
-        //   shiftKey: true,
-        //   handler: (range, context) => {
-        //     // Handle shift+enter
-        //     console.log("shift+enter")
-        //   }
-        // },
-        // enter:{
-        //   key:13,
-        //   handler: (range, context)=>{
-        //     console.log("enter");
-        //     return true;
-        //   }
-        // }
-      }
-    }
   };
-  
-  get f() {
-    return this.taskForm.controls;
-  }
   
   constructor(private formBuilder: FormBuilder,
               public taskService: TaskService,
@@ -170,6 +147,10 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       .subscribe(param => {
         this.selectedProjectId = param['paramKey'];
       });
+  }
+  
+  get f() {
+    return this.taskForm.controls;
   }
   
   ngOnInit() {
@@ -383,7 +364,6 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   updateTask(content, modal) {
     this.addTaskFlag = false;
     modal.close();
-    console.log(this.taskForm.value);
     this.modalService.open(content, {centered: true});
   }
   

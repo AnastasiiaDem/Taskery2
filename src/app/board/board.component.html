@@ -80,7 +80,6 @@
             </td>
           </tr>
           <tr>
-<!--            <td class="CardBody">{{data.description}}</td>-->
             <td class="CardBody" [innerHTML]="data.description | safeHtml"></td>
           </tr>
           </tbody>
@@ -95,12 +94,7 @@
   <div class="container">
     <div class="row align-items-center">
       <div class="card-header px-lg-5">
-        <div class="card-heading text-primary">{{addTaskFlag ? 'Add new task' : 'Update the task'}}
-          <!--          <img *ngIf="!addTaskFlag"-->
-          <!--               src="https://img.icons8.com/ios-glyphs/30/444444/delete.png" alt=""-->
-          <!--               class="trash"-->
-          <!--               (click)="deleteTask(modal)">-->
-        </div>
+        <div class="card-heading text-primary">{{addTaskFlag ? 'Add new task' : 'Update the task'}}</div>
       </div>
       <div class="card-body" style="padding: 2rem!important;">
         <form [formGroup]="taskForm" (ngSubmit)="onSubmit(modal)">
@@ -112,8 +106,6 @@
             </div>
           </div>
           <div class="form-floating mb-3">
-<!--            <textarea class="form-control" style="padding-top: 0.5rem; height: 150px;" formControlName="description"-->
-<!--                      placeholder="Description"></textarea>-->
             <quill-editor class="form-control" style="padding: 1rem .75rem; height: 150px;"
                           formControlName="description" placeholder="Description"
                           [modules]="quillConfig"></quill-editor>
