@@ -9,27 +9,12 @@
   border: none !important;
 }
 
-.avatar:hover, .avatar:focus {
+.avatar:hover, #dropdown:focus {
   background: url("../../assets/images/icons8-spinning-circle-100 (1).png") no-repeat;
   background-size: 30px;
-}
-
-.avatar-active {
-  background: url("../../assets/images/icons8-spinning-circle-100 (1).png") no-repeat;
-  background-size: 30px;
-  height: 30px;
-  width: 30px;
-  display: inline-block;
-  margin-right: 25px;
-  transition: 1s;
-  border: none !important;
 }
 
 .avatar::after {
-  display: none;
-}
-
-.avatar-active::after {
   display: none;
 }
 
@@ -80,6 +65,10 @@
   justify-content: space-between;
 }
 
+.navbar {
+  padding: 1rem 5rem;
+}
+
 .nav-block {
   display: flex;
   margin-right: 5rem;
@@ -96,8 +85,6 @@
 }
 
 .net-icon {
-  //position: absolute;
-  //top: 18px;
   height: 20px;
   width: 20px;
 }
@@ -113,24 +100,20 @@
 }
 
 .head-text {
-  //font-weight: 700 !important;
   font-weight: 900 !important;
   font-family: 'Inter', serif;
-  //font-size: 95px;
-  font-size: 85px;
-  line-height: 90px;
-  //display: inline;
+  font-size: 68px;
+  line-height: 80px;
   margin: 0;
 }
 
 .task-span {
   position: absolute;
-  top: 95px;
-  left: 61px;
-  width: 405px;
+  top: 13.3rem;
+  left: 9.1rem;
+  width: 325px;
   color: rgb(76 126 253);
-  //transition: 500ms;
-  transition: 0.9s ease-out;
+  transition: 0.5s ease-out;
   z-index: 10;
 }
 
@@ -143,7 +126,21 @@
   font-size: 15px;
   margin: 0;
   line-height: 20px;
-  //transition: 500ms;
-  transition: 0.9s ease-in;
+  transition: 0.5s ease-in;
   z-index: 10;
+  top: 6.5rem;
+  left: 9rem;
+}
+
+.contact {
+  padding: 0.4rem 1rem !important;
+  padding-right: 5rem !important;
+  color: rgb(179 209 254) !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  transition: 0.5s;
+
+  &:hover {
+    color: rgba(13, 110, 253, 0.8) !important;
+  }
 }

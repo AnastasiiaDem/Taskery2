@@ -1,31 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
 
 .main-content {
-  //width: 100%;
   margin: 2rem 4rem;
   display: flex;
   position: relative;
-  height: 500px;
+  height: 700px;
 
   .description {
-    //padding: 5% 0 0 0;
-    //width: 45%;
-    padding: 0;
     width: 100%;
 
     .head-text {
-      //font-weight: 700 !important;
       font-weight: 900 !important;
       font-family: 'Inter', serif;
-      //font-size: 95px;
-      font-size: 85px;
-      line-height: 90px;
-      //display: inline;
+      font-size: 68px;
+      line-height: 80px;
       margin: 0;
     }
 
     .body-text {
-      //width: 52%;
       width: 56%;
       font-size: 14px;
       color: rgba(55, 61, 63, 0.8);
@@ -35,29 +27,14 @@
       text-align: justify;
       margin-bottom: 0;
       margin-top: -80px;
-      //text-indent: 10px;
 
       .italic-span {
         font-family: 'Libre Baskerville', serif;
         font-style: italic;
         font-size: 15px;
-        //color: rgb(76 126 253);
       }
     }
   }
-
-  //.task-span {
-  //  //width: 405px;
-  //  position: absolute;
-  //  color: rgb(76 126 253);
-  //  font-weight: 900 !important;
-  //  font-family: 'Inter', serif;
-  //  transform: translate(-21px, -57px);
-  //  font-size: 15px;
-  //  margin: 0;
-  //  line-height: 20px;
-  //  //top: 42px;
-  //}
 
   .task-span {
     position: absolute;
@@ -79,33 +56,18 @@
     color: rgba(55, 61, 63, 0.8);
   }
 
-  .home-image img {
-    transform: scale(1.3);
-    position: absolute;
-    right: -3%;
-    width: 37%;
-    z-index: -1;
-    top: 22%;
-  }
-  img {
-    position: absolute;
-    z-index: -1;
-    width: 340px;
-    top: 55%;
-    left: 17%;
-  }
-
   .image2 {
-    //left: 23%;
-    left: 18%;
-    top: 52%;
+    height: 700px;
+    width: 700px;
   }
 }
 
 .main-content-second {
   text-align: center;
-  height: max-content;
-  margin: 10rem auto;
+  display: flex;
+  height: 600px;
+  align-items: center;
+  justify-content: center;
 
   h2 {
     font-weight: 600 !important;
@@ -139,4 +101,11 @@
 
 .btn-outline-primary {
   transition: all 0.4s ease-in-out;
+}
+
+.main-text {
+  position: absolute;
+  width: 60%;
+  left: 5rem;
+  top: 7rem;
 }

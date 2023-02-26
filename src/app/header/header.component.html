@@ -2,16 +2,16 @@
   <div class="navbar-nav">
     <div class="nav-item nav-link logo-link">
       <img src="./assets/images/icons8-network-2-64.png" alt="" class="net-icon">
-      <!--      <img src="./assets/images/Group%202.png" alt="" width="130" style="position: absolute; top: 4px;">-->
-      <!--      <p class="small-head-text" [@inOutAnimation] *ngIf="url != '/'">TASKERY</p>-->
-      <p class="head-text task-span" [ngClass]="url == '/' ? 'task-span' : 'transition-task-span'">TASKERY</p>
+      <p class="head-text task-span" [ngClass]="url == '/home' ? 'task-span' : 'transition-task-span'">TASKERY</p>
     </div>
-    <div class="nav-block">
+    <div class="nav-block" style="margin-left: 11rem; margin-right: 0;">
       <a class="nav-item nav-link project-list" (click)="home()">Home</a>
       <a class="nav-item nav-link project-list" id="projectList" (click)="projectList()">Project list</a>
       <a class="nav-item nav-link report" (click)="report()">Report</a>
     </div>
-    
+
+    <div class="nav-block">
+    <a class="nav-item nav-link contact" (click)="contacts()">Contact us</a>
     <div ngbDropdown class="d-inline-block" style="height: 30px;" placement="left-top">
       <button type="button" id="dropdown" ngbDropdownToggle class='avatar' (click)="getUpdatedData()"></button>
       <div ngbDropdownMenu aria-labelledby="dropdown" id="ngbDropdownMenu">
@@ -43,6 +43,7 @@
           </div>
         </div>
       </div>
+    </div>
     </div>
   </div>
 </nav>

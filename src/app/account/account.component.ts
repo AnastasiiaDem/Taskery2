@@ -44,7 +44,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   checkIcon;
   xIcon;
   fieldType = '';
-  
+
   constructor(private alertService: AlertService,
               private toastr: ToastrService,
               private router: Router,
@@ -56,13 +56,13 @@ export class AccountComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(x => this.currentUser = x);
   }
-  
+
   ngOnInit() {
     this.faIcon = faEye;
     this.pencilIcon = faPencil;
     this.checkIcon = faCheck;
     this.xIcon = faXmark;
-    
+
     this.getCurrentUser();
     this.userSettingsForm = this.formBuilder.group({
       firstName: ['', Validators.required],
@@ -71,12 +71,12 @@ export class AccountComponent implements OnInit, OnDestroy {
       password: ['', [Validators.required, Validators.minLength(6), Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]+$')]],
     });
   }
-  
+
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
-  
+
   getCurrentUser() {
     this.userService.getCurrentUser()
       .pipe(takeUntil(this.unsubscribe))
@@ -104,23 +104,23 @@ export class AccountComponent implements OnInit, OnDestroy {
           console.log(err);
         });
   }
-  
+
   onSubmit() {
     this.alertService.clear();
     if (this.userSettingsForm.invalid) {
       return;
     }
   }
-  
+
   get f() {
     return this.userSettingsForm.controls;
   }
-  
+
   toggleFieldTextType() {
     this.fieldTextType = !this.fieldTextType;
     this.faIcon = this.fieldTextType ? faEyeSlash : faEye;
   }
-  
+
   editField(field) {
     this.editStatus = true;
     this.fieldType = field;
@@ -128,7 +128,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     input['readOnly'] = false;
     input['disabled'] = false;
   }
-  
+
   updateField(field) {
     this.submitted = true;
     if (!this.userSettingsForm.controls[field].errors) {
@@ -147,7 +147,7 @@ export class AccountComponent implements OnInit, OnDestroy {
           });
     }
   }
-  
+
   resetChanges(field) {
     this.userSettingsForm.controls[field].setValue(this.currentUserData[field]);
     this.userService.updateUser(this.currentUserData)
@@ -163,11 +163,11 @@ export class AccountComponent implements OnInit, OnDestroy {
           console.log(err);
         });
   }
-  
+
   deleteUser(content) {
     this.modalService.open(content, {centered: true});
   }
-  
+
   isDelete(action, modal) {
     if (action == 'confirm') {
       this.userService.deleteUser(this.currentUserData._id)
@@ -175,7 +175,7 @@ export class AccountComponent implements OnInit, OnDestroy {
         .subscribe(response => {
             console.log(response);
             this.authenticationService.logout().subscribe(sub => {
-              this.router.navigate(['/login']);
+              this.router.navigate(['/']);
             });
           },
           err => {

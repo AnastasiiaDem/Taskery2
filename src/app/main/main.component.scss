@@ -1,0 +1,34 @@
+.main-content-second {
+  .btn {
+    color: #4c7efd !important;
+    border-color: #fff !important;
+    transition: 0.5s;
+
+    &:hover {
+      background-color: #fff !important;
+      color: #0d6efd !important;
+      border-color: #0d6efd !important;
+    }
+  }
+}
+
+.get-started-btn {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+
+  .btn {
+    background-color: #4c7efd !important;
+    border-color: #0d6efd !important;
+    transition: 0.5s;
+
+    &:hover {
+      background-color: #fff !important;
+      color: #4c7efd !important;
+    }
+  }
+}
+
+.avatar {
+  pointer-events: none !important;
+}

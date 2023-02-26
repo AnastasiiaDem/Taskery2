@@ -55,12 +55,12 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
   };
   previewData;
   submitted = false;
-  
+
   atValues = [
     {id: 1, value: 'Fredrik Sundqvist', link: 'https://google.com'},
     {id: 2, value: 'Patrik Sjölin'}
   ];
-  
+
   linkStyle(project) {
     if (project.status == StatusEnum.todo) {
       return {'background': '#EDF9FF'};
@@ -75,7 +75,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
       return {'background': '#E8FBED'};
     }
   }
-  
+
   quillConfig: QuillModules = {
     toolbar: {
       container: [
@@ -90,7 +90,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
         ['clean'],
         ['link', 'image']
       ],
-      
+
     },
     imageCompress: {
       maxWidth: 450
@@ -100,11 +100,11 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
       mentionDenotationChars: ['@'],
       source: (searchTerm, renderList, mentionChar) => {
         let values;
-        
+
         if (mentionChar === '@') {
           values = this.atValues;
         }
-        
+
         if (searchTerm.length === 0) {
           renderList(values, searchTerm);
         } else {
@@ -119,8 +119,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
     'emoji-textarea': false,
     'emoji-shortname': true,
   };
-  
-  
+
+
   constructor(private formBuilder: FormBuilder,
               private modalService: NgbModal,
               private taskService: TaskService,
@@ -133,11 +133,11 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
               private _focusMonitor: FocusMonitor,
               private spinner: NgxSpinnerService) {
   }
-  
+
   get f() {
     return this.projectForm.controls;
   }
-  
+
   ngOnInit() {
     this.currentDate = new Date();
     this.currentDate = new Date();
@@ -163,7 +163,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
       assignedUsers: [[], Validators.required],
       createdAt: [this.currentDate, Validators.required],
     });
-    
+
     this.dropdownSettings = {
       singleSelection: false,
       idField: 'id',
@@ -175,10 +175,10 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
       allowSearchFilter: true
     };
   }
-  
+
   ngAfterViewChecked() {
     this._focusMonitor.stopMonitoring(document.getElementById('mat-btn'));
-    
+
     const dom: HTMLElement = this.elementRef.nativeElement;
     dom.querySelectorAll('.card-header').forEach(el => {
       if (el.innerHTML.includes(StatusEnum.todo)) {
@@ -196,12 +196,12 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
       $(el).css({'font-weight': '600'});
     });
   }
-  
+
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
-  
+
   getAllProjects() {
     this.projectService.getProjects()
       .pipe(takeUntil(this.unsubscribe))
@@ -219,7 +219,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
               createdAt: project.createdAt
             });
           });
-          
+
           this.projects.length = (this.projects.length == undefined) ? 0 : this.projects.length;
           this.currentProject = {
             projectName: '',
@@ -233,7 +233,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
           console.log(err);
         });
   }
-  
+
   getAllTasks() {
     this.taskService.getTasks()
       .pipe(takeUntil(this.unsubscribe))
@@ -257,7 +257,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
           console.log(err);
         });
   }
-  
+
   getAllUsers() {
     this.userService.getUsers()
       .pipe(takeUntil(this.unsubscribe))
@@ -275,7 +275,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
           console.log(err);
         });
   }
-  
+
   getCurrentUser() {
     this.userService.getCurrentUser()
       .pipe(takeUntil(this.unsubscribe))
@@ -286,7 +286,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
           console.log(err);
         });
   }
-  
+
   addProject(content, e) {
     e.preventDefault();
     this.projects.length = (this.projects.length == undefined) ? 0 : this.projects.length;
@@ -302,17 +302,17 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
     this.addProjectFlag = true;
     this.modalService.open(content, {centered: true});
   }
-  
+
   showUpdatedItem(project) {
     let updateItem = this.projects.find(this.findIndexToUpdate, project.id);
     let index = this.projects.indexOf(updateItem);
     this.projects[index] = project;
   }
-  
+
   findIndexToUpdate(project) {
     return project.id === this;
   }
-  
+
   onSubmit(modal) {
     this.submitted = true;
     if (!this.addProjectFlag) {
@@ -343,7 +343,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
             console.log(err);
           });
     }
-  
+
     this.userService.getUsers()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(users => {
@@ -359,8 +359,9 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
         });
     modal.close();
   }
-  
+
   openModal(content, project) {
+    debugger
     this.addProjectFlag = false;
     this.projectForm.setValue({
       id: project.id || project._id,
@@ -375,7 +376,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
     project.assignedUsers.forEach(u => {
       assignedList += u.text + '<br>';
     });
-    
+
     this.previewData = {
       projectName: project.projectName,
       description: project.description,
@@ -385,18 +386,18 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
     };
     this.modalService.open(content, {centered: true});
   }
-  
+
   updateProject(content, modal) {
     this.addProjectFlag = false;
     modal.close();
     this.modalService.open(content, {centered: true});
   }
-  
+
   deleteProject(content, modal) {
     modal.close();
     this.modalService.open(content, {centered: true});
   }
-  
+
   isDelete(action, modal) {
     if (action == 'confirm') {
       this.projectService.deleteProject(this.projectForm.value.id)
@@ -423,7 +424,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
       modal.close();
     }
   }
-  
+
   email(userId, project) {
     this.emailService.sendEmail(userId, project, '', '', 'project')
       .pipe(takeUntil(this.unsubscribe))

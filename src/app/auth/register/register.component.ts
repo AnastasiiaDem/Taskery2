@@ -24,7 +24,7 @@ export class RegisterComponent implements OnInit {
   selectedVal: string;
   fieldTextType: boolean;
   faIcon;
-  
+
   constructor(private formBuilder: FormBuilder,
               private router: Router,
               private toastr: ToastrService,
@@ -32,13 +32,13 @@ export class RegisterComponent implements OnInit {
               private userService: UserService,
               private alertService: AlertService) {
     if (this.authenticationService.currentUserValue) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/home']);
     }
   }
-  
+
   ngOnInit() {
     this.faIcon = faEye;
-    
+
     this.registerForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -49,21 +49,21 @@ export class RegisterComponent implements OnInit {
     });
     this.selectedVal = 'TeamMember';
   }
-  
+
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
-  
+
   get f() {
     return this.registerForm.controls;
   }
-  
+
   onSubmit() {
     this.submitted = true;
-    
+
     this.alertService.clear();
-    
+
     this.registerForm.setValue(
       {
         agree: this.registerForm.value.agree,
@@ -73,11 +73,11 @@ export class RegisterComponent implements OnInit {
         password: this.registerForm.value.password,
         role: (this.selectedVal == 'TeamMember' || this.selectedVal == '') ? Role.TeamMember : Role.ProjectManager
       });
-    
+
     if (this.registerForm.invalid) {
       return;
     }
-    
+
     setTimeout(() => {
       this.userService.getUsers()
         .pipe(
@@ -86,7 +86,7 @@ export class RegisterComponent implements OnInit {
         .subscribe(users => {
           this.userList = users;
         });
-  
+
       let userObject: UserModel = {
         id: this.userList.length ? Math.max(...this.userList.map(x => x.id)) + 1 : 1,
         email: this.registerForm.value.email,
@@ -98,9 +98,9 @@ export class RegisterComponent implements OnInit {
         sendTaskEmail: false,
         sendTaskOverdueEmail: false
       };
-  
+
       this.loading = true;
-  
+
       this.userService.addUser(userObject)
         .pipe(
           takeUntil(this.unsubscribe),
@@ -117,11 +117,11 @@ export class RegisterComponent implements OnInit {
           });
     }, 1000);
   }
-  
+
   onValChange(value: any) {
     this.selectedVal = value;
   }
-  
+
   toggleFieldTextType() {
     this.fieldTextType = !this.fieldTextType;
     this.faIcon = this.fieldTextType ? faEyeSlash : faEye;

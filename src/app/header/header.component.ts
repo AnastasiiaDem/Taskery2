@@ -31,7 +31,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     sendTaskEmail: false,
     sendTaskOverdueEmail: false
   };
-  
+
   constructor(private alertService: AlertService,
               private toastr: ToastrService,
               private router: Router,
@@ -43,11 +43,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(x => this.currentUser = x);
   }
-  
+
   ngOnInit() {
     this.getCurrentUser();
   }
-  
+
   getCurrentUser() {
     this.userService.getCurrentUser()
       .pipe(takeUntil(this.unsubscribe))
@@ -59,24 +59,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
           console.log(err);
         });
   }
-  
+
   logout() {
     this.authenticationService.logout().subscribe(sub => {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/']);
     });
   }
-  
+
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
-  
+
   userSettings(content) {
     this.modalService.open(content, {centered: true});
   }
-  
+
   goToUserSettings() {
-    if (this.url != '/') {
+    if (this.url != '/home') {
       this.url = '/account';
       this.router.navigate(['/account']);
     } else {
@@ -89,9 +89,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }, 910);
     }
   }
-  
+
   goToNotifications() {
-    if (this.url != '/') {
+    if (this.url != '/home') {
       this.url = '/notifications';
       this.router.navigate(['/notifications']);
     } else {
@@ -104,39 +104,43 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }, 910);
     }
   }
-  
+
   getUpdatedData() {
     this.getCurrentUser();
   }
-  
+
   home() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/home']);
     setTimeout(() => {
-      this.url = '/';
+      this.url = '/home';
     }, 100);
   }
-  
+
   projectList() {
-    if (this.url != '/') {
+    if (this.url != '/home') {
       this.url = '/projects';
       this.router.navigate(['/projects']);
     } else {
       this.url = '/projects';
       setTimeout(() => {
         this.router.navigate(['/projects']);
-      }, 910);
+      }, 510);
     }
   }
-  
+
   report() {
-    if (this.url != '/') {
+    if (this.url != '/home') {
       this.url = '/report';
       this.router.navigate(['/report']);
     } else {
       this.url = '/report';
       setTimeout(() => {
         this.router.navigate(['/report']);
-      }, 950);
+      }, 550);
     }
+  }
+
+  contacts() {
+
   }
 }
