@@ -271,28 +271,6 @@ a {
   z-index: -1;
 }
 
-
-.background {
-  filter: blur(30px);
-  width: 400px;
-  z-index: -1;
-  height: 400px;
-  position: absolute;
-  border-radius: 72%;
-  left: 5%;
-  top: 14%;
-  background: linear-gradient(322deg, white 40%, #ece9ff 50%);
-}
-
-.background2 {
-  top: 100%;
-  left: 60%;
-  width: 200px;
-  height: 200px;
-  background: #eae6ff;
-  filter: blur(30px);
-}
-
 .corner {
   border-radius: 0 0 calc(1rem - 1px) calc(1rem - 1px);
   font-size: 0.7rem;

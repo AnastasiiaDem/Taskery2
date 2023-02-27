@@ -120,7 +120,7 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
       if (err) {
         return res.status(400).json({message: 'An error has occurred'});
       }
-      return res.status(200).json({message: 'Email sent successfully'});
+      return res.status(200).json({message: 'The report has been sent to your email'});
     });
   });
 };

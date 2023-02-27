@@ -91,7 +91,7 @@
 }
 
 .background2 {
-  top: 110%;
+  top: 125%;
   left: 60%;
   width: 200px;
   height: 200px;
@@ -116,6 +116,7 @@
 
 @media (min-width: 1401px) and (max-width: 1560px) {
   .main-content {
+    height: 600px;
     .image2 {
       height: 600px;
       width: 600px;
@@ -129,6 +130,7 @@
 
 @media (max-width: 1400px) {
   .main-content {
+    height: 550px;
     .image2 {
       height: 550px;
       width: 550px;
@@ -145,13 +147,14 @@
 
 @media (max-width: 1382px) {
   .main-content {
+    height: 500px;
     .image2 {
       height: 500px;
       width: 500px;
     }
     .head-text {
-      font-size: 43px !important;
-      line-height: 48px !important;
+      font-size: 50px !important;
+      line-height: 55px !important;
     }
     .second-head-text {
       font-size: 2.3rem;
@@ -163,6 +166,6 @@
     }
   }
   .head-undertext {
-    font-size: 15px;
+    font-size: 18px;
   }
 }

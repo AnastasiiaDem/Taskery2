@@ -531,11 +531,11 @@ export class ReportComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(response => {
           console.log(response.message);
-          // this.toastr.success(response.message);
+          this.toastr.success(response.message);
         },
         error => {
           console.log(error);
-          // this.toastr.error(error);
+          this.toastr.error(error);
         });
   }
 }

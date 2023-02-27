@@ -1,13 +1,13 @@
 .main-content-second {
   .btn {
-    color: #4c7efd !important;
+    color: #13da4c !important;
     border-color: #fff !important;
     transition: 0.5s;
 
     &:hover {
       background-color: #fff !important;
-      color: #0d6efd !important;
-      border-color: #0d6efd !important;
+      color: #0DFD11FF !important;
+      border-color: #58e380 !important;
     }
   }
 }
@@ -59,12 +59,6 @@
 
 @media (max-width: 1382px) {
   .get-started-btn {
-    top: 38%;
-  }
-
-  .btn-group-lg>.btn, .btn-lg {
-    --bs-btn-padding-y: 0.25rem;
-    --bs-btn-padding-x: 0.75rem;
-    --bs-btn-font-size: 1rem;
+    top: 55%;
   }
 }
