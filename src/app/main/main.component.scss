@@ -32,3 +32,39 @@
 .avatar {
   pointer-events: none !important;
 }
+
+@media (min-width: 1561px) and (max-width: 1680px) {
+  .get-started-btn {
+    top: 60%;
+  }
+}
+
+@media (max-width: 1560px) {
+  .get-started-btn {
+    top: 45%;
+  }
+}
+
+@media (min-width: 1401px) and (max-width: 1497px) {
+  .get-started-btn {
+    top: 55%;
+  }
+}
+
+@media (max-width: 1400px) {
+  .get-started-btn {
+    top: 45%;
+  }
+}
+
+@media (max-width: 1382px) {
+  .get-started-btn {
+    top: 38%;
+  }
+
+  .btn-group-lg>.btn, .btn-lg {
+    --bs-btn-padding-y: 0.25rem;
+    --bs-btn-padding-x: 0.75rem;
+    --bs-btn-font-size: 1rem;
+  }
+}

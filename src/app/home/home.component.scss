@@ -50,7 +50,7 @@
 
   .second-body-text {
     font-family: 'Inter', serif;
-    font-size: 14px;
+    font-size: 15px;
     margin: -0.5rem auto 3rem auto;
     text-align: center;
     color: rgba(55, 61, 63, 0.8);
@@ -108,4 +108,61 @@
   width: 60%;
   left: 5rem;
   top: 7rem;
+}
+
+.head-undertext {
+  font-size: 20px;
+}
+
+@media (min-width: 1401px) and (max-width: 1560px) {
+  .main-content {
+    .image2 {
+      height: 600px;
+      width: 600px;
+    }
+    .head-text {
+      font-size: 60px !important;
+      line-height: 70px !important;
+    }
+  }
+}
+
+@media (max-width: 1400px) {
+  .main-content {
+    .image2 {
+      height: 550px;
+      width: 550px;
+    }
+    .head-text {
+      font-size: 55px !important;
+      line-height: 60px !important;
+    }
+  }
+  .main-text {
+    left: 2rem;
+  }
+}
+
+@media (max-width: 1382px) {
+  .main-content {
+    .image2 {
+      height: 500px;
+      width: 500px;
+    }
+    .head-text {
+      font-size: 43px !important;
+      line-height: 48px !important;
+    }
+    .second-head-text {
+      font-size: 2.3rem;
+      line-height: 2rem;
+    }
+    .second-body-text {
+      font-size: 13px;
+      margin: -0.5rem auto 2rem auto;
+    }
+  }
+  .head-undertext {
+    font-size: 15px;
+  }
 }

@@ -26,7 +26,7 @@ export class MainComponent implements OnInit {
 
   getStarted() {
     this.spinner.show();
-    this.router.navigate(['/home']);
+    this.router.navigate(['/register']);
     setTimeout(() => {
       this.spinner.hide();
     }, 950);

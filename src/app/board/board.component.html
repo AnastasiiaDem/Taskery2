@@ -50,14 +50,14 @@
         </div>
       </div>
     </div>
-    
+
     <button *ngIf="currentUser.role != 'ProjectManager'" [ngClass]="onlyMyIssues ? 'my-tasks' : 'all-tasks'"
             style="font-size: 11px; height: 22px;" (click)="findMyIssues()">
       Only My Issues
     </button>
   </div>
-  
-  
+
+
   <ejs-kanban #kanban keyField='status'
               [dataSource]='tasks'
               [cardSettings]='cardSettings'
@@ -195,4 +195,4 @@
   </div>
 </ng-template>
 
-<ngx-spinner bdColor="rgb(170 170 170 / 50%)" size="default" color="rgb(32 32 32)" type="ball-atom"></ngx-spinner>
+<ngx-spinner bdColor="rgb(170 170 170 / 50%)" size="small" color="rgb(32 32 32)" type="ball-beat"></ngx-spinner>
