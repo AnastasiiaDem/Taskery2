@@ -8,4 +8,5 @@ export class ProjectModel {
   status: StatusEnum;
   assignedUsers: Array<any>;
   createdAt: string;
+  updatedAt: string;
 }

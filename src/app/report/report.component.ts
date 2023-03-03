@@ -185,7 +185,8 @@ export class ReportComponent implements OnInit, OnDestroy {
                     description: p.description,
                     status: p.status,
                     assignedUsers: p.assignedUsers,
-                    createdAt: p.createdAt
+                    createdAt: p.createdAt,
+                    updatedAt: p.updatedAt
                   });
                 });
                 this.projects = projectsList.filter(project => this.tasks.find(task => task.projectId == project.id));

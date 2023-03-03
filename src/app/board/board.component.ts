@@ -2,7 +2,7 @@ import {AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild} f
 import {TaskModel} from 'src/app/shared/models/task.model';
 import {TaskService} from 'src/app/shared/services/task.service';
 import {StatusEnum} from 'src/app/shared/enums';
-import {CardSettingsModel, KanbanComponent} from '@syncfusion/ej2-angular-kanban';
+import {CardSettingsModel, KanbanComponent, SortSettingsModel} from '@syncfusion/ej2-angular-kanban';
 import {Select2OptionData} from 'ng-select2';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {UserService} from 'src/app/shared/services/user.service';
@@ -21,16 +21,20 @@ import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {Query} from '@syncfusion/ej2-data';
 import {EmailService} from '../shared/services/email.service';
 import {QuillModules} from 'ngx-quill/lib/quill-editor.interfaces';
-import 'quill-emoji/dist/quill-emoji.js'
+import 'quill-emoji/dist/quill-emoji.js';
 
 import * as QuillNamespace from 'quill';
-let Quill: any = QuillNamespace;
 import ImageCompress from 'quill-image-compress';
+import Emoji from 'quill-emoji';
+import Mention from 'quill-mention';
+
+let Quill: any = QuillNamespace;
+
 Quill.register('modules/imageCompress', ImageCompress);
-import Emoji from "quill-emoji";
-Quill.register("modules/emoji", Emoji);
-import Mention from "quill-mention";
-Quill.register("modules/mention", Mention);
+
+Quill.register('modules/emoji', Emoji);
+
+Quill.register('modules/mention', Mention);
 
 
 @Component({
@@ -49,6 +53,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     contentField: 'description',
     headerField: 'id'
   };
+  sortSettings: SortSettingsModel = {};
   addTaskFlag: boolean;
   statusData: Array<Select2OptionData> = [];
   employeeData: Array<Select2OptionData> = [];
@@ -69,7 +74,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   currentProject: ProjectModel;
   calendarIcon;
   currentDate;
-  onlyMyIssues = false;
+  AllIssues = false;
   selectedUser;
   dateFilterValue;
   dateFilterData;
@@ -262,7 +267,11 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
           this.getAllTasks();
           setTimeout(() => {
             this.tasks = this.tasksList.filter(task => {
-              return task.projectId == this.selectedProjectId;
+              if (this.currentUser.role == 'ProjectManager') {
+                return task.projectId == this.selectedProjectId;
+              } else {
+                return task.projectId == this.selectedProjectId && task.employeeId == this.currentUser._id;
+              }
             });
           }, 100);
         },
@@ -341,6 +350,16 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.taskService.updateTask(event.data[0])
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(data => {
+          debugger
+          this.currentProject.updatedAt = new Date().toString();
+          this.projectsService.updateProject(this.currentProject)
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe(message => {
+                console.log(message)
+              },
+              err => {
+                console.log(err);
+              });
           console.log(data.message);
         },
         err => {
@@ -375,6 +394,18 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
         .subscribe(data => {
             console.log(data.message);
             this.kanban.updateCard(this.taskForm.value);
+    
+            debugger
+            this.currentProject.updatedAt = new Date().toString();
+            this.projectsService.updateProject(this.currentProject)
+              .pipe(takeUntil(this.unsubscribe))
+              .subscribe(message => {
+                  console.log(message)
+                },
+                err => {
+                  console.log(err);
+                });
+            
             this.userService.getUsers()
               .pipe(takeUntil(this.unsubscribe))
               .subscribe(users => {
@@ -395,6 +426,16 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       this.taskService.addTask(this.taskForm.value)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(task => {
+          debugger
+            this.currentProject.updatedAt = new Date().toString();
+            this.projectsService.updateProject(this.currentProject)
+              .pipe(takeUntil(this.unsubscribe))
+              .subscribe(message => {
+                  console.log(message)
+                },
+                err => {
+                  console.log(err);
+                });
             let newTask = {
               id: task._id,
               title: task.title,
@@ -450,6 +491,16 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       this.taskService.deleteTask(this.taskForm.value.id)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(data => {
+            debugger
+            this.currentProject.updatedAt = new Date().toString();
+            this.projectsService.updateProject(this.currentProject)
+              .pipe(takeUntil(this.unsubscribe))
+              .subscribe(message => {
+                  console.log(message)
+                },
+                err => {
+                  console.log(err);
+                });
             console.log(data.message);
             this.tasks.filter(task => task.id !== this.taskForm.value.id);
             this.kanban.deleteCard(this.taskForm.value);
@@ -464,17 +515,17 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   
-  findMyIssues() {
-    this.onlyMyIssues = !this.onlyMyIssues;
+  showIssues() {
+    this.AllIssues = !this.AllIssues;
     this.tasks = [];
     this.tasksList = [];
     this.getAllTasks();
     setTimeout(() => {
       this.tasks = this.tasksList.filter(task => {
-        if (this.onlyMyIssues == true) {
-          return task.projectId == this.selectedProjectId && task.employeeId == this.currentUser._id;
-        } else {
+        if (this.AllIssues == true) {
           return task.projectId == this.selectedProjectId;
+        } else {
+          return task.projectId == this.selectedProjectId && task.employeeId == this.currentUser._id;
         }
       });
     }, 100);
@@ -574,7 +625,6 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
   }
   
-  
   filter(e, type) {
     if (type == 'employee' && !this.searchText && !this.dateFilterValue && !this.date1Value && !this.date2Value) {
       this.selectUser(e);
@@ -661,5 +711,25 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
           console.log(error);
           // this.toastr.error(error);
         });
+  }
+  
+  sort(type) {
+    if (type == 'oldest') {
+      this.sortSettings = {
+        sortBy: 'Custom',
+        field: 'deadline',
+        direction: 'Ascending'
+      };
+    } else if (type == 'newest') {
+      this.sortSettings = {
+        sortBy: 'Custom',
+        field: 'deadline',
+        direction: 'Descending'
+      };
+    } else {
+      this.sortSettings = {
+        sortBy: 'DataSourceOrder'
+      };
+    }
   }
 }

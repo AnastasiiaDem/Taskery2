@@ -47,6 +47,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {QuillModule} from 'ngx-quill';
 import { SafeHtmlPipe } from './shared/safe-html.pipe';
 import {MainComponent} from "./main/main.component";
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -94,6 +95,7 @@ import {MainComponent} from "./main/main.component";
     NgxSpinnerModule,
     MatSlideToggleModule,
     QuillModule.forRoot(),
+    DragDropModule,
   ],
   providers: [HttpClientModule, TaskService, UserService, ProjectsService,
     AlertService, AuthService, DatePipe, EmailService,

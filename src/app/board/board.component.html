@@ -1,92 +1,124 @@
-<div style="margin: 3rem auto 1rem; text-align: center;">
-  <span class="tooltiptext">Add new task</span>
-  <button (click)="addTask(addUpdateContent)" mat-mini-fab aria-label="Create new task" class="add-btn" id="mat-btn">
-    <mat-icon style="color: #666666 !important;">add</mat-icon>
-  </button>
-</div>
-
-
-<div class="w3-animate-opacity" style="margin: 0 auto; width: 95%;">
-  <div style="display: flex; align-items: flex-end; margin-bottom: 10px;">
-    <div ngbDropdown class="d-inline-block" placement="right-top" [autoClose]="'outside'"
-         style="height: 23px !important;">
-      <button (click)="filterMenu()" id="dropdown" ngbDropdownToggle class="filter-btn">
-        <mat-icon style="font-size: 20px; height: auto !important;">filter_list</mat-icon>
-      </button>
-      <div ngbDropdownMenu aria-labelledby="dropdown" id="ngbDropdownMenu" style="transform: translate(50px, 0px)">
-        <div class="px-4 py-3">
-          <div class="form-group form-floating mb-3 select-container">
-            <input class="form-control" type="text" placeholder="Search Task" style="height: 40px;"
-                   [(ngModel)]="searchText" (keyup)="filter($event, 'search')">
-            <label>Search Task</label>
-          </div>
-          <hr style="color: rgb(136 136 136);">
-          <div class="form-group form-floating mb-3 select-container">
-            <ng-select2 [placeholder]="'Employee Filter'" [allowClear]="true" [(ngModel)]="selectedUser"
-                        [width]="'100%'"
-                        [data]="usersData" (valueChanged)="filter($event, 'employee')">
-            </ng-select2>
-          </div>
-          <hr style="color: rgb(136 136 136);">
-          <div class="form-group form-floating mb-1 select-container" style="width: 100%;">
-            <ng-select2 [placeholder]="'Date Filter'" [allowClear]="true" [(ngModel)]="dateFilterValue" [width]="'100%'"
-                        [data]="dateFilterData" (valueChanged)="dateFilter($event)">
-            </ng-select2>
-          </div>
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <div class="form-floating" [ngStyle]="{width: dateFilterValue == 'between' ? '49%' : '100%'}"
-                 *ngIf="dateFilterValue == 'after' || dateFilterValue == 'between'">
-              <input [disabled]="isFrom" class="form-control" type="date" [(ngModel)]="date1Value"
-                     style="height: 40px; font-size: 12px;" id="date1" (change)="filter(null, 'date')">
-              <label>from</label>
-            </div>
-            <div class="form-floating" [ngStyle]="{width: dateFilterValue == 'between' ? '49%' : '100%'}"
-                 *ngIf="dateFilterValue == 'before' || dateFilterValue == 'equal' || dateFilterValue == 'between'">
-              <input [disabled]="isTo" class="form-control" type="date" [(ngModel)]="date2Value"
-                     style="height: 40px; font-size: 12px;" id="date2" (change)="filter(null, 'date')">
-              <label>to</label>
+<div>
+  <div class="w3-animate-opacity" style="margin: 0 auto; width: 95%;">
+    <div style="display: flex;align-items: center;margin: 3rem 2rem 1rem;justify-content: space-between;">
+      <div class="d-flex align-items-center">
+        <p class="project-name">{{currentProject?.projectName}}</p>
+        <button (click)="addTask(addUpdateContent)" class="add-btn">
+          <mat-icon class="add-btn-icon">add</mat-icon>
+          Add new task
+        </button>
+      </div>
+      <div class="d-flex align-items-center">
+        <div ngbDropdown class="d-inline-block" placement="left-top" [autoClose]="'outside'"
+             style="height: 23px !important;">
+          <button id="dropdown2" ngbDropdownToggle class="sort-btn">
+            <mat-icon style="font-size: 20px; display: flex; align-items: center;">swap_vert
+            </mat-icon>
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdown2" id="ngbDropdownMenu2" style="width: 100px; padding: 0.5rem;">
+            <div>
+              <div class="mt-1 mb-1 settings-block">
+                <button class="nav-item nav-link settings-btn" (click)="sort('newest')">
+                  <img src="./assets/images/ascending.png" alt=""> Newest first
+                </button>
+              </div>
+              <div class="mb-1">
+                <button class="nav-item nav-link settings-btn" (click)="sort('oldest')">
+                  <img src="./assets/images/descending.png" alt=""> Oldest first
+                </button>
+              </div>
+              <hr style="color: rgba(136,136,136,0.8);margin: 10px 0;">
+              <div class="mb-1">
+                <button class="nav-item nav-link settings-btn text-center reset" (click)="sort('reset')">
+                  reset
+                </button>
+              </div>
             </div>
           </div>
         </div>
+        <div ngbDropdown class="d-inline-block" placement="left-top" [autoClose]="'outside'"
+             style="height: 23px !important;">
+          <button (click)="filterMenu()" id="dropdown" ngbDropdownToggle class="filter-btn">
+            <mat-icon style="font-size: 20px; display: flex; align-items: center; height: auto !important;">filter_list
+            </mat-icon>
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdown" id="ngbDropdownMenu">
+            <div class="px-4 py-3">
+              <div class="form-group form-floating mb-3 select-container">
+                <input class="form-control" type="text" placeholder="Search Task" style="height: 40px;"
+                       [(ngModel)]="searchText" (keyup)="filter($event, 'search')">
+                <label>Search Task</label>
+              </div>
+              <hr style="color: rgb(136 136 136);">
+              <div class="form-group form-floating mb-3 select-container">
+                <ng-select2 [placeholder]="'Employee Filter'" [allowClear]="true" [(ngModel)]="selectedUser"
+                            [width]="'100%'"
+                            [data]="usersData" (valueChanged)="filter($event, 'employee')">
+                </ng-select2>
+              </div>
+              <hr style="color: rgb(136 136 136);">
+              <div class="form-group form-floating mb-1 select-container" style="width: 100%;">
+                <ng-select2 [placeholder]="'Date Filter'" [allowClear]="true" [(ngModel)]="dateFilterValue"
+                            [width]="'100%'"
+                            [data]="dateFilterData" (valueChanged)="dateFilter($event)">
+                </ng-select2>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div class="form-floating" [ngStyle]="{width: dateFilterValue == 'between' ? '49%' : '100%'}"
+                     *ngIf="dateFilterValue == 'after' || dateFilterValue == 'between'">
+                  <input [disabled]="isFrom" class="form-control" type="date" [(ngModel)]="date1Value"
+                         style="height: 40px; font-size: 12px;" id="date1" (change)="filter(null, 'date')">
+                  <label>from</label>
+                </div>
+                <div class="form-floating" [ngStyle]="{width: dateFilterValue == 'between' ? '49%' : '100%'}"
+                     *ngIf="dateFilterValue == 'before' || dateFilterValue == 'equal' || dateFilterValue == 'between'">
+                  <input [disabled]="isTo" class="form-control" type="date" [(ngModel)]="date2Value"
+                         style="height: 40px; font-size: 12px;" id="date2" (change)="filter(null, 'date')">
+                  <label>to</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button *ngIf="currentUser.role != 'ProjectManager'" [ngClass]="AllIssues ? 'all-tasks' : 'my-tasks'"
+                style="font-size: 11px; height: 22px; margin-left: 20px;" (click)="showIssues()">
+          All Issues
+        </button>
       </div>
     </div>
-
-    <button *ngIf="currentUser.role != 'ProjectManager'" [ngClass]="onlyMyIssues ? 'my-tasks' : 'all-tasks'"
-            style="font-size: 11px; height: 22px;" (click)="findMyIssues()">
-      Only My Issues
-    </button>
+    
+    
+    <ejs-kanban #kanban keyField='status'
+                [dataSource]='tasks'
+                [cardSettings]='cardSettings'
+                [sortSettings]='sortSettings'
+                (cardDoubleClick)='openModal(previewContent, $event)'
+                (dragStop)="drop($event)">
+      <e-columns>
+        <e-column headerText='To Do' keyField='To Do'></e-column>
+        <e-column headerText='In Progress' keyField='In Progress'></e-column>
+        <e-column headerText='On Review' keyField='On Review'></e-column>
+        <e-column headerText='Done' keyField='Done'></e-column>
+      </e-columns>
+      <ng-template #cardSettingsTemplate let-data>
+        <div class='e-card-content'>
+          <table class="card-template-wrap">
+            <tbody>
+            <tr>
+              <td class="CardHeader">
+                <p>{{data.title}}</p>
+                <p class="card-deadline" [ngStyle]="overdueDateStyle(data)">{{data.deadline | date}}</p>
+              </td>
+            </tr>
+            <tr>
+              <td class="CardBody" [innerHTML]="data.description | safeHtml"></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-template>
+    </ejs-kanban>
   </div>
-
-
-  <ejs-kanban #kanban keyField='status'
-              [dataSource]='tasks'
-              [cardSettings]='cardSettings'
-              (cardDoubleClick)='openModal(previewContent, $event)'
-              (dragStop)="drop($event)">
-    <e-columns>
-      <e-column headerText='To Do' keyField='To Do'></e-column>
-      <e-column headerText='In Progress' keyField='In Progress'></e-column>
-      <e-column headerText='On Review' keyField='On Review'></e-column>
-      <e-column headerText='Done' keyField='Done'></e-column>
-    </e-columns>
-    <ng-template #cardSettingsTemplate let-data>
-      <div class='e-card-content'>
-        <table class="card-template-wrap">
-          <tbody>
-          <tr>
-            <td class="CardHeader">
-              <p>{{data.title}}</p>
-              <p class="card-deadline" [ngStyle]="overdueDateStyle(data)">{{data.deadline | date}}</p>
-            </td>
-          </tr>
-          <tr>
-            <td class="CardBody" [innerHTML]="data.description | safeHtml"></td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </ng-template>
-  </ejs-kanban>
 </div>
 
 
@@ -144,24 +176,24 @@
         </div>
         <hr class="line">
         <div class="body-content">
-        <div class="left-block">
-          <div class="form-floating">
-            <p>STATUS</p>
-            <span>{{previewData.status}}</span>
+          <div class="left-block">
+            <div class="form-floating">
+              <p>STATUS</p>
+              <span>{{previewData.status}}</span>
+            </div>
+            <div class="form-floating">
+              <p>DEADLINE</p>
+              <span>{{previewData.deadline}}</span>
+            </div>
+            <div class="form-floating">
+              <p>ASSIGNEE</p>
+              <span>{{previewData.employee}}</span>
+            </div>
           </div>
-          <div class="form-floating">
-            <p>DEADLINE</p>
-            <span>{{previewData.deadline}}</span>
+          <div class="right-block">
+            <div class="form-floating description-block" [innerHTML]="previewData.description | safeHtml">
+            </div>
           </div>
-          <div class="form-floating">
-            <p>ASSIGNEE</p>
-            <span>{{previewData.employee}}</span>
-          </div>
-        </div>
-        <div class="right-block">
-          <div class="form-floating description-block" [innerHTML]="previewData.description | safeHtml">
-          </div>
-        </div>
         </div>
       </div>
       <div class="card-footer">
