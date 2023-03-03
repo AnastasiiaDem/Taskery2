@@ -32,8 +32,8 @@ export class ProjectsService {
     return this.http.delete(url, options);
   }
   
-  updateProject(body: ProjectModel): Observable<any> {
-    const url = `${apiUrl}/project/update/${body.id}`;
+  updateProject(body): Observable<any> {
+    const url = `${apiUrl}/project/update/${body.id || body._id}`;
     return this.http.put(url, body, options);
   }
 }

@@ -156,21 +156,6 @@ a {
   transform: scale(1.05);
 }
 
-.circle {
-  border-radius: 100%;
-  margin: 3rem auto 2rem;
-  width: 50px;
-  height: 50px;
-  text-align: center;
-  background-color: #F4F5F7 !important;
-  box-shadow: 6px 6px 17px rgb(163 177 198 / 68%), -9px -9px 16px rgb(234 234 234 / 84%);
-  transition: all .2s ease-in-out;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-}
-
 .add {
   height: 90%;
   display: flex;
@@ -204,14 +189,10 @@ a {
   border-radius: 6px;
   position: absolute;
   z-index: 1;
-  top: -2.5rem;
-  left: -0.8rem;
+  top: -45px;
+  left: -20px;
   font-size: 0.7rem;
   transition: visibility 1s cubic-bezier(0.76, -0.37, 0.15, 1.23);
-}
-
-.circle:hover .tooltiptext {
-  visibility: visible;
 }
 
 .tooltiptext::after {
@@ -293,34 +274,32 @@ a {
 }
 
 .all-tasks {
-  border: 1px solid #666666;
-  background: #fff;
+  border: 1px solid #fff;
+  background: #0d6efd;
   padding: 2px 5px;
-  color: #666666;
   font-size: 12px;
-  font-weight: 500;
   border-radius: 4px;
   transition: 0.5s;
-  //margin-bottom: 10px;
+  font-weight: 500;
+  color: #fff;
   margin-left: 5px;
 }
 
-.all-tasks:hover {
+.my-tasks:hover {
   background: #0d6efd;
   border: 1px solid #fff;
   color: #fff;
 }
 
 .my-tasks {
-  border: 1px solid #fff;
-  background: #0d6efd;
+  border: 1px solid #888E99;
+  background: #fff;
   padding: 2px 5px;
+  color: #888E99;
   font-size: 12px;
+  font-weight: 500;
   border-radius: 4px;
   transition: 0.5s;
-  font-weight: 500;
-  color: #fff;
-  //margin-bottom: 10px;
   margin-left: 5px;
 }
 
@@ -335,24 +314,57 @@ a {
 }
 
 .add-btn {
-  background-color: #F4F5F7 !important;
+  color: #888E99;
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  padding: 3px 6px 3px 0;
+  border: 1px solid #fff;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 4px;
+  transition: 0.5s;
 
   &:hover {
-    background-color: rgb(237 237 237) !important;
+    //background: rgba(179, 186, 197, 0.2);
+    //border: 1px solid rgb(213 215 218 / 10%);
+    //color: #fff !important;
   }
+}
+
+.add-btn-icon {
+  font-size: 18px;
+  height: 20px;
+
+  &:hover {
+    transform: scale(1);
+  }
+}
+
+.circle {
+  position: relative;
+}
+
+.circle:hover .tooltiptext {
+  visibility: visible;
 }
 
 .filter-btn {
   border: none;
-  padding: 2px 5px;
+  padding: 2px;
   background: #fff;
-  color: #666666;
-  font-size: 12px;
-  border-radius: 4px;
-  transition: 0.5s;
-  display: inline-flex;
-  align-items: center;
+  height: 24px;
+  width: 23px;
+}
+
+.sort-btn {
+  border: none;
+  padding: 2px;
+  background: #fff;
   margin-left: 20px;
+  height: 24px;
+  width: 23px;
 }
 
 .dropdown-toggle::after {
@@ -364,7 +376,6 @@ a {
   right: 40px;
   width: 300px;
   font-size: 13px;
-  transform: translate(45px, 12px) !important;
 }
 
 .select-container {
@@ -389,16 +400,14 @@ a {
 
 ::ng-deep .form-floating > label {
   color: #999999 !important;
-  padding: 1rem .75rem;
+  padding: 0.6rem .75rem;
 }
 
 mat-icon {
   transition: 0.5s;
-}
-
-mat-icon:hover {
-  transform: scale(1.4);
-  color: #0d6efd;
+  color: #888E99;
+  height: 20px;
+  width: 20px;
 }
 
 .delete-task, .update-task {
@@ -540,4 +549,52 @@ mat-icon:hover {
   border-radius: 10px;
   margin-top: 0.2rem;
   margin-bottom: 1rem;
+}
+
+.project-name {
+  margin-bottom: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #212529;
+  font-family: "Source Sans Pro", sans-serif;
+  background: rgba(179, 186, 197, 0.2);
+  border: 1px solid rgb(213 215 218 / 10%);
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+
+.settings-btn {
+  color: black;
+  font-size: 15px;
+  padding: 3px !important;
+  width: 100%;
+  border: 0;
+  text-align: left;
+  background: #fff;
+  transition: 0.5s;
+
+  img {
+    height: 11px;
+    margin-bottom: 3px;
+  }
+}
+
+.settings-btn:hover {
+  background: rgba(179, 186, 197, 0.2);
+}
+
+.settings-block {
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+}
+
+.reset {
+  line-height: 10px;
+  font-size: 14px;
+  color: rgb(136 142 153);
+
+  &:hover {
+    background: #fff;
+  }
 }

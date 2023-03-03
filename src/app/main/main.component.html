@@ -1,0 +1,50 @@
+<div class="wrapper">
+  <nav class="navbar navbar-expand">
+    <div class="navbar-nav">
+      <div class="nav-item nav-link logo-link">
+        <img src="./assets/images/icons8-network-2-64.png" alt="" class="net-icon">
+      </div>
+      <div class="nav-block">
+        <a class="nav-item nav-link contact" (click)="contacts()">Contact us</a>
+        <button type="button" class='avatar'></button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main-body-contents w3-animate-opacity">
+    <div class="w3-animate-opacity">
+      <div class="background background2"></div>
+      <div class="main-content">
+        <div class="description">
+          <div class="main-text">
+            <p class="head-text"><span style="color: rgb(76 126 253);">TASKERY </span>HELPS TEAMS TO MOVE WORK FORWARD.
+            </p>
+            <p class="head-undertext">Collaborate, manage projects, and reach new productivity
+              peaks.</p>
+          </div>
+          <p class="get-started-btn"><a (click)="getStarted()" class="btn btn-primary btn-lg px-3">Get Started</a></p>
+        </div>
+        <img class="image2" src="./assets/images/hand_image2.avif" alt="">
+      </div>
+
+      <div class="main-content main-content-second">
+        <div class="col-lg-10">
+          <p class="second-head-text">It’s more than work. It’s a way of working together.</p>
+          <p class="second-body-text">
+            Manage projects, organize tasks, and build team spirit-all in one place. Customize and expand with more
+            features as your teamwork grows. Start with a Taskery board, lists, and cards.
+          </p>
+          <p><a (click)="getStarted()" class="btn btn-outline-primary btn-lg px-3" style="margin-left: 10px;">Sign Up&nbsp;&nbsp;&nbsp; →</a></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <footer class="footer">
+    <p class="site">Taskery.com</p>
+    <p style="margin-bottom: 1rem;"> © All rights reserved.</p>
+  </footer>
+</div>
+
+<ngx-spinner bdColor="rgb(170 170 170 / 50%)" size="small" color="rgb(32 32 32)" type="ball-beat"
+             [fullScreen]="true"></ngx-spinner>

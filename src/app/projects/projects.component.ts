@@ -1,4 +1,4 @@
-import {AfterViewChecked, Component, ElementRef, OnInit} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
 import {ProjectModel} from '../shared/models/project.model';
 import {ProjectsService} from '../shared/services/project.service';
 import {StatusEnum} from '../shared/enums';
@@ -17,16 +17,20 @@ import {DatePipe} from '@angular/common';
 import {EmailService} from '../shared/services/email.service';
 import {ToastrService} from 'ngx-toastr';
 import {QuillModules} from 'ngx-quill/lib/quill-editor.interfaces';
-import 'quill-emoji/dist/quill-emoji.js'
+import 'quill-emoji/dist/quill-emoji.js';
 
 import * as QuillNamespace from 'quill';
-let Quill: any = QuillNamespace;
 import ImageCompress from 'quill-image-compress';
+import Emoji from 'quill-emoji';
+import Mention from 'quill-mention';
+
+let Quill: any = QuillNamespace;
+
 Quill.register('modules/imageCompress', ImageCompress);
-import Emoji from "quill-emoji";
-Quill.register("modules/emoji", Emoji);
-import Mention from "quill-mention";
-Quill.register("modules/mention", Mention);
+
+Quill.register('modules/emoji', Emoji);
+
+Quill.register('modules/mention', Mention);
 
 
 @Component({
@@ -34,9 +38,9 @@ Quill.register("modules/mention", Mention);
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.scss', '../board/board.component.scss'],
 })
-export class ProjectsComponent implements OnInit, AfterViewChecked {
+export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   projects: ProjectModel[] = [];
-  currentProject: { description: string; projectName: string; status: StatusEnum; assignedUsers: [], createdAt: string };
+  currentProject: { description: string; projectName: string; status: StatusEnum; assignedUsers: [], createdAt: string, updatedAt: string };
   projectForm: FormGroup;
   statusData: Array<Select2OptionData> = [];
   tasksData: Array<Select2OptionData> = [];
@@ -109,7 +113,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
           renderList(values, searchTerm);
         } else {
           const matches = [];
-          for (var i = 0; i < values.length; i++)
+          for (let i = 0; i < values.length; i++)
             if (~values[i].value.toLowerCase().indexOf(searchTerm.toLowerCase())) matches.push(values[i]);
           renderList(matches, searchTerm);
         }
@@ -140,7 +144,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
   
   ngOnInit() {
     this.currentDate = new Date();
-    this.currentDate = new Date();
+
     this.spinner.show();
     setTimeout(() => {
       this.spinner.hide();
@@ -162,8 +166,9 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
       status: ['', Validators.required],
       assignedUsers: [[], Validators.required],
       createdAt: [this.currentDate, Validators.required],
+      updatedAt: [this.currentDate, Validators.required]
     });
-    
+
     this.dropdownSettings = {
       singleSelection: false,
       idField: 'id',
@@ -177,10 +182,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
   }
   
   ngAfterViewChecked() {
-    this._focusMonitor.stopMonitoring(document.getElementById('mat-btn'));
-    
     const dom: HTMLElement = this.elementRef.nativeElement;
-    dom.querySelectorAll('.card-header').forEach(el => {
+    dom.querySelectorAll('.status').forEach(el => {
       if (el.innerHTML.includes(StatusEnum.todo)) {
         $(el).css({'color': 'rgb(57 197 255)'});
       }
@@ -194,6 +197,21 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
         $(el).css({'color': 'rgb(58 224 104)'});
       }
       $(el).css({'font-weight': '600'});
+    });
+    
+    dom.querySelectorAll('.circle').forEach(el => {
+      if (el.innerHTML.includes(StatusEnum.todo)) {
+        $(el).css({'background': 'rgb(57 197 255)'});
+      }
+      if (el.innerHTML.includes(StatusEnum.inProgress)) {
+        $(el).css({'background': 'rgb(255 149 119)'});
+      }
+      if (el.innerHTML.includes(StatusEnum.onReview)) {
+        $(el).css({'background': 'rgb(101 85 255)'});
+      }
+      if (el.innerHTML.includes(StatusEnum.done)) {
+        $(el).css({'background': 'rgb(58 224 104)'});
+      }
     });
   }
   
@@ -209,24 +227,26 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
           res.projects.filter(p => {
             return (p.userId == this.currentUser._id || p.assignedUsers.find(u => u.id == this.currentUser._id));
           }).forEach(project => {
-            this.projects.unshift({
+            this.projects.push({
               id: project._id,
               userId: project.userId,
               projectName: project.projectName,
               description: project.description,
               status: project.status,
               assignedUsers: project.assignedUsers,
-              createdAt: project.createdAt
+              createdAt: project.createdAt,
+              updatedAt: project.updatedAt
             });
           });
-          
+          this.sortProjects();
           this.projects.length = (this.projects.length == undefined) ? 0 : this.projects.length;
           this.currentProject = {
             projectName: '',
             description: '',
             status: StatusEnum.todo,
             assignedUsers: [],
-            createdAt: this.currentDate
+            createdAt: this.currentDate,
+            updatedAt: this.currentDate
           };
         },
         err => {
@@ -250,7 +270,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
             description: '',
             status: StatusEnum.todo,
             assignedUsers: [],
-            createdAt: this.currentDate
+            createdAt: this.currentDate,
+            updatedAt: this.currentDate
           };
         },
         err => {
@@ -264,7 +285,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
       .subscribe(users => {
           this.usersData = users.filter(user => {
             return (user.role != Role.ProjectManager) && (user._id != this.currentUser._id);
-          }).map((user, i) => {
+          }).map(user => {
             return {
               id: user._id,
               text: user.firstName + ' ' + user.lastName
@@ -296,7 +317,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
       description: '',
       status: StatusEnum.todo,
       assignedUsers: [],
-      createdAt: this.currentDate
+      createdAt: this.currentDate,
+      updatedAt: this.currentDate
     };
     this.projectForm.setValue(currentProject);
     this.addProjectFlag = true;
@@ -319,8 +341,10 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
       this.projectService.updateProject(this.projectForm.value)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(data => {
+            this.projectForm.value.updatedAt = new Date();
             console.log(data.message);
             this.showUpdatedItem(this.projectForm.value);
+            this.sortProjects();
           },
           err => {
             console.log(err);
@@ -329,21 +353,23 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
       this.projectService.addProject(this.projectForm.value)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(p => {
-            this.projects.unshift({
+            this.projects.push({
               id: p._id,
               userId: p.userId,
               description: p.description,
               projectName: p.projectName,
               status: p.status,
               assignedUsers: p.assignedUsers,
-              createdAt: p.createdAt
+              createdAt: p.createdAt,
+              updatedAt: p.updatedAt
             });
+            this.sortProjects();
           },
           err => {
             console.log(err);
           });
     }
-  
+    
     this.userService.getUsers()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(users => {
@@ -368,10 +394,11 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
       description: project.description,
       status: project.status,
       assignedUsers: project.assignedUsers,
-      createdAt: project.createdAt
+      createdAt: project.createdAt,
+      updatedAt: project.updatedAt
     });
     let assignedList = '';
-
+    
     project.assignedUsers.forEach(u => {
       assignedList += u.text + '<br>';
     });
@@ -381,7 +408,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
       description: project.description,
       status: project.status,
       assignedUsers: assignedList,
-      createdAt: project.createdAt
+      createdAt: project.createdAt,
+      updatedAt: project.updatedAt
     };
     this.modalService.open(content, {centered: true});
   }
@@ -411,7 +439,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
               description: '',
               status: StatusEnum.todo,
               assignedUsers: [],
-              createdAt: this.currentDate
+              createdAt: this.currentDate,
+              updatedAt: this.currentDate
             };
             this.projectForm.setValue(currentProject);
           },
@@ -435,5 +464,11 @@ export class ProjectsComponent implements OnInit, AfterViewChecked {
           console.log(error);
           // this.toastr.error(error);
         });
+  }
+  
+  sortProjects() {
+    this.projects.sort((a,b) => {
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+    });
   }
 }

@@ -5,7 +5,7 @@ import Project from '../model/ProjectModel';
 import mongoose from 'mongoose';
 
 export const createProject = async (req: express.Request, res: express.Response) => {
-  const {projectName, description, status, assignedUsers, createdAt} = req.body;
+  const {projectName, description, status, assignedUsers, createdAt, updatedAt} = req.body;
   
   const cookies = req.cookies;
   
@@ -29,7 +29,8 @@ export const createProject = async (req: express.Request, res: express.Response)
     description: description,
     status: status,
     assignedUsers: assignedUsers,
-    createdAt: createdAt
+    createdAt: createdAt,
+    updatedAt: updatedAt
   });
   
   newProject.save((err, data) => {
@@ -45,7 +46,7 @@ export const updateProject = async (req: express.Request, res: express.Response)
   
   !id && res.status(400).json({error: 'no id'});
   
-  const {projectName, description, status, assignedUsers, createdAt} = req.body;
+  const {projectName, description, status, assignedUsers, createdAt, updatedAt} = req.body;
   
   const cookies = req.cookies;
   if (!cookies?.token) return res.status(401).json({error: 'error no cookies'});
@@ -65,6 +66,7 @@ export const updateProject = async (req: express.Request, res: express.Response)
     ...(status ? {status: status} : {}),
     ...(assignedUsers ? {assignedUsers: assignedUsers} : {}),
     ...(createdAt ? {createdAt: createdAt} : {}),
+    ...(updatedAt ? {updatedAt: updatedAt} : {}),
   };
   
   try {

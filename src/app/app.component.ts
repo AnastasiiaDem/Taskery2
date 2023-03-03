@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subject, Subscription, takeUntil} from 'rxjs';
+import {Subject, takeUntil} from 'rxjs';
 import {AlertService} from './shared/services/alert.service';
 import {ToastrService} from 'ngx-toastr';
 import {UserModel} from './shared/models/user.model';
-import {ChildrenOutletContexts, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {AuthService} from './shared/services/auth.service';
 
 @Component({
@@ -12,12 +12,13 @@ import {AuthService} from './shared/services/auth.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy {
-  
+
   messageText: string;
   message: any;
   currentUser: UserModel;
+  url;
   private readonly unsubscribe: Subject<void> = new Subject();
-  
+
   constructor(private alertService: AlertService,
               private toastr: ToastrService,
               private router: Router,
@@ -26,11 +27,11 @@ export class AppComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(x => this.currentUser = x);
   }
-  
+
   ngOnInit() {
-  
+    this.url = this.router.url;
   }
-  
+
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();

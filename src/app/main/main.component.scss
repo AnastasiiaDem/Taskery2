@@ -1,0 +1,64 @@
+.main-content-second {
+  .btn {
+    color: #13da4c !important;
+    border-color: #fff !important;
+    transition: 0.5s;
+
+    &:hover {
+      background-color: #fff !important;
+      color: #0DFD11FF !important;
+      border-color: #58e380 !important;
+    }
+  }
+}
+
+.get-started-btn {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+
+  .btn {
+    background-color: #4c7efd !important;
+    border-color: #0d6efd !important;
+    transition: 0.5s;
+
+    &:hover {
+      background-color: #fff !important;
+      color: #4c7efd !important;
+    }
+  }
+}
+
+.avatar {
+  pointer-events: none !important;
+}
+
+@media (min-width: 1561px) and (max-width: 1680px) {
+  .get-started-btn {
+    top: 60%;
+  }
+}
+
+@media (max-width: 1560px) {
+  .get-started-btn {
+    top: 45%;
+  }
+}
+
+@media (min-width: 1401px) and (max-width: 1497px) {
+  .get-started-btn {
+    top: 55%;
+  }
+}
+
+@media (max-width: 1400px) {
+  .get-started-btn {
+    top: 45%;
+  }
+}
+
+@media (max-width: 1382px) {
+  .get-started-btn {
+    top: 55%;
+  }
+}

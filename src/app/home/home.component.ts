@@ -7,13 +7,13 @@ import {NgxSpinnerService} from 'ngx-spinner';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  
+
   constructor(private spinner: NgxSpinnerService) {
   }
-  
+
   ngOnInit(): void {
   }
-  
+
   redirect() {
     this.spinner.show();
     document.getElementById('projectList').click();
