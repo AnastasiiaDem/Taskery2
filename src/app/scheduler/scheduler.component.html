@@ -1,0 +1,61 @@
+<div>
+  <div class="form-group form-floating mb-3 select-container">
+    <ng-select2 [placeholder]="'Project Filter'"
+                [value]="selectedProject"
+                [width]="'300px'"
+                [data]="projectsData"
+                [allowClear]="true"
+                (valueChanged)="filter($event)">
+    </ng-select2>
+  </div>
+  <jqxScheduler #schedulerReference
+                [legendPosition]="'top'"
+                [view]="'monthView'"
+                [showLegend]="true"
+                [width]="'90%'"
+                [date]="date"
+                [height]="800"
+                [ready]="ready"
+                [views]="views"
+                [rowsHeight]="90"
+                [toolbarHeight]="35"
+                [editDialog]="false"
+                [contextMenu]="false"
+                [appointmentDataFields]="appointmentDataFields"
+                (onAppointmentDoubleClick)="taskDoubleClick(previewContent, $event)"
+                style="margin: 3rem auto;">
+  </jqxScheduler>
+</div>
+
+<ng-template #previewContent let-modal>
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="card-body" style="padding: 2rem;">
+        <div class="form-floating title-block">
+          {{previewData.title}}
+        </div>
+        <hr class="line">
+        <div class="body-content">
+          <div class="left-block">
+            <div class="form-floating">
+              <p>STATUS</p>
+              <span>{{previewData.status}}</span>
+            </div>
+            <div class="form-floating">
+              <p>DEADLINE</p>
+              <span>{{previewData.deadline | date: 'YYYY-MM-dd'}}</span>
+            </div>
+            <div class="form-floating">
+              <p>ASSIGNEE</p>
+              <span>{{previewData.employee}}</span>
+            </div>
+          </div>
+          <div class="right-block">
+            <div class="form-floating description-block" [innerHTML]="previewData.description | safeHtml">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

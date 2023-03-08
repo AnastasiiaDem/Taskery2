@@ -139,6 +139,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }, 550);
     }
   }
+  
+  scheduler() {
+    if (this.url != '/home') {
+      this.url = '/scheduler';
+      this.router.navigate(['/scheduler']);
+    } else {
+      this.url = '/scheduler';
+      setTimeout(() => {
+        this.router.navigate(['/scheduler']);
+      }, 550);
+    }
+  }
 
   contacts() {
 

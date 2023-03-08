@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {Subject, takeUntil} from 'rxjs';
 import {AlertService} from './shared/services/alert.service';
 import {ToastrService} from 'ngx-toastr';
@@ -12,13 +12,13 @@ import {AuthService} from './shared/services/auth.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy {
-
+  
   messageText: string;
   message: any;
   currentUser: UserModel;
   url;
   private readonly unsubscribe: Subject<void> = new Subject();
-
+  
   constructor(private alertService: AlertService,
               private toastr: ToastrService,
               private router: Router,
@@ -27,11 +27,11 @@ export class AppComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(x => this.currentUser = x);
   }
-
+  
   ngOnInit() {
     this.url = this.router.url;
   }
-
+  
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();

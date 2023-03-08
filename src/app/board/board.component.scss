@@ -598,3 +598,15 @@ mat-icon {
     background: #fff;
   }
 }
+
+::ng-deep .ql-mention-list-container {
+  height: 105px;
+  z-index: 10000;
+  overflow-y: scroll;
+  background: #e6f2ff;
+  border-radius: 10px;
+  ul {
+    padding: 5px 15px 0 25px;
+    height: 100px;
+  }
+}

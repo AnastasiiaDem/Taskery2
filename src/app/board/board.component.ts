@@ -87,10 +87,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   previewData;
   submitted = false;
   
-  atValues = [
-    {id: 1, value: 'Fredrik Sundqvist', link: 'https://google.com'},
-    {id: 2, value: 'Patrik Sjölin'}
-  ];
+  atValues = [];
   
   quillConfig: QuillModules = {
     toolbar: {
@@ -329,6 +326,10 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.userService.getUsers()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(users => {
+          this.atValues = [];
+          users.forEach(user => {
+            this.atValues.push({id: user._id, value: user.firstName + ' ' + user.lastName, link: 'https://mail.google.com/mail/u/' + this.currentUser.email + '/?view=cm&to=' + user.email});
+          });
           this.currentProject.assignedUsers?.forEach(u => {
             users.forEach(user => {
               if (user._id == u.id) {
@@ -350,12 +351,22 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.taskService.updateTask(event.data[0])
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(data => {
-          debugger
           this.currentProject.updatedAt = new Date().toString();
           this.projectsService.updateProject(this.currentProject)
             .pipe(takeUntil(this.unsubscribe))
-            .subscribe(message => {
-                console.log(message)
+            .subscribe(res => {
+                console.log(res.message);
+              },
+              err => {
+                console.log(err);
+              });
+          this.userService.getUsers()
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe(users => {
+                let taskUser = users.find(u => u._id === event.data[0].employeeId);
+                if (taskUser.sendTaskOverdueEmail) {
+                  this.email(taskUser._id, this.currentProject, event.data[0], 'taskUpdate');
+                }
               },
               err => {
                 console.log(err);
@@ -394,18 +405,15 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
         .subscribe(data => {
             console.log(data.message);
             this.kanban.updateCard(this.taskForm.value);
-    
-            debugger
             this.currentProject.updatedAt = new Date().toString();
             this.projectsService.updateProject(this.currentProject)
               .pipe(takeUntil(this.unsubscribe))
-              .subscribe(message => {
-                  console.log(message)
+              .subscribe(res => {
+                  console.log(res.message);
                 },
                 err => {
                   console.log(err);
                 });
-            
             this.userService.getUsers()
               .pipe(takeUntil(this.unsubscribe))
               .subscribe(users => {
@@ -413,6 +421,17 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
                   if (taskUser.sendTaskOverdueEmail) {
                     this.email(taskUser._id, this.currentProject, this.taskForm.value, 'taskUpdate');
                   }
+    
+                  setTimeout(() => {
+                    let parentHTML = document.querySelectorAll('[data-id="' + this.taskForm.value.id + '"]');
+                    let descriptionHTML = parentHTML[0].getElementsByClassName("mention");
+                    let mentionId = descriptionHTML[0]['dataset'].id;
+      
+                    let mentionedUser = users.find(u => u._id === mentionId);
+                    if (mentionedUser.sendTaskOverdueEmail) {
+                      this.email(mentionedUser._id, this.currentProject, this.taskForm.value, 'mention');
+                    }
+                  }, 500);
                 },
                 err => {
                   console.log(err);
@@ -426,12 +445,11 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       this.taskService.addTask(this.taskForm.value)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(task => {
-          debugger
             this.currentProject.updatedAt = new Date().toString();
             this.projectsService.updateProject(this.currentProject)
               .pipe(takeUntil(this.unsubscribe))
-              .subscribe(message => {
-                  console.log(message)
+              .subscribe(res => {
+                  console.log(res.message);
                 },
                 err => {
                   console.log(err);
@@ -454,6 +472,17 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
                   if (taskUser.sendTaskEmail && this.taskForm.value.status == 'To Do') {
                     this.email(taskUser._id, this.currentProject, this.taskForm.value, 'task');
                   }
+                  
+                  setTimeout(() => {
+                    let parentHTML = document.querySelectorAll('[data-id="' + this.taskForm.value.id + '"]');
+                    let descriptionHTML = parentHTML[0].getElementsByClassName("mention");
+                    let mentionId = descriptionHTML[0]['dataset'].id;
+      
+                    let mentionedUser = users.find(u => u._id === mentionId);
+                    if (mentionedUser.sendTaskOverdueEmail) {
+                      this.email(mentionedUser._id, this.currentProject, this.taskForm.value, 'mention');
+                    }
+                  }, 500);
                 },
                 err => {
                   console.log(err);
@@ -491,12 +520,11 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       this.taskService.deleteTask(this.taskForm.value.id)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(data => {
-            debugger
             this.currentProject.updatedAt = new Date().toString();
             this.projectsService.updateProject(this.currentProject)
               .pipe(takeUntil(this.unsubscribe))
-              .subscribe(message => {
-                  console.log(message)
+              .subscribe(res => {
+                  console.log(res.message);
                 },
                 err => {
                   console.log(err);

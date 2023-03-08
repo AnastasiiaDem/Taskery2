@@ -10,6 +10,7 @@ import {ReportComponent} from './report/report.component';
 import {AccountComponent} from './account/account.component';
 import {NotificationsComponent} from './notifications/notifications.component';
 import {MainComponent} from "./main/main.component";
+import {SchedulerComponent} from './scheduler/scheduler.component';
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -17,10 +18,11 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent, data: {animation: 'login'}},
   {path: 'register', component: RegisterComponent, data: {animation: 'register'}},
   {path: 'board', component: BoardComponent, data: {animation: 'board'}},
-  {path: 'projects', component: ProjectsComponent, data: {animation: 'projects'}},
+  {path: 'projects', component: ProjectsComponent, canActivate: [AuthGuard], data: {animation: 'projects'}},
   {path: 'account', component: AccountComponent, data: {animation: 'account'}},
   {path: 'notifications', component: NotificationsComponent, data: {animation: 'notifications'}},
-  {path: 'report', component: ReportComponent, canActivate: [AuthGuard], data: {animation: 'report'}}
+  {path: 'report', component: ReportComponent, canActivate: [AuthGuard], data: {animation: 'report'}},
+  {path: 'scheduler', component: SchedulerComponent, canActivate: [AuthGuard], data: {animation: 'scheduler'}}
 ];
 
 @NgModule({

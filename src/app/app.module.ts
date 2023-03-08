@@ -48,6 +48,9 @@ import {QuillModule} from 'ngx-quill';
 import { SafeHtmlPipe } from './shared/safe-html.pipe';
 import {MainComponent} from "./main/main.component";
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import { SchedulerComponent } from './scheduler/scheduler.component';
+import {ScheduleModule} from '@syncfusion/ej2-angular-schedule';
+import {jqxSchedulerModule} from 'jqwidgets-ng/jqxscheduler';
 
 @NgModule({
   declarations: [
@@ -62,7 +65,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     AccountComponent,
     NotificationsComponent,
     MainComponent,
-    SafeHtmlPipe
+    SafeHtmlPipe,
+    SchedulerComponent
   ],
   imports: [
     BrowserModule,
@@ -96,6 +100,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     MatSlideToggleModule,
     QuillModule.forRoot(),
     DragDropModule,
+    ScheduleModule,
+    jqxSchedulerModule
   ],
   providers: [HttpClientModule, TaskService, UserService, ProjectsService,
     AlertService, AuthService, DatePipe, EmailService,
