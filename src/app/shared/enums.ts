@@ -6,5 +6,5 @@ export enum StatusEnum {
 }
 
 export enum ColorPalette {
-  "#FF3B30", "#FF9500", "#FFCC00", "#4CD964", "#5AC8FA", "#007AFF", "#5856D6", "#FF2D55", "#8E8E93", "#C7C7CC"
+  '#FFCC00', '#4CD964', '#007AFF', '#6c64fc', '#FF3B30', '#FF9500'
 }

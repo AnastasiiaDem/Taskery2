@@ -1,13 +1,15 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {Subject, takeUntil} from 'rxjs';
 import {AlertService} from '../shared/services/alert.service';
 import {ToastrService} from 'ngx-toastr';
 import {Role, UserModel} from '../shared/models/user.model';
-import {Router} from '@angular/router';
+import {NavigationStart, Router} from '@angular/router';
 import {AuthService} from '../shared/services/auth.service';
 import {UserService} from '../shared/services/user.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder} from '@angular/forms';
+import {filter} from 'rxjs/operators';
+import {NavigationEvent} from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker-view-model';
 
 @Component({
   selector: 'header',
@@ -46,6 +48,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getCurrentUser();
+    this.router.events
+      .pipe(
+        filter( event =>event instanceof NavigationStart)
+      )
+      .subscribe((event: NavigationStart) => {
+          this.url = event.url;
+        }
+      )
   }
 
   getCurrentUser() {
@@ -150,9 +160,5 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.router.navigate(['/scheduler']);
       }, 550);
     }
-  }
-
-  contacts() {
-
   }
 }

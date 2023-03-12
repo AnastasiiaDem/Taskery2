@@ -1,5 +1,6 @@
-<div>
-  <div class="form-group form-floating mb-3 select-container">
+<div style="margin-top: 3rem;">
+  <div class="form-group form-floating mb-3 select-container"
+       style="display: flex;justify-content: space-between;z-index: 1;align-items: flex-end;margin: 0 4rem;">
     <ng-select2 [placeholder]="'Project Filter'"
                 [value]="selectedProject"
                 [width]="'300px'"
@@ -7,25 +8,36 @@
                 [allowClear]="true"
                 (valueChanged)="filter($event)">
     </ng-select2>
+    
+    <button *ngIf="currentUser.role != 'ProjectManager'" [ngClass]="AllIssues ? 'all-tasks' : 'my-tasks'"
+            style="font-size: 11px; height: 22px; margin-right: 1rem;" (click)="showIssues(selectedProject)">
+      All Issues
+    </button>
   </div>
-  <jqxScheduler #schedulerReference
-                [legendPosition]="'top'"
-                [view]="'monthView'"
-                [showLegend]="true"
-                [width]="'90%'"
-                [date]="date"
-                [height]="800"
-                [ready]="ready"
-                [views]="views"
-                [rowsHeight]="90"
-                [toolbarHeight]="35"
-                [editDialog]="false"
-                [contextMenu]="false"
-                [appointmentDataFields]="appointmentDataFields"
-                (onAppointmentDoubleClick)="taskDoubleClick(previewContent, $event)"
-                style="margin: 3rem auto;">
-  </jqxScheduler>
+  <div style="margin-top: -2rem;">
+    <jqxScheduler #schedulerReference
+                  [legendPosition]="'top'"
+                  [view]="'monthView'"
+                  [width]="'93%'"
+                  [date]="date"
+                  [height]="800"
+                  [ready]="ready"
+                  [views]="views"
+                  [rowsHeight]="90"
+                  [toolbarHeight]="35"
+                  [editDialog]="false"
+                  [contextMenu]="false"
+                  [appointmentDataFields]="appointmentDataFields"
+                  (onAppointmentDoubleClick)="taskDoubleClick(previewContent, $event)"
+                  (onAppointmentChange)="dateChanged($event)"
+                  style="margin: 3rem auto;">
+    </jqxScheduler>
+  </div>
 </div>
+
+<!--<div class="no-content">-->
+<!--  <p>There is no data to display😢</p>-->
+<!--</div>-->
 
 <ng-template #previewContent let-modal>
   <div class="container">
@@ -37,6 +49,10 @@
         <hr class="line">
         <div class="body-content">
           <div class="left-block">
+            <div class="form-floating">
+              <p>PROJECT</p>
+              <span>{{previewData.projectName}}</span>
+            </div>
             <div class="form-floating">
               <p>STATUS</p>
               <span>{{previewData.status}}</span>

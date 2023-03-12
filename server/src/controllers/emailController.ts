@@ -8,7 +8,6 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
   if (!userId || !project) return res.status(400).json({message: `Incorrect password or email`});
   
   const foundUser = await User.findOne({_id: userId}).exec();
-  console.log(foundUser);
   
   let assignedList = '';
   let fullUserData: any = {};

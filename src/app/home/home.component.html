@@ -7,10 +7,15 @@
         <p class="head-undertext">Collaborate, manage projects, and reach new productivity
           peaks.</p>
       </div>
+      <p style="position: absolute;bottom: 10%;left: 20%;display: flex;flex-direction: column;align-items: center;"
+         *ngIf="currentUser.role !== 'ProjectManager'">
+        <a (click)="scroll(daily)" class="daily-link">see your tasks for the day</a>
+        <img src="./assets/images/icons8-double-down-50.png" style="height: 25px;">
+      </p>
     </div>
     <img class="image2" src="./assets/images/hand_image2.avif" alt="">
   </div>
-
+  
   <div class="main-content main-content-second">
     <div class="col-lg-10">
       <p class="second-head-text">It’s more than work. It’s a way of working together.</p>
@@ -18,8 +23,102 @@
         Manage projects, organize tasks, and build team spirit-all in one place. Customize and expand with more features
         as your teamwork grows. Start with a Taskery board, lists, and cards.
       </p>
-      <p><a (click)="redirect()" class="btn btn-outline-primary px-3" style="margin-left: 10px;">Go to the project list →</a></p></div>
+      <p><a (click)="projectList()" class="btn btn-outline-primary px-3" style="margin-left: 10px;">Go to the project
+        list →</a></p>
+    </div>
   </div>
+  
+  <span #daily>
+    <div style="margin: 0 4rem 5rem 4rem;padding-top: 2rem;min-height: 400px" *ngIf="currentUser.role !== 'ProjectManager'">
+    <h2>Your tasks for the day</h2>
+    <div class="projects-wrapper w3-animate-opacity custom-table-responsive"
+         *ngIf="!!myTasks && !!myTasks.overdue.length"
+         style="background: #f4f5f7;margin: 0 10px;border-top-left-radius: 4px;border-top-right-radius: 4px;border-bottom: 2px solid rgba(216,220,228,0.2);">
+      <table class="custom-table">
+        <div [ngClass]="overdue ? 'hidden-type' : 'task-type'" (click)="hide('overdue')">OVERDUE TASKS</div>
+        <!--        <thead>-->
+        <!--        <tr>-->
+        <!--          <th style="width: 200px;">Project name</th>-->
+        <!--          <th>Description</th>-->
+        <!--          <th style="width: 150px;">Status</th>-->
+        <!--          <th style="width: 20px;"></th>-->
+        <!--        </tr>-->
+        <!--        </thead>-->
+        <tbody *ngIf="!overdue">
+        <tr *ngFor="let  task of  myTasks.overdue; let idx = index">
+          <td style="width: 200px;">{{task.title}}</td>
+          <td style="width: 700px;" class="text-muted text-sm" [innerHTML]="task.description | safeHtml"></td>
+          <td class="deadline">{{task.deadline}}</td>
+          <td style="width: 60px;">
+            <a (click)="goToList(task.projectId)" class="btn corner">
+              <span class="tooltiptext">go to the tasks list</span>
+              <mat-icon class="keyboard-tab">keyboard_tab
+              </mat-icon>
+            </a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="projects-wrapper w3-animate-opacity custom-table-responsive" *ngIf="!!myTasks && !!myTasks.today.length"
+         style="border-radius: 0;background: #f4f5f7;margin: 0 10px;">
+      <table class="custom-table">
+        <div [ngClass]="today ? 'hidden-type hidden-type2' : 'task-type task-type2'" (click)="hide('today')">TODAY</div>
+        <!--        <thead>-->
+        <!--        <tr>-->
+        <!--          <th style="width: 200px;">Project name</th>-->
+        <!--          <th>Description</th>-->
+        <!--          <th style="width: 150px;">Status</th>-->
+        <!--          <th style="width: 20px;"></th>-->
+        <!--        </tr>-->
+        <!--        </thead>-->
+        <tbody *ngIf="!today">
+        <tr *ngFor="let  task of  myTasks.today; let idx = index">
+          <td style="width: 200px;">{{task.title}}</td>
+          <td style="width: 700px;" class="text-muted text-sm" [innerHTML]="task.description | safeHtml"></td>
+          <td class="deadline">{{task.deadline}}</td>
+          <td style="width: 60px;">
+            <a [routerLink]="['/board', {'paramKey': task.projectId}]" class="btn corner">
+              <span class="tooltiptext">go to the tasks list</span>
+              <mat-icon class="keyboard-tab">keyboard_tab
+              </mat-icon>
+            </a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="projects-wrapper w3-animate-opacity custom-table-responsive"
+         *ngIf="!!myTasks && !!myTasks.upcoming.length"
+         style="background: #f4f5f7;margin: 0 10px;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-top: 2px solid rgba(216,220,228,0.2);">
+      <table class="custom-table">
+        <div [ngClass]="upcoming ? 'hidden-type hidden-type3' : 'task-type task-type3'" (click)="hide('upcoming')">UPCOMING TASKS</div>
+        <!--        <thead>-->
+        <!--        <tr>-->
+        <!--          <th style="width: 200px;">Project name</th>-->
+        <!--          <th>Description</th>-->
+        <!--          <th style="width: 150px;">Status</th>-->
+        <!--          <th style="width: 20px;"></th>-->
+        <!--        </tr>-->
+        <!--        </thead>-->
+        <tbody *ngIf="!upcoming">
+        <tr *ngFor="let  task of  myTasks.upcoming; let idx = index">
+          <td style="width: 200px;">{{task.title}}</td>
+          <td style="width: 700px;" class="text-muted text-sm" [innerHTML]="task.description | safeHtml"></td>
+          <td class="deadline">{{task.deadline}}</td>
+          <td style="width: 60px;">
+            <a [routerLink]="['/board', {'paramKey': task.projectId}]" class="btn corner">
+              <span class="tooltiptext">go to the tasks list</span>
+              <mat-icon class="keyboard-tab">keyboard_tab
+              </mat-icon>
+            </a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  </span>
 </div>
 
 <ngx-spinner bdColor="rgb(170 170 170 / 50%)" size="small" color="rgb(32 32 32)" type="ball-beat"

@@ -46,7 +46,7 @@ import {NotificationsComponent} from './notifications/notifications.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {QuillModule} from 'ngx-quill';
 import { SafeHtmlPipe } from './shared/safe-html.pipe';
-import {MainComponent} from "./main/main.component";
+import {InitialComponent} from "./initial/initial.component";
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { SchedulerComponent } from './scheduler/scheduler.component';
 import {ScheduleModule} from '@syncfusion/ej2-angular-schedule';
@@ -64,7 +64,7 @@ import {jqxSchedulerModule} from 'jqwidgets-ng/jqxscheduler';
     HeaderComponent,
     AccountComponent,
     NotificationsComponent,
-    MainComponent,
+    InitialComponent,
     SafeHtmlPipe,
     SchedulerComponent
   ],

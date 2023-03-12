@@ -88,12 +88,12 @@
       </div>
     </div>
     
-    
     <ejs-kanban #kanban keyField='status'
                 [dataSource]='tasks'
                 [cardSettings]='cardSettings'
                 [sortSettings]='sortSettings'
                 (cardDoubleClick)='openModal(previewContent, $event)'
+                (dragStart)="dropStart($event)"
                 (dragStop)="drop($event)">
       <e-columns>
         <e-column headerText='To Do' keyField='To Do'></e-column>

@@ -9,11 +9,11 @@ import {ProjectsComponent} from './projects/projects.component';
 import {ReportComponent} from './report/report.component';
 import {AccountComponent} from './account/account.component';
 import {NotificationsComponent} from './notifications/notifications.component';
-import {MainComponent} from "./main/main.component";
+import {InitialComponent} from "./initial/initial.component";
 import {SchedulerComponent} from './scheduler/scheduler.component';
 
 const routes: Routes = [
-  {path: '', component: MainComponent},
+  {path: '', component: InitialComponent},
   {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent, data: {animation: 'login'}},
   {path: 'register', component: RegisterComponent, data: {animation: 'register'}},

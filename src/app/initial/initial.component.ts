@@ -7,10 +7,10 @@ import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'app-home',
-  templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss', '../home/home.component.scss', '../header/header.component.scss', '../app.component.scss'],
+  templateUrl: './initial.component.html',
+  styleUrls: ['./initial.component.scss', '../home/home.component.scss', '../header/header.component.scss', '../app.component.scss'],
 })
-export class MainComponent implements OnInit {
+export class InitialComponent implements OnInit {
   
   private readonly unsubscribe: Subject<void> = new Subject();
   currentUser: UserModel;
@@ -48,9 +48,5 @@ export class MainComponent implements OnInit {
     setTimeout(() => {
       this.spinner.hide();
     }, 950);
-  }
-  
-  contacts() {
-  
   }
 }

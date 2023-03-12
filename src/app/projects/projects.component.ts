@@ -343,6 +343,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
         .subscribe(data => {
             this.projectForm.value.updatedAt = new Date();
             console.log(data.message);
+            this.submitted = false;
             this.showUpdatedItem(this.projectForm.value);
             this.sortProjects();
           },

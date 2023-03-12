@@ -84,6 +84,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   date2Value;
   searchText;
   overdue;
+  initialStatus;
   previewData;
   submitted = false;
   
@@ -328,7 +329,11 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       .subscribe(users => {
           this.atValues = [];
           users.forEach(user => {
-            this.atValues.push({id: user._id, value: user.firstName + ' ' + user.lastName, link: 'https://mail.google.com/mail/u/' + this.currentUser.email + '/?view=cm&to=' + user.email});
+            this.atValues.push({
+              id: user._id,
+              value: user.firstName + ' ' + user.lastName,
+              link: 'https://mail.google.com/mail/u/' + this.currentUser.email + '/?view=cm&to=' + user.email
+            });
           });
           this.currentProject.assignedUsers?.forEach(u => {
             users.forEach(user => {
@@ -345,6 +350,10 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
         err => {
           console.log(err);
         });
+  }
+  
+  dropStart(event) {
+    this.initialStatus = event.data[0].status;
   }
   
   drop(event) {
@@ -406,6 +415,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
             console.log(data.message);
             this.kanban.updateCard(this.taskForm.value);
             this.currentProject.updatedAt = new Date().toString();
+            this.submitted = false;
             this.projectsService.updateProject(this.currentProject)
               .pipe(takeUntil(this.unsubscribe))
               .subscribe(res => {
@@ -421,12 +431,12 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
                   if (taskUser.sendTaskOverdueEmail) {
                     this.email(taskUser._id, this.currentProject, this.taskForm.value, 'taskUpdate');
                   }
-    
+                  
                   setTimeout(() => {
                     let parentHTML = document.querySelectorAll('[data-id="' + this.taskForm.value.id + '"]');
-                    let descriptionHTML = parentHTML[0].getElementsByClassName("mention");
+                    let descriptionHTML = parentHTML[0].getElementsByClassName('mention');
                     let mentionId = descriptionHTML[0]['dataset'].id;
-      
+                    
                     let mentionedUser = users.find(u => u._id === mentionId);
                     if (mentionedUser.sendTaskOverdueEmail) {
                       this.email(mentionedUser._id, this.currentProject, this.taskForm.value, 'mention');
@@ -475,9 +485,9 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
                   
                   setTimeout(() => {
                     let parentHTML = document.querySelectorAll('[data-id="' + this.taskForm.value.id + '"]');
-                    let descriptionHTML = parentHTML[0].getElementsByClassName("mention");
+                    let descriptionHTML = parentHTML[0].getElementsByClassName('mention');
                     let mentionId = descriptionHTML[0]['dataset'].id;
-      
+                    
                     let mentionedUser = users.find(u => u._id === mentionId);
                     if (mentionedUser.sendTaskOverdueEmail) {
                       this.email(mentionedUser._id, this.currentProject, this.taskForm.value, 'mention');
@@ -541,7 +551,6 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       modal.close();
     }
   }
-  
   
   showIssues() {
     this.AllIssues = !this.AllIssues;

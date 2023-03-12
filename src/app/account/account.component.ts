@@ -141,6 +141,7 @@ export class AccountComponent implements OnInit, OnDestroy {
             const input = document.getElementById(field);
             input['readOnly'] = true;
             input['disabled'] = true;
+            this.submitted = false;
           },
           err => {
             console.log(err);
