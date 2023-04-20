@@ -427,7 +427,7 @@ a {
   align-items: center;
 }
 
-.tooltiptext {
+.tooltiptext, .tooltipcalc, .tooltiptemplate {
   visibility: hidden;
   width: max-content;
   background-color: #f0f1f2;
@@ -444,7 +444,7 @@ a {
   transition: visibility 1s cubic-bezier(0.76, -0.37, 0.15, 1.23);
 }
 
-.tooltiptext::after {
+.tooltiptext::after, .tooltipcalc::after, .tooltiptemplate::after {
   content: " ";
   position: absolute;
   top: 100%;
@@ -457,4 +457,29 @@ a {
 
 .corner:hover .tooltiptext {
   visibility: visible;
+}
+
+.calc-budget:hover .tooltipcalc {
+  visibility: visible;
+  z-index: 1000000;
+}
+
+.generate-desc:hover .tooltiptemplate {
+  visibility: visible;
+  z-index: 1000000;
+}
+
+.tooltipcalc {
+  left: 95px !important;
+}
+
+.tooltiptemplate {
+  left: -65px !important;
+}
+
+.calc-budget, .generate-desc {
+  height: 20px;
+  padding-left: 5px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
 }

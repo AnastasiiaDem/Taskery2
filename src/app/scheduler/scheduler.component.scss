@@ -1,5 +1,5 @@
 ::ng-deep .jqx-scheduler-legend-bar-top {
-  //display: block !important;
+  display: block !important;
   padding-left: 20px;
 }
 
@@ -187,18 +187,20 @@
   }
 }
 
-::ng-deep ng-select2 .select2-selection, ::ng-deep ng-select2 .select2-selection .select2-selection__arrow {
-  height: 40px !important;
-  font-size: 12px !important;
-  text-align: left;
-}
+.select-container {
+  ::ng-deep ng-select2 .select2-selection, ::ng-deep ng-select2 .select2-selection .select2-selection__arrow {
+    height: 40px !important;
+    font-size: 12px !important;
+    text-align: left;
+  }
 
-::ng-deep ng-select2 .select2-selection .select2-selection__rendered {
-  line-height: 40px !important;
-}
+  ::ng-deep ng-select2 .select2-selection .select2-selection__rendered {
+    line-height: 40px !important;
+  }
 
-::ng-deep .select2-results__options {
-  font-size: 12px !important;
+  ::ng-deep .select2-results__options {
+    font-size: 12px !important;
+  }
 }
 
 ::ng-deep .jqx-scheduler-selected-appointment {

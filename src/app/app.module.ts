@@ -51,6 +51,9 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import { SchedulerComponent } from './scheduler/scheduler.component';
 import {ScheduleModule} from '@syncfusion/ej2-angular-schedule';
 import {jqxSchedulerModule} from 'jqwidgets-ng/jqxscheduler';
+import {AIService} from './shared/services/ai.service';
+import {NumberPipePipe} from './shared/input-number.pipe';
+import {NumberCommaDirective} from './shared/format-number.directive';
 
 @NgModule({
   declarations: [
@@ -66,7 +69,9 @@ import {jqxSchedulerModule} from 'jqwidgets-ng/jqxscheduler';
     NotificationsComponent,
     InitialComponent,
     SafeHtmlPipe,
-    SchedulerComponent
+    SchedulerComponent,
+    NumberPipePipe,
+    NumberCommaDirective
   ],
   imports: [
     BrowserModule,
@@ -104,7 +109,7 @@ import {jqxSchedulerModule} from 'jqwidgets-ng/jqxscheduler';
     jqxSchedulerModule
   ],
   providers: [HttpClientModule, TaskService, UserService, ProjectsService,
-    AlertService, AuthService, DatePipe, EmailService,
+    AlertService, AuthService, DatePipe, EmailService, AIService,
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
   ],
   bootstrap: [AppComponent]

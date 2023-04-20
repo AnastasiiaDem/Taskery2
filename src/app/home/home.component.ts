@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {Subject, takeUntil} from 'rxjs';
 import {StatusEnum} from '../shared/enums';
@@ -88,7 +88,7 @@ export class HomeComponent implements OnInit {
   }
   
   sortTasks(tasks) {
-    tasks.sort((a,b) => {
+    tasks.sort((a, b) => {
       return new Date(b.deadline).getTime() - new Date(a.deadline).getTime();
     });
     return tasks;
@@ -121,12 +121,8 @@ export class HomeComponent implements OnInit {
                   employeeId: task.employeeId,
                   projectId: task.projectId
                 });
-              }
-            });
-            this.sortTasks(res.tasks).forEach((task, i) => {
-              if (i > 2) {
-                return;
-              } else {
+              } else if (task.deadline > this.datepipe.transform(this.currentDate, 'YYYY-MM-dd')
+                && task.deadline < this.datepipe.transform(`${new Date(this.currentDate).getFullYear()}-${new Date(this.currentDate).getMonth() + 1}-${new Date(this.currentDate).getDate() + 3}`, 'YYYY-MM-dd')) {
                 this.myTasks.upcoming.push({
                   id: task._id,
                   title: task.title,

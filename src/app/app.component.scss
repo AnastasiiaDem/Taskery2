@@ -243,3 +243,17 @@ ngb-carousel .picsum-img-wrapper>img {
   flex-direction: column;
   justify-content: space-between;
 }
+
+ng-select2 {
+  .select2-selection {
+    height: 56px !important;
+
+    .select2-selection__rendered {
+      line-height: 54px !important;
+    }
+
+    .select2-selection__arrow {
+      height: 54px !important;
+    }
+  }
+}

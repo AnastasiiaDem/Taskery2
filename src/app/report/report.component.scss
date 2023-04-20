@@ -5,7 +5,7 @@
   height: 350px;
 }
 
-.chart, .chart2, .block1, .block2, .block3 {
+.chart, .chart2, .block1, .block2, .block3, .block4, .block5, .block6 {
   width: 40%;
   padding: 30px;
   display: flex;
@@ -39,7 +39,7 @@
   width: 60%;
 }
 
-.block1, .block2, .block3, .block4 {
+.block1, .block2, .block3, .block4, .block5, .block6 {
   width: 25%;
 
   img {
@@ -62,25 +62,9 @@
   font-weight: 900 !important;
 }
 
-.block1 {
-  width: 20%;
-}
-
-.block2 {
-  width: 25%;
-}
-
-.block3 {
-  width: 35%;
-}
-
-.block4 {
-  width: 16%;
-
-  .date {
-    font-size: 15px;
-    font-weight: 500;
-  }
+.info-wrapper .date {
+  font-size: 30px;
+  font-weight: 700;
 }
 
 .info-img-block {

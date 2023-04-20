@@ -28,6 +28,9 @@ import ImageCompress from 'quill-image-compress';
 import Emoji from 'quill-emoji';
 import Mention from 'quill-mention';
 
+import { OpenAIApi, Configuration } from "openai";
+import {AIService} from '../shared/services/ai.service';
+
 let Quill: any = QuillNamespace;
 
 Quill.register('modules/imageCompress', ImageCompress);
@@ -88,6 +91,14 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   previewData;
   submitted = false;
   
+  configuration = new Configuration({
+    apiKey: "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",
+  });
+  
+  openai = new OpenAIApi(this.configuration);
+  aiResponse: any;
+  aiData: any = '';
+
   atValues = [];
   
   quillConfig: QuillModules = {
@@ -138,6 +149,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               public taskService: TaskService,
               private modalService: NgbModal,
               private userService: UserService,
+              private aiService: AIService,
               private route: ActivatedRoute,
               private projectsService: ProjectsService,
               private datepipe: DatePipe,
@@ -327,14 +339,6 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.userService.getUsers()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(users => {
-          this.atValues = [];
-          users.forEach(user => {
-            this.atValues.push({
-              id: user._id,
-              value: user.firstName + ' ' + user.lastName,
-              link: 'https://mail.google.com/mail/u/' + this.currentUser.email + '/?view=cm&to=' + user.email
-            });
-          });
           this.currentProject.assignedUsers?.forEach(u => {
             users.forEach(user => {
               if (user._id == u.id) {
@@ -343,6 +347,15 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
                   text: user.firstName + ' ' + user.lastName
                 });
               }
+            });
+          });
+          
+          this.atValues = [];
+          users.filter(u => u._id != this.currentUser._id || !!this.employeeData.find(usr => usr.id == u._id)).forEach(user => {
+            this.atValues.push({
+              id: user._id,
+              value: user.firstName + ' ' + user.lastName,
+              link: 'https://mail.google.com/mail/u/' + this.currentUser.email + '/?view=cm&to=' + user.email
             });
           });
           this.firstUserId = this.employeeData[0].id;
@@ -435,11 +448,13 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
                   setTimeout(() => {
                     let parentHTML = document.querySelectorAll('[data-id="' + this.taskForm.value.id + '"]');
                     let descriptionHTML = parentHTML[0].getElementsByClassName('mention');
-                    let mentionId = descriptionHTML[0]['dataset'].id;
-                    
-                    let mentionedUser = users.find(u => u._id === mentionId);
-                    if (mentionedUser.sendTaskOverdueEmail) {
-                      this.email(mentionedUser._id, this.currentProject, this.taskForm.value, 'mention');
+                    if (!!descriptionHTML.length) {
+                      let mentionId = descriptionHTML[0]['dataset'].id;
+  
+                      let mentionedUser = users.find(u => u._id === mentionId);
+                      if (mentionedUser.sendTaskOverdueEmail) {
+                        this.email(mentionedUser._id, this.currentProject, this.taskForm.value, 'mention');
+                      }
                     }
                   }, 500);
                 },
@@ -768,5 +783,16 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
         sortBy: 'DataSourceOrder'
       };
     }
+  }
+  
+  writeBriefAI() {
+    this.aiService.getAIresponse('Write a brief for the task(purpose, functionality, technical requirements): ' + this.taskForm.value.title + '.\nProject name: ' + this.currentProject?.projectName)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(response => {
+          this.taskForm.controls['description'].setValue(response.choices[0].text);
+        },
+        error => {
+          console.log(error);
+        });
   }
 }

@@ -29,7 +29,8 @@
   </div>
   
   <span #daily>
-    <div style="margin: 0 4rem 5rem 4rem;padding-top: 2rem;min-height: 400px" *ngIf="currentUser.role !== 'ProjectManager'">
+    <div style="margin: 0 4rem 5rem 4rem;padding-top: 2rem;min-height: 400px"
+         *ngIf="currentUser.role !== 'ProjectManager'">
     <h2>Your tasks for the day</h2>
     <div class="projects-wrapper w3-animate-opacity custom-table-responsive"
          *ngIf="!!myTasks && !!myTasks.overdue.length"
@@ -45,7 +46,7 @@
         <!--        </tr>-->
         <!--        </thead>-->
         <tbody *ngIf="!overdue">
-        <tr *ngFor="let  task of  myTasks.overdue; let idx = index">
+        <tr *ngFor="let task of myTasks.overdue; let idx = index">
           <td style="width: 200px;">{{task.title}}</td>
           <td style="width: 700px;" class="text-muted text-sm" [innerHTML]="task.description | safeHtml"></td>
           <td class="deadline">{{task.deadline}}</td>

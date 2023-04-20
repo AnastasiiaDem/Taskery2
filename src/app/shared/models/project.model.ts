@@ -9,4 +9,5 @@ export class ProjectModel {
   assignedUsers: Array<any>;
   createdAt: string;
   updatedAt: string;
+  budget: number;
 }

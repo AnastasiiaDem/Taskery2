@@ -29,6 +29,7 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnDestroy {
   users: any[] = [];
   resources: any;
   dataAdapter: any;
+  projectId = '';
   usersList = [];
   projects = [];
   previewData = {
@@ -113,7 +114,7 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   
   ngAfterViewInit() {
-
+  
   }
   
   ngOnDestroy() {
@@ -152,6 +153,7 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(res => {
           this.tasks = [];
+          let colorAndProject = [];
           res.tasks.forEach(task => {
             if (this.projectsData.find(p => p.id == task.projectId)) {
               this.tasks.push({
@@ -176,8 +178,15 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnDestroy {
                 borderColor: ColorPalette[this.projectsData.findIndex(p => p.id == task.projectId)]
               });
             }
+            if (this.projectId != task.projectId && !!this.projectsData.find(p => p.id == task.projectId)) {
+              this.projectId = task.projectId;
+              colorAndProject.push({
+                projectId: task.projectId,
+                project: this.projectsData.find(p => p.id == task.projectId).text,
+                color: ColorPalette[this.projectsData.findIndex(p => p.id == task.projectId)]
+              });
+            }
           });
-          
           this.source = {
             dataType: 'array',
             dataFields: [
@@ -211,7 +220,12 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnDestroy {
           this.dataAdapter = new jqx.dataAdapter(this.source);
           this.scheduler.source(this.dataAdapter);
           this.scheduler.resources(this.resources);
-            this.filter(this.selectedProject);
+          this.filter(this.selectedProject);
+          let html = '';
+          colorAndProject.forEach(p => {
+            html += `<div data-toggle="on" style="border-color: ${p.color}; background: ${p.color};" class="jqx-scheduler-legend"></div><div class="jqx-scheduler-legend-label">${p.project}</div>`;
+          });
+          $('#legendbartop').html(`<div style="margin:5px; position: relative;">${html}</div>`);
         },
         err => {
           console.log(err);
@@ -272,8 +286,8 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnDestroy {
       this.scheduler.beginAppointmentsUpdate();
       if (this.AllIssues == true) {
         this.tasks.forEach(task => {
-            this.scheduler.setAppointmentProperty(task.id, 'hidden', false);
-          });
+          this.scheduler.setAppointmentProperty(task.id, 'hidden', false);
+        });
       } else {
         this.tasks.filter(task => task.employeeId == this.currentUser._id)
           .forEach(task => {
@@ -296,7 +310,7 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnDestroy {
     };
     let currentProject = this.projects.find(p => p._id == updatedTask.projectId);
     this.taskService.updateTask(updatedTask).pipe(takeUntil(this.unsubscribe))
-        .subscribe(data => {
+      .subscribe(data => {
           currentProject.updatedAt = new Date().toString();
           this.projectsService.updateProject(currentProject)
             .pipe(takeUntil(this.unsubscribe))
@@ -318,10 +332,10 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnDestroy {
                 console.log(err);
               });
           console.log(data.message);
-          },
-          err => {
-            console.log(err);
-          });
+        },
+        err => {
+          console.log(err);
+        });
   }
   
   email(userId, project, task, type) {

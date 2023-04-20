@@ -23,6 +23,7 @@ import * as QuillNamespace from 'quill';
 import ImageCompress from 'quill-image-compress';
 import Emoji from 'quill-emoji';
 import Mention from 'quill-mention';
+import {AIService} from '../shared/services/ai.service';
 
 let Quill: any = QuillNamespace;
 
@@ -40,7 +41,7 @@ Quill.register('modules/mention', Mention);
 })
 export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   projects: ProjectModel[] = [];
-  currentProject: { description: string; projectName: string; status: StatusEnum; assignedUsers: [], createdAt: string, updatedAt: string };
+  currentProject: { description: string; projectName: string; status: StatusEnum; assignedUsers: [], createdAt: string, updatedAt: string, budget: number };
   projectForm: FormGroup;
   statusData: Array<Select2OptionData> = [];
   tasksData: Array<Select2OptionData> = [];
@@ -60,10 +61,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   previewData;
   submitted = false;
   
-  atValues = [
-    {id: 1, value: 'Fredrik Sundqvist', link: 'https://google.com'},
-    {id: 2, value: 'Patrik Sjölin'}
-  ];
+  atValues = [];
   
   linkStyle(project) {
     if (project.status == StatusEnum.todo) {
@@ -128,6 +126,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   constructor(private formBuilder: FormBuilder,
               private modalService: NgbModal,
               private taskService: TaskService,
+              private aiService: AIService,
               private projectService: ProjectsService,
               private userService: UserService,
               private elementRef: ElementRef,
@@ -166,7 +165,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       status: ['', Validators.required],
       assignedUsers: [[], Validators.required],
       createdAt: [this.currentDate, Validators.required],
-      updatedAt: [this.currentDate, Validators.required]
+      updatedAt: [this.currentDate, Validators.required],
+      budget: [0, Validators.required]
     });
 
     this.dropdownSettings = {
@@ -176,7 +176,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
       enableCheckAll: false,
-      itemsShowLimit: 3,
+      itemsShowLimit: 2,
       allowSearchFilter: true
     };
   }
@@ -235,7 +235,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
               status: project.status,
               assignedUsers: project.assignedUsers,
               createdAt: project.createdAt,
-              updatedAt: project.updatedAt
+              updatedAt: project.updatedAt,
+              budget: project.budget || 0
             });
           });
           this.sortProjects();
@@ -246,7 +247,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
             status: StatusEnum.todo,
             assignedUsers: [],
             createdAt: this.currentDate,
-            updatedAt: this.currentDate
+            updatedAt: this.currentDate,
+            budget: 0
           };
         },
         err => {
@@ -271,7 +273,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
             status: StatusEnum.todo,
             assignedUsers: [],
             createdAt: this.currentDate,
-            updatedAt: this.currentDate
+            updatedAt: this.currentDate,
+            budget: 0
           };
         },
         err => {
@@ -318,7 +321,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       status: StatusEnum.todo,
       assignedUsers: [],
       createdAt: this.currentDate,
-      updatedAt: this.currentDate
+      updatedAt: this.currentDate,
+      budget: 0
     };
     this.projectForm.setValue(currentProject);
     this.addProjectFlag = true;
@@ -362,7 +366,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
               status: p.status,
               assignedUsers: p.assignedUsers,
               createdAt: p.createdAt,
-              updatedAt: p.updatedAt
+              updatedAt: p.updatedAt,
+              budget: p.budget || 0
             });
             this.sortProjects();
           },
@@ -396,7 +401,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       status: project.status,
       assignedUsers: project.assignedUsers,
       createdAt: project.createdAt,
-      updatedAt: project.updatedAt
+      updatedAt: project.updatedAt,
+      budget: project.budget || 0
     });
     let assignedList = '';
     
@@ -410,7 +416,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       status: project.status,
       assignedUsers: assignedList,
       createdAt: project.createdAt,
-      updatedAt: project.updatedAt
+      updatedAt: project.updatedAt,
+      budget: project.budget || 0
     };
     this.modalService.open(content, {centered: true});
   }
@@ -441,7 +448,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
               status: StatusEnum.todo,
               assignedUsers: [],
               createdAt: this.currentDate,
-              updatedAt: this.currentDate
+              updatedAt: this.currentDate,
+              budget: 0
             };
             this.projectForm.setValue(currentProject);
           },
@@ -471,5 +479,41 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.projects.sort((a,b) => {
       return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
     });
+  }
+  
+  writeBriefAI() {
+    if (this.projectForm.value.projectName != '') {
+      this.spinner.show();
+      this.aiService.getAIresponse('Write a brief for the project(purpose, functionality, technical requirements): ' + this.projectForm.value.projectName)
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe(response => {
+            this.projectForm.controls['description'].setValue(response.choices[0].text);
+            this.spinner.hide();
+          },
+          error => {
+            console.log(error);
+            this.spinner.hide();
+          });
+    }
+  }
+  
+  calcBudgetAI() {
+    if (this.projectForm.value.projectName != '') {
+      this.spinner.show();
+      this.aiService.getAIresponse('Calculate approximate budget for the project (THE OUTPUT MUST CONTAIN ONLY ONE NUMBER WITHOUT TEXT). Project name: ' + this.projectForm.value.projectName + '.\nDescription: ' + this.projectForm.value.description)
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe(response => {
+            this.projectForm.controls['budget'].setValue(parseInt(response.choices[0].text.replace(/[^0-9]/g, '')));
+            this.spinner.hide();
+          },
+          error => {
+            console.log(error);
+            this.spinner.hide();
+          });
+    }
+  }
+  
+  budgetChanged(event) {
+    this.projectForm.value.budget = parseInt(this.projectForm.value.budget.replace(/[^0-9]/g, ''));
   }
 }

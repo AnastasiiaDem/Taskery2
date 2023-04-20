@@ -16,6 +16,7 @@ interface IProject {
   assignedUsers: Array<any>;
   createdAt: string;
   updatedAt: string;
+  budget: number;
 }
 
 export const ProjectSchema = new Schema<IProject>({
@@ -27,6 +28,7 @@ export const ProjectSchema = new Schema<IProject>({
   assignedUsers: { type: [], required: true },
   createdAt: { type: String, required: true },
   updatedAt: { type: String, required: true },
+  budget: { type: Number, required: true },
 });
 
 const Project = mongoose.model<IProject>("Project", ProjectSchema);
