@@ -24,7 +24,7 @@
         as your teamwork grows. Start with a Taskery board, lists, and cards.
       </p>
       <p><a (click)="projectList()" class="btn btn-outline-primary px-3" style="margin-left: 10px;">Go to the project
-        list →</a></p>
+        list&nbsp;→</a></p>
     </div>
   </div>
   
@@ -47,7 +47,7 @@
         <!--        </thead>-->
         <tbody *ngIf="!overdue">
         <tr *ngFor="let task of myTasks.overdue; let idx = index">
-          <td style="width: 200px;">{{task.title}}</td>
+          <td style="width: 200px;">{{task.title}}<br><span class="project-name">{{task.projectName}}</span></td>
           <td style="width: 700px;" class="text-muted text-sm" [innerHTML]="task.description | safeHtml"></td>
           <td class="deadline">{{task.deadline}}</td>
           <td style="width: 60px;">
@@ -75,7 +75,7 @@
         <!--        </thead>-->
         <tbody *ngIf="!today">
         <tr *ngFor="let  task of  myTasks.today; let idx = index">
-          <td style="width: 200px;">{{task.title}}</td>
+          <td style="width: 200px;">{{task.title}}<br><span class="project-name">{{task.projectName}}</span></td>
           <td style="width: 700px;" class="text-muted text-sm" [innerHTML]="task.description | safeHtml"></td>
           <td class="deadline">{{task.deadline}}</td>
           <td style="width: 60px;">
@@ -104,7 +104,7 @@
         <!--        </thead>-->
         <tbody *ngIf="!upcoming">
         <tr *ngFor="let  task of  myTasks.upcoming; let idx = index">
-          <td style="width: 200px;">{{task.title}}</td>
+          <td style="width: 200px;">{{task.title}}<br><span class="project-name">{{task.projectName}}</span></td>
           <td style="width: 700px;" class="text-muted text-sm" [innerHTML]="task.description | safeHtml"></td>
           <td class="deadline">{{task.deadline}}</td>
           <td style="width: 60px;">

@@ -3,6 +3,7 @@ import Token from '../model/TokenModel';
 import express from 'express';
 import Project from '../model/ProjectModel';
 import mongoose from 'mongoose';
+import Task from '../model/TaskModel';
 
 export const createProject = async (req: express.Request, res: express.Response) => {
   const {projectName, description, status, assignedUsers, createdAt, updatedAt, budget} = req.body;
@@ -98,6 +99,7 @@ export const deleteProject = async (req: express.Request, res: express.Response)
   
   try {
     const result = await Project.findByIdAndDelete(id);
+    const result2 = await Task.deleteMany({projectId: id});
     res.status(200).json({message: 'Project is deleted'});
   } catch (error: any) {
     res.status(400).json({error: error});

@@ -8,6 +8,7 @@ import {DatePipe} from '@angular/common';
 import {TaskModel} from '../shared/models/task.model';
 import {Router} from '@angular/router';
 import {Role, UserModel} from '../shared/models/user.model';
+import {ProjectsService} from '../shared/services/project.service';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +18,7 @@ import {Role, UserModel} from '../shared/models/user.model';
 export class HomeComponent implements OnInit {
   
   private readonly unsubscribe: Subject<void> = new Subject();
-  myTasks: { overdue: Array<TaskModel>, today: Array<TaskModel>, upcoming: Array<TaskModel> };
+  myTasks: { overdue: Array<any>, today: Array<any>, upcoming: Array<any> };
   currentUser: UserModel = {
     email: '',
     firstName: '',
@@ -33,11 +34,13 @@ export class HomeComponent implements OnInit {
   overdue;
   today;
   upcoming;
+  allProjects = [];
   
   constructor(private spinner: NgxSpinnerService,
               public taskService: TaskService,
               public userService: UserService,
               private datepipe: DatePipe,
+              public projectService: ProjectsService,
               private router: Router) {
     this.getCurrentUser();
   }
@@ -45,7 +48,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.overdue = false;
     this.currentDate = new Date();
-    
+    this.getAllProjects();
     this.getAllTasks();
   }
   
@@ -94,6 +97,20 @@ export class HomeComponent implements OnInit {
     return tasks;
   }
   
+  getAllProjects() {
+    this.projectService.getProjects()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(res => {
+          this.allProjects = [];
+          res.projects.forEach(project => {
+            this.allProjects.push(project);
+          });
+        },
+        err => {
+          console.log(err);
+        });
+  }
+  
   getAllTasks() {
     this.taskService.getTasks()
       .pipe(takeUntil(this.unsubscribe))
@@ -109,7 +126,8 @@ export class HomeComponent implements OnInit {
                   status: task.status,
                   deadline: task.deadline,
                   employeeId: task.employeeId,
-                  projectId: task.projectId
+                  projectId: task.projectId,
+                  projectName: this.allProjects.find(p => p._id == task.projectId).projectName
                 });
               } else if (this.datepipe.transform(this.currentDate, 'YYYY-MM-dd') == task.deadline) {
                 this.myTasks.today.push({
@@ -119,7 +137,8 @@ export class HomeComponent implements OnInit {
                   status: task.status,
                   deadline: task.deadline,
                   employeeId: task.employeeId,
-                  projectId: task.projectId
+                  projectId: task.projectId,
+                  projectName: this.allProjects.find(p => p._id == task.projectId).projectName
                 });
               } else if (task.deadline > this.datepipe.transform(this.currentDate, 'YYYY-MM-dd')
                 && task.deadline < this.datepipe.transform(`${new Date(this.currentDate).getFullYear()}-${new Date(this.currentDate).getMonth() + 1}-${new Date(this.currentDate).getDate() + 3}`, 'YYYY-MM-dd')) {
@@ -130,7 +149,8 @@ export class HomeComponent implements OnInit {
                   status: task.status,
                   deadline: task.deadline,
                   employeeId: task.employeeId,
-                  projectId: task.projectId
+                  projectId: task.projectId,
+                  projectName: this.allProjects.find(p => p._id == task.projectId).projectName
                 });
               }
             });

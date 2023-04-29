@@ -11,10 +11,14 @@ import {AccountComponent} from './account/account.component';
 import {NotificationsComponent} from './notifications/notifications.component';
 import {InitialComponent} from "./initial/initial.component";
 import {SchedulerComponent} from './scheduler/scheduler.component';
+import {ContactComponent} from './contact/contact.component';
+import {AdminComponent} from './admin/admin.component';
 
 const routes: Routes = [
   {path: '', component: InitialComponent},
+  {path: 'contact', component: ContactComponent},
   {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
+  {path: 'admin', component: AdminComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent, data: {animation: 'login'}},
   {path: 'register', component: RegisterComponent, data: {animation: 'register'}},
   {path: 'board', component: BoardComponent, data: {animation: 'board'}},

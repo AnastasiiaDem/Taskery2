@@ -12,5 +12,6 @@ export class UserModel {
 
 export enum Role {
   TeamMember = 'TeamMember',
-  ProjectManager = 'ProjectManager'
+  ProjectManager = 'ProjectManager',
+  Admin = 'Admin'
 }

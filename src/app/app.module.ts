@@ -54,6 +54,9 @@ import {jqxSchedulerModule} from 'jqwidgets-ng/jqxscheduler';
 import {AIService} from './shared/services/ai.service';
 import {NumberPipePipe} from './shared/input-number.pipe';
 import {NumberCommaDirective} from './shared/format-number.directive';
+import {ContactComponent} from './contact/contact.component';
+import {ContactService} from './shared/services/contact.service';
+import {AdminComponent} from './admin/admin.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +74,9 @@ import {NumberCommaDirective} from './shared/format-number.directive';
     SafeHtmlPipe,
     SchedulerComponent,
     NumberPipePipe,
-    NumberCommaDirective
+    NumberCommaDirective,
+    ContactComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
@@ -109,7 +114,7 @@ import {NumberCommaDirective} from './shared/format-number.directive';
     jqxSchedulerModule
   ],
   providers: [HttpClientModule, TaskService, UserService, ProjectsService,
-    AlertService, AuthService, DatePipe, EmailService, AIService,
+    AlertService, AuthService, DatePipe, EmailService, AIService, ContactService,
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
   ],
   bootstrap: [AppComponent]

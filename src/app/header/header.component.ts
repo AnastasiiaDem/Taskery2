@@ -17,6 +17,7 @@ import {NavigationEvent} from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker-
   styleUrls: ['./header.component.scss', '../app.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
+  
   private readonly unsubscribe: Subject<void> = new Subject();
   currentUser: UserModel;
   messageText: string;
@@ -158,6 +159,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.url = '/scheduler';
       setTimeout(() => {
         this.router.navigate(['/scheduler']);
+      }, 550);
+    }
+  }
+  
+  contactUs() {
+    if (this.url != '/home') {
+      this.url = '/contact';
+      this.router.navigate(['/contact']);
+    } else {
+      this.url = '/contact';
+      setTimeout(() => {
+        this.router.navigate(['/contact']);
       }, 550);
     }
   }

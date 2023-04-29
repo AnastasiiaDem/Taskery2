@@ -95,7 +95,7 @@ export function printDiv(divId: string) {
         }
         
         .info-wrapper .date {
-          font-size: 30px;
+          font-size: 25px;
           font-weight: 700;
         }
         

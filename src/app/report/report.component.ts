@@ -73,7 +73,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   pieData = [];
   legendSettings;
   exportStatus;
-  currentDate;
+  currentDate = new Date();
   loading = false;
   currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: Role; } = {
     _id: 0,

@@ -50,8 +50,8 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   @ViewChild('kanban') kanban: KanbanComponent;
   
   taskForm: FormGroup;
-  tasks: TaskModel[] = [];
-  tasksList: TaskModel[] = [];
+  tasks = [];
+  tasksList = [];
   cardSettings: CardSettingsModel = {
     contentField: 'description',
     headerField: 'id'
@@ -315,7 +315,8 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               status: task.status,
               deadline: task.deadline,
               employeeId: task.employeeId,
-              projectId: task.projectId
+              projectId: task.projectId,
+              employeeName: this.currentProject.assignedUsers.find(employee => employee.id == task.employeeId)?.text
             });
           });
           
@@ -591,7 +592,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     if (this.overdue && task.status != StatusEnum.done) {
       return {'color': 'rgb(221 4 38 / 70%)'};
     } else {
-      return {'color': '#66666666'};
+      return {'color': '#a5a8bd'};
     }
   }
   
@@ -786,13 +787,18 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   writeBriefAI() {
-    this.aiService.getAIresponse('Write a brief for the task(purpose, functionality, technical requirements): ' + this.taskForm.value.title + '.\nProject name: ' + this.currentProject?.projectName)
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(response => {
-          this.taskForm.controls['description'].setValue(response.choices[0].text);
-        },
-        error => {
-          console.log(error);
-        });
+    if (this.taskForm.value.title != '') {
+      this.spinner.show();
+      this.aiService.getAIresponse('Write a brief for the task(purpose, functionality, technical requirements): ' + this.taskForm.value.title + '.\nProject name: ' + this.currentProject?.projectName)
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe(response => {
+            this.taskForm.controls['description'].setValue(response.choices[0].text);
+            this.spinner.hide();
+          },
+          error => {
+            console.log(error);
+            this.spinner.hide();
+          });
+    }
   }
 }

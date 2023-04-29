@@ -1,9 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {NavigationStart, Router} from '@angular/router';
 import {AuthService} from '../shared/services/auth.service';
 import {Subject, takeUntil} from 'rxjs';
-import {UserModel} from '../shared/models/user.model';
+import {Role, UserModel} from '../shared/models/user.model';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {filter} from 'rxjs/operators';
+import {UserService} from '../shared/services/user.service';
 
 @Component({
   selector: 'app-home',
@@ -14,9 +16,22 @@ export class InitialComponent implements OnInit {
   
   private readonly unsubscribe: Subject<void> = new Subject();
   currentUser: UserModel;
+  url;
+  currentUserData: UserModel = {
+    id: 0,
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    role: Role.TeamMember,
+    sendAssignedEmail: false,
+    sendTaskEmail: false,
+    sendTaskOverdueEmail: false
+  };
   
   constructor(private router: Router,
               private spinner: NgxSpinnerService,
+              private userService: UserService,
               private authenticationService: AuthService) {
     this.authenticationService.currentUser
       .pipe(takeUntil(this.unsubscribe))
@@ -27,6 +42,14 @@ export class InitialComponent implements OnInit {
   }
   
   ngOnInit(): void {
+    this.router.events
+      .pipe(
+        filter( event =>event instanceof NavigationStart)
+      )
+      .subscribe((event: NavigationStart) => {
+          this.url = event.url;
+        }
+      )
   }
   
   ngOnDestroy() {
@@ -34,12 +57,16 @@ export class InitialComponent implements OnInit {
     this.unsubscribe.complete();
   }
   
-  redirect() {
-    this.spinner.show();
-    document.getElementById('projectList').click();
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 950);
+  contactUs() {
+    // if (this.url != '') {
+    //   this.url = '/contact';
+    //   this.router.navigate(['/contact']);
+    // } else {
+      this.url = '/contact';
+      setTimeout(() => {
+        this.router.navigate(['/contact']);
+      }, 510);
+    // }
   }
   
   getStarted() {
