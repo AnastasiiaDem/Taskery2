@@ -426,6 +426,7 @@ ng-select2 {
 
     ::ng-deep .select2-selection__rendered {
       line-height: 30px !important;
+      padding-left: 15px;
     }
 
     ::ng-deep .select2-selection__arrow {

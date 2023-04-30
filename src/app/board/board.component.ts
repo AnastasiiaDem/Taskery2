@@ -1,5 +1,4 @@
 import {AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {TaskModel} from 'src/app/shared/models/task.model';
 import {TaskService} from 'src/app/shared/services/task.service';
 import {StatusEnum} from 'src/app/shared/enums';
 import {CardSettingsModel, KanbanComponent, SortSettingsModel} from '@syncfusion/ej2-angular-kanban';
@@ -28,7 +27,7 @@ import ImageCompress from 'quill-image-compress';
 import Emoji from 'quill-emoji';
 import Mention from 'quill-mention';
 
-import { OpenAIApi, Configuration } from "openai";
+import {Configuration, OpenAIApi} from 'openai';
 import {AIService} from '../shared/services/ai.service';
 
 let Quill: any = QuillNamespace;
@@ -92,13 +91,13 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   submitted = false;
   
   configuration = new Configuration({
-    apiKey: "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",
+    apiKey: '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',
   });
   
   openai = new OpenAIApi(this.configuration);
   aiResponse: any;
   aiData: any = '';
-
+  
   atValues = [];
   
   quillConfig: QuillModules = {
@@ -223,38 +222,17 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     
     const dom: HTMLElement = this.elementRef.nativeElement;
     dom.querySelectorAll('.e-item-count').forEach(el => {
-      el.innerHTML = el.innerHTML.replace('items', 'tasks');
+      el.innerHTML = el.innerHTML.replace('items', '');
     });
     
     dom.querySelectorAll('.e-header-text').forEach(el => {
-      if (el.innerHTML.includes(StatusEnum.todo)) {
-        $(el).css({'color': 'rgb(57 197 255)'});
-      }
-      if (el.innerHTML.includes(StatusEnum.inProgress)) {
-        $(el).css({'color': 'rgb(255 149 119)'});
-      }
-      if (el.innerHTML.includes(StatusEnum.onReview)) {
-        $(el).css({'color': 'rgb(101 85 255)'});
-      }
-      if (el.innerHTML.includes(StatusEnum.done)) {
-        $(el).css({'color': 'rgb(58 224 104)'});
-      }
-      $(el).css({'font-weight': '600'});
+      $(el).css({'color': '#4D4B54'});
+      $(el).css({'font-size': '12px'});
+      $(el).css({'font-weight': '800'});
     });
     
     dom.querySelectorAll('.e-header-cells').forEach(el => {
-      if (el.innerHTML.includes(StatusEnum.todo)) {
-        $(el).css({'background-color': '#EDF9FF'});
-      }
-      if (el.innerHTML.includes(StatusEnum.inProgress)) {
-        $(el).css({'background-color': '#FFEFEA'});
-      }
-      if (el.innerHTML.includes(StatusEnum.onReview)) {
-        $(el).css({'background-color': '#EAE8FF'});
-      }
-      if (el.innerHTML.includes(StatusEnum.done)) {
-        $(el).css({'background-color': '#E8FBED'});
-      }
+      $(el).css({'background-color': '#F4F5F7'});
     });
     
     dom.querySelectorAll('.e-content-cells').forEach(el => {
@@ -403,7 +381,15 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   openModal(content, task) {
     this.addTaskFlag = false;
-    this.taskForm.setValue(task.data);
+    this.taskForm.setValue({
+      id: task.data.id,
+      title: task.data.title,
+      description: task.data.description,
+      status: task.data.status,
+      deadline: task.data.deadline,
+      employeeId: task.data.employeeId,
+      projectId: task.data.projectId
+    });
     this.previewData = {
       title: task.data.title,
       description: task.data.description,
@@ -451,7 +437,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
                     let descriptionHTML = parentHTML[0].getElementsByClassName('mention');
                     if (!!descriptionHTML.length) {
                       let mentionId = descriptionHTML[0]['dataset'].id;
-  
+                      
                       let mentionedUser = users.find(u => u._id === mentionId);
                       if (mentionedUser.sendTaskOverdueEmail) {
                         this.email(mentionedUser._id, this.currentProject, this.taskForm.value, 'mention');
@@ -590,9 +576,9 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.overdue = task.deadline < this.currentDate;
     
     if (this.overdue && task.status != StatusEnum.done) {
-      return {'color': 'rgb(221 4 38 / 70%)'};
+      return {'color': '#DF2134'};
     } else {
-      return {'color': '#a5a8bd'};
+      return {'color': '#9E9FA1'};
     }
   }
   

@@ -96,28 +96,26 @@
                 (dragStart)="dropStart($event)"
                 (dragStop)="drop($event)">
       <e-columns>
-        <e-column headerText='To Do' keyField='To Do'></e-column>
-        <e-column headerText='In Progress' keyField='In Progress'></e-column>
-        <e-column headerText='On Review' keyField='On Review'></e-column>
-        <e-column headerText='Done' keyField='Done'></e-column>
+        <e-column headerText='TO DO' keyField='To Do'></e-column>
+        <e-column headerText='IN PROGRESS' keyField='In Progress'></e-column>
+        <e-column headerText='ON REVIEW' keyField='On Review'></e-column>
+        <e-column headerText='DONE' keyField='Done'></e-column>
       </e-columns>
       <ng-template #cardSettingsTemplate let-data>
         <div class='e-card-content'>
           <table class="card-template-wrap">
             <tbody>
             <tr>
+              <p class="employee-name">{{data.employeeName}}</p>
+            </tr>
+            <tr>
               <td class="CardHeader">
                 <p>{{data.title}}</p>
-                <p class="card-deadline" [ngStyle]="overdueDateStyle(data)">{{data.deadline | date}}</p>
+                <p class="card-deadline" [ngStyle]="overdueDateStyle(data)">{{data.deadline | date:'MMM d'}}</p>
               </td>
             </tr>
             <tr>
               <td class="CardBody" [innerHTML]="data.description | safeHtml"></td>
-            </tr>
-            <tr>
-              <td class="CardFooter">
-                <p>{{data.employeeName}}</p>
-              </td>
             </tr>
             </tbody>
           </table>

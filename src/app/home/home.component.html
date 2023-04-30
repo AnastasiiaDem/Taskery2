@@ -47,8 +47,8 @@
         <!--        </thead>-->
         <tbody *ngIf="!overdue">
         <tr *ngFor="let task of myTasks.overdue; let idx = index">
-          <td style="width: 200px;">{{task.title}}<br><span class="project-name">{{task.projectName}}</span></td>
-          <td style="width: 700px;" class="text-muted text-sm" [innerHTML]="task.description | safeHtml"></td>
+          <td style="width: 250px;">{{task.title}}<br><span class="project-name">{{task.projectName}}</span></td>
+          <td class="text-muted text-sm" [innerHTML]="task.description | safeHtml"></td>
           <td class="deadline">{{task.deadline}}</td>
           <td style="width: 60px;">
             <a (click)="goToList(task.projectId)" class="btn corner">
@@ -75,8 +75,8 @@
         <!--        </thead>-->
         <tbody *ngIf="!today">
         <tr *ngFor="let  task of  myTasks.today; let idx = index">
-          <td style="width: 200px;">{{task.title}}<br><span class="project-name">{{task.projectName}}</span></td>
-          <td style="width: 700px;" class="text-muted text-sm" [innerHTML]="task.description | safeHtml"></td>
+          <td style="width: 250px;">{{task.title}}<br><span class="project-name">{{task.projectName}}</span></td>
+          <td class="text-muted text-sm" [innerHTML]="task.description | safeHtml"></td>
           <td class="deadline">{{task.deadline}}</td>
           <td style="width: 60px;">
             <a [routerLink]="['/board', {'paramKey': task.projectId}]" class="btn corner">
@@ -104,8 +104,8 @@
         <!--        </thead>-->
         <tbody *ngIf="!upcoming">
         <tr *ngFor="let  task of  myTasks.upcoming; let idx = index">
-          <td style="width: 200px;">{{task.title}}<br><span class="project-name">{{task.projectName}}</span></td>
-          <td style="width: 700px;" class="text-muted text-sm" [innerHTML]="task.description | safeHtml"></td>
+          <td style="width: 250px;">{{task.title}}<br><span class="project-name">{{task.projectName}}</span></td>
+          <td class="text-muted text-sm" [innerHTML]="task.description | safeHtml"></td>
           <td class="deadline">{{task.deadline}}</td>
           <td style="width: 60px;">
             <a [routerLink]="['/board', {'paramKey': task.projectId}]" class="btn corner">

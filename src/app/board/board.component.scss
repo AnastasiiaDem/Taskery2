@@ -239,9 +239,10 @@ a {
   font-weight: 600;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-top: 5px;
   margin-bottom: 10px;
+  color: #000;
 
   p {
     margin: 0;
@@ -249,15 +250,12 @@ a {
   }
 }
 
-.CardFooter {
+.employee-name {
+  border-bottom: 1px solid rgb(224 224 224 / 40%);
   background: white !important;
-  color: #e0e0e0;
-  font-size: 11px;
+  color: rgba(0, 0, 0, 0.4);
   font-weight: 600;
-  text-align: right;
-  display: block;
-  margin-top: 10px;
-  border-top: 1px solid rgb(224 224 224 / 50%);
+  font-size: 12px;
 
   p {
     margin: 0;
@@ -322,7 +320,6 @@ a {
 .card-deadline {
   font-size: 10px;
   font-weight: 600;
-  font-style: italic;
   width: 40% !important;
   text-align: right;
   padding-left: 5px;
@@ -669,4 +666,8 @@ mat-icon {
   padding-left: 5px;
   margin-bottom: 0.5rem;
   cursor: pointer;
+}
+
+::ng-deep .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card, .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card {
+  box-shadow: 0 2px 3px 0 #E0E0E0 !important;
 }

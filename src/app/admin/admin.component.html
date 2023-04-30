@@ -39,7 +39,7 @@
           <h5 class="title">System Users</h5>
           <h6 style="margin: 0;font-style: italic;font-size: 12px;">Number of users: {{numberOfUsers}}</h6>
         </div>
-        <div class="mb-3" style="display: flex;align-items: center;">
+        <div class="mb-3" style="display: flex;align-items: center;padding: 0 1rem;">
           <ng-select2 [placeholder]="'search by'"
                       [(ngModel)]="searchBy"
                       [width]="'80px'"
@@ -69,12 +69,11 @@
             <tr *ngFor="let user of users; let idx = index">
               <td title="{{user._id}}" style="overflow: hidden; text-overflow: ellipsis;white-space: nowrap;max-width: 110px;">{{user._id}}</td>
               <td>{{user.firstName}} {{user.lastName}}</td>
-              <td>{{user.role}}</td>
+              <td style="width: 140px;">{{user.role}}</td>
               <td>{{user.email}}</td>
-              <!--            <td></td>-->
-              <td>{{user.sendAssignedEmail ? 'yes' : 'no'}}</td>
-              <td>{{user.sendTaskEmail ? 'yes' : 'no'}}</td>
-              <td>{{user.sendTaskOverdueEmail ? 'yes' : 'no'}}</td>
+              <td style="width: 145px;">{{user.sendAssignedEmail ? 'yes' : 'no'}}</td>
+              <td style="width: 115px;">{{user.sendTaskEmail ? 'yes' : 'no'}}</td>
+              <td style="width: 115px;">{{user.sendTaskOverdueEmail ? 'yes' : 'no'}}</td>
             </tr>
             </tbody>
           </table>

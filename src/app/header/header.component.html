@@ -12,7 +12,9 @@
       <a class="nav-item nav-link project-list" style="margin-left: 4rem;" (click)="contactUs()">Contact Us</a>
     </div>
     <div class="nav-block">
-      <!--      <p style="margin: 0;padding: 0 1rem;font-size: 12px;line-height: 30px;color: #0d6efd;font-weight: 300;">{{currentUserData.firstName}} {{currentUserData.lastName}}</p>-->
+      <p style="margin: 0;padding: 0 1rem;font-size: 12px;line-height: 30px;color: #0d6efd;font-weight: 300;">
+        {{currentUserData.firstName}} {{currentUserData.lastName}}
+      </p>
       <div ngbDropdown class="d-inline-block" style="height: 30px;" placement="left-top">
         <button type="button" id="dropdown" ngbDropdownToggle class='avatar' (click)="getUpdatedData()"></button>
         <div ngbDropdownMenu aria-labelledby="dropdown" id="ngbDropdownMenu">
