@@ -7,8 +7,9 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../shared/services/auth.service';
 import {UserService} from '../shared/services/user.service';
 import {Subject, takeUntil} from 'rxjs';
-import {Role, UserModel} from '../shared/models/user.model';
+import {UserModel} from '../shared/models/user.model';
 import {faCheck, faEye, faEyeSlash, faPencil, faXmark} from '@fortawesome/free-solid-svg-icons';
+import {RoleEnum} from '../shared/enums';
 
 @Component({
   selector: 'account',
@@ -25,13 +26,13 @@ export class AccountComponent implements OnInit, OnDestroy {
   submitted = false;
   userList: UserModel[] = [];
   selectedVal: string;
-  currentUserData: { _id: string; firstName: string; lastName: string; email: string; password: string; role: Role; sendAssignedEmail: boolean; sendTaskEmail: boolean; sendTaskOverdueEmail: boolean;} = {
+  currentUserData: { _id: string; firstName: string; lastName: string; email: string; password: string; role: RoleEnum; sendAssignedEmail: boolean; sendTaskEmail: boolean; sendTaskOverdueEmail: boolean; } = {
     _id: '',
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-    role: Role.ProjectManager,
+    role: RoleEnum.ProjectManager,
     sendAssignedEmail: false,
     sendTaskEmail: false,
     sendTaskOverdueEmail: false
@@ -44,7 +45,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   checkIcon;
   xIcon;
   fieldType = '';
-
+  
   constructor(private alertService: AlertService,
               private toastr: ToastrService,
               private router: Router,
@@ -56,13 +57,13 @@ export class AccountComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(x => this.currentUser = x);
   }
-
+  
   ngOnInit() {
     this.faIcon = faEye;
     this.pencilIcon = faPencil;
     this.checkIcon = faCheck;
     this.xIcon = faXmark;
-
+    
     this.getCurrentUser();
     this.userSettingsForm = this.formBuilder.group({
       firstName: ['', Validators.required],
@@ -71,12 +72,12 @@ export class AccountComponent implements OnInit, OnDestroy {
       password: ['', [Validators.required, Validators.minLength(6), Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]+$')]],
     });
   }
-
+  
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
-
+  
   getCurrentUser() {
     this.userService.getCurrentUser()
       .pipe(takeUntil(this.unsubscribe))
@@ -104,23 +105,23 @@ export class AccountComponent implements OnInit, OnDestroy {
           console.log(err);
         });
   }
-
+  
   onSubmit() {
     this.alertService.clear();
     if (this.userSettingsForm.invalid) {
       return;
     }
   }
-
+  
   get f() {
     return this.userSettingsForm.controls;
   }
-
+  
   toggleFieldTextType() {
     this.fieldTextType = !this.fieldTextType;
     this.faIcon = this.fieldTextType ? faEyeSlash : faEye;
   }
-
+  
   editField(field) {
     this.editStatus = true;
     this.fieldType = field;
@@ -128,7 +129,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     input['readOnly'] = false;
     input['disabled'] = false;
   }
-
+  
   updateField(field) {
     this.submitted = true;
     if (!this.userSettingsForm.controls[field].errors) {
@@ -148,7 +149,7 @@ export class AccountComponent implements OnInit, OnDestroy {
           });
     }
   }
-
+  
   resetChanges(field) {
     this.userSettingsForm.controls[field].setValue(this.currentUserData[field]);
     this.userService.updateUser(this.currentUserData)
@@ -164,11 +165,11 @@ export class AccountComponent implements OnInit, OnDestroy {
           console.log(err);
         });
   }
-
+  
   deleteUser(content) {
     this.modalService.open(content, {centered: true});
   }
-
+  
   isDelete(action, modal) {
     if (action == 'confirm') {
       this.userService.deleteUser(this.currentUserData._id)

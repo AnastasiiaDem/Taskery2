@@ -2,10 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {NavigationStart, Router} from '@angular/router';
 import {AuthService} from '../shared/services/auth.service';
 import {Subject, takeUntil} from 'rxjs';
-import {Role, UserModel} from '../shared/models/user.model';
+import {UserModel} from '../shared/models/user.model';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {filter} from 'rxjs/operators';
 import {UserService} from '../shared/services/user.service';
+import {RoleEnum} from '../shared/enums';
 
 @Component({
   selector: 'app-home',
@@ -23,7 +24,7 @@ export class InitialComponent implements OnInit {
     lastName: '',
     email: '',
     password: '',
-    role: Role.TeamMember,
+    role: RoleEnum.TeamMember,
     sendAssignedEmail: false,
     sendTaskEmail: false,
     sendTaskOverdueEmail: false
@@ -44,12 +45,12 @@ export class InitialComponent implements OnInit {
   ngOnInit(): void {
     this.router.events
       .pipe(
-        filter( event =>event instanceof NavigationStart)
+        filter(event => event instanceof NavigationStart)
       )
       .subscribe((event: NavigationStart) => {
           this.url = event.url;
         }
-      )
+      );
   }
   
   ngOnDestroy() {
@@ -62,10 +63,10 @@ export class InitialComponent implements OnInit {
     //   this.url = '/contact';
     //   this.router.navigate(['/contact']);
     // } else {
-      this.url = '/contact';
-      setTimeout(() => {
-        this.router.navigate(['/contact']);
-      }, 510);
+    this.url = '/contact';
+    setTimeout(() => {
+      this.router.navigate(['/contact']);
+    }, 510);
     // }
   }
   

@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'numberPipe'
@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class NumberPipePipe implements PipeTransform {
   
   transform(val) {
-    if(val) {
+    if (val) {
       val = this.format_number(val, '');
     }
     return val;

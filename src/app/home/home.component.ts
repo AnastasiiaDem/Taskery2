@@ -1,13 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {Subject, takeUntil} from 'rxjs';
-import {StatusEnum} from '../shared/enums';
+import {RoleEnum, StatusEnum} from '../shared/enums';
 import {TaskService} from '../shared/services/task.service';
 import {UserService} from '../shared/services/user.service';
 import {DatePipe} from '@angular/common';
-import {TaskModel} from '../shared/models/task.model';
 import {Router} from '@angular/router';
-import {Role, UserModel} from '../shared/models/user.model';
+import {UserModel} from '../shared/models/user.model';
 import {ProjectsService} from '../shared/services/project.service';
 
 @Component({
@@ -25,7 +24,7 @@ export class HomeComponent implements OnInit {
     id: 0,
     lastName: '',
     password: '',
-    role: Role.ProjectManager,
+    role: RoleEnum.ProjectManager,
     sendAssignedEmail: false,
     sendTaskEmail: false,
     sendTaskOverdueEmail: false

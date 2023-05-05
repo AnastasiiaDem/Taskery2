@@ -1,14 +1,13 @@
 import {AfterViewChecked, Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
 import {ProjectModel} from '../shared/models/project.model';
 import {ProjectsService} from '../shared/services/project.service';
-import {StatusEnum} from '../shared/enums';
+import {RoleEnum, StatusEnum} from '../shared/enums';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Select2OptionData} from 'ng-select2';
 import {TaskService} from '../shared/services/task.service';
 import * as $ from 'jquery';
 import {Subject, takeUntil} from 'rxjs';
-import {Role} from '../shared/models/user.model';
 import {UserService} from '../shared/services/user.service';
 import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {NgxSpinnerService} from 'ngx-spinner';
@@ -18,7 +17,6 @@ import {EmailService} from '../shared/services/email.service';
 import {ToastrService} from 'ngx-toastr';
 import {QuillModules} from 'ngx-quill/lib/quill-editor.interfaces';
 import 'quill-emoji/dist/quill-emoji.js';
-
 import * as QuillNamespace from 'quill';
 import ImageCompress from 'quill-image-compress';
 import Emoji from 'quill-emoji';
@@ -50,13 +48,13 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   currentDate;
   private readonly unsubscribe: Subject<void> = new Subject();
   public dropdownSettings: IDropdownSettings = {};
-  currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: Role; } = {
+  currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: RoleEnum; } = {
     _id: 0,
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-    role: Role.ProjectManager
+    role: RoleEnum.ProjectManager
   };
   previewData;
   submitted = false;
@@ -143,7 +141,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   ngOnInit() {
     this.currentDate = new Date();
-
+    
     this.spinner.show();
     setTimeout(() => {
       this.spinner.hide();
@@ -168,7 +166,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       updatedAt: [this.currentDate, Validators.required],
       budget: [0, Validators.required]
     });
-
+    
     this.dropdownSettings = {
       singleSelection: false,
       idField: 'id',
@@ -287,7 +285,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(users => {
           this.usersData = users.filter(user => {
-            return (user.role != Role.ProjectManager) && (user._id != this.currentUser._id);
+            return (user.role != RoleEnum.ProjectManager) && (user._id != this.currentUser._id);
           }).map(user => {
             return {
               id: user._id,
@@ -476,7 +474,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   sortProjects() {
-    this.projects.sort((a,b) => {
+    this.projects.sort((a, b) => {
       return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
     });
   }
@@ -484,7 +482,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   writeBriefAI() {
     if (this.projectForm.value.projectName != '') {
       this.spinner.show();
-      this.aiService.getAIresponse('Write a brief for the project(purpose, functionality, technical requirements): ' + this.projectForm.value.projectName)
+      this.aiService.getAIresponse('Write a specific brief for the project(purpose, functionality, technical requirements): ' + this.projectForm.value.projectName)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(response => {
             this.projectForm.controls['description'].setValue(response.choices[0].text);
@@ -500,7 +498,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   calcBudgetAI() {
     if (this.projectForm.value.projectName != '') {
       this.spinner.show();
-      this.aiService.getAIresponse('Calculate approximate budget for the project (THE OUTPUT MUST CONTAIN ONLY ONE NUMBER WITHOUT TEXT). Project name: ' + this.projectForm.value.projectName + '.\nDescription: ' + this.projectForm.value.description)
+      const assignedUsersNum = this.projectForm.value.assignedUsers.length > 0 ? this.projectForm.value.assignedUsers.length : '1';
+      this.aiService.getAIresponse('What is the estimated cost for the project (THE OUTPUT MUST CONTAIN ONLY ONE NUMBER WITHOUT TEXT, between 1000 and 50000), based on number of employees: ' + assignedUsersNum + ';\nproject name: ' + this.projectForm.value.projectName + ';\ndescription: ' + this.projectForm.value.description)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(response => {
             this.projectForm.controls['budget'].setValue(parseInt(response.choices[0].text.replace(/[^0-9]/g, '')));

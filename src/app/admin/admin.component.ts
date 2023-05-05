@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Subject, takeUntil} from 'rxjs';
-import {Role, UserModel} from '../shared/models/user.model';
+import {UserModel} from '../shared/models/user.model';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {UserService} from '../shared/services/user.service';
 import {TaskModel} from '../shared/models/task.model';
@@ -9,8 +9,8 @@ import {ContactService} from '../shared/services/contact.service';
 import {Select2OptionData} from 'ng-select2';
 import {RequestModel} from '../shared/models/request.model';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {first} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
+import {RoleEnum} from '../shared/enums';
 
 @Component({
   selector: 'admin',
@@ -27,7 +27,7 @@ export class AdminComponent implements OnInit {
     id: 0,
     lastName: '',
     password: '',
-    role: Role.ProjectManager,
+    role: RoleEnum.ProjectManager,
     sendAssignedEmail: false,
     sendTaskEmail: false,
     sendTaskOverdueEmail: false

@@ -51,7 +51,7 @@ export const updateUser = async (req: express.Request, res: express.Response) =>
   
   if (!_id || !firstName || !lastName || !email || !password || !role) {
     return res.status(400).json({message: `Properties are required`});
-  
+    
   }
   
   const update = {

@@ -1,6 +1,6 @@
 import {AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {TaskService} from 'src/app/shared/services/task.service';
-import {StatusEnum} from 'src/app/shared/enums';
+import {RoleEnum, StatusEnum} from 'src/app/shared/enums';
 import {CardSettingsModel, KanbanComponent, SortSettingsModel} from '@syncfusion/ej2-angular-kanban';
 import {Select2OptionData} from 'ng-select2';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -9,7 +9,6 @@ import * as $ from 'jquery';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {Subject, takeUntil} from 'rxjs';
-import {Role} from '../shared/models/user.model';
 import {ProjectsService} from '../shared/services/project.service';
 import {ProjectModel} from '../shared/models/project.model';
 import {faCalendarDays} from '@fortawesome/free-solid-svg-icons';
@@ -21,12 +20,10 @@ import {Query} from '@syncfusion/ej2-data';
 import {EmailService} from '../shared/services/email.service';
 import {QuillModules} from 'ngx-quill/lib/quill-editor.interfaces';
 import 'quill-emoji/dist/quill-emoji.js';
-
 import * as QuillNamespace from 'quill';
 import ImageCompress from 'quill-image-compress';
 import Emoji from 'quill-emoji';
 import Mention from 'quill-mention';
-
 import {Configuration, OpenAIApi} from 'openai';
 import {AIService} from '../shared/services/ai.service';
 
@@ -65,13 +62,13 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   filterStatus = false;
   public dropdownSettings: IDropdownSettings = {};
   private readonly unsubscribe: Subject<void> = new Subject();
-  currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: Role; } = {
+  currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: RoleEnum; } = {
     _id: 0,
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-    role: Role.ProjectManager
+    role: RoleEnum.ProjectManager
   };
   currentProject: ProjectModel;
   calendarIcon;
@@ -775,7 +772,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   writeBriefAI() {
     if (this.taskForm.value.title != '') {
       this.spinner.show();
-      this.aiService.getAIresponse('Write a brief for the task(purpose, functionality, technical requirements): ' + this.taskForm.value.title + '.\nProject name: ' + this.currentProject?.projectName)
+      this.aiService.getAIresponse('Write a specific brief for the task(purpose, functionality, technical requirements): ' + this.taskForm.value.title + 'for the project: ' + this.currentProject?.projectName)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(response => {
             this.taskForm.controls['description'].setValue(response.choices[0].text);

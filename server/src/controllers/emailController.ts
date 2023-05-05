@@ -4,7 +4,7 @@ import User from '../model/UserModel';
 
 export const sendEmail = async (req: express.Request, res: express.Response) => {
   const {userId, project, task, report, content} = req.body;
-
+  
   if (!userId || !project) return res.status(400).json({message: `Incorrect password or email`});
   
   const foundUser = await User.findOne({_id: userId}).exec();
@@ -23,7 +23,7 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
   
   if (content == 'task') {
     subject = 'New Task // Taskery.com';
-  
+    
     html = '<style>' +
       '.email-text {display: flex; align-items: flex-start; justify-content: flex-start;flex-direction: column; width: 500px;}' +
       '</style>' +
@@ -39,7 +39,7 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
     
   } else if (content == 'taskUpdate') {
     subject = 'Task Update // Taskery.com';
-  
+    
     html = '<style>' +
       '.email-text {display: flex; align-items: flex-start; justify-content: flex-start;flex-direction: column; width: 500px;}' +
       '</style>' +
@@ -87,7 +87,7 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
     
   } else if (content == 'project') {
     subject = 'New Project // Taskery.com';
-  
+    
     html = '<style>' +
       '.email-text {display: flex; align-items: flex-start; justify-content: flex-start;flex-direction: column; width: 500px;}' +
       '</style>' +
@@ -99,11 +99,11 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
       '    <p>Project status: <b>' + project.status + '</b></p>\n' +
       '    <p>All assigned employees for this project: <p style="margin-left: 50px;">' + assignedList + '</p></p>\n' +
       '  </div>';
-  
+    
   }
-    
-    
-    return new Promise<any>((resolve, reject) => {
+  
+  
+  return new Promise<any>((resolve, reject) => {
     var transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {

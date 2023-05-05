@@ -1,15 +1,15 @@
-import {Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subject, takeUntil} from 'rxjs';
 import {AlertService} from '../shared/services/alert.service';
 import {ToastrService} from 'ngx-toastr';
-import {Role, UserModel} from '../shared/models/user.model';
+import {UserModel} from '../shared/models/user.model';
 import {NavigationStart, Router} from '@angular/router';
 import {AuthService} from '../shared/services/auth.service';
 import {UserService} from '../shared/services/user.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder} from '@angular/forms';
 import {filter} from 'rxjs/operators';
-import {NavigationEvent} from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker-view-model';
+import {RoleEnum} from '../shared/enums';
 
 @Component({
   selector: 'header',
@@ -29,12 +29,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     lastName: '',
     email: '',
     password: '',
-    role: Role.TeamMember,
+    role: RoleEnum.TeamMember,
     sendAssignedEmail: false,
     sendTaskEmail: false,
     sendTaskOverdueEmail: false
   };
-
+  
   constructor(private alertService: AlertService,
               private toastr: ToastrService,
               private router: Router,
@@ -46,19 +46,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(x => this.currentUser = x);
   }
-
+  
   ngOnInit() {
     this.getCurrentUser();
     this.router.events
       .pipe(
-        filter( event =>event instanceof NavigationStart)
+        filter(event => event instanceof NavigationStart)
       )
       .subscribe((event: NavigationStart) => {
           this.url = event.url;
         }
-      )
+      );
   }
-
+  
   getCurrentUser() {
     this.userService.getCurrentUser()
       .pipe(takeUntil(this.unsubscribe))
@@ -70,22 +70,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
           console.log(err);
         });
   }
-
+  
   logout() {
     this.authenticationService.logout().subscribe(sub => {
       this.router.navigate(['/']);
     });
   }
-
+  
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
-
+  
   userSettings(content) {
     this.modalService.open(content, {centered: true});
   }
-
+  
   goToUserSettings() {
     if (this.url != '/home') {
       this.url = '/account';
@@ -100,7 +100,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }, 910);
     }
   }
-
+  
   goToNotifications() {
     if (this.url != '/home') {
       this.url = '/notifications';
@@ -115,18 +115,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }, 910);
     }
   }
-
+  
   getUpdatedData() {
     this.getCurrentUser();
   }
-
+  
   home() {
     this.router.navigate(['/home']);
     setTimeout(() => {
       this.url = '/home';
     }, 100);
   }
-
+  
   projectList() {
     if (this.url != '/home') {
       this.url = '/projects';
@@ -138,7 +138,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }, 510);
     }
   }
-
+  
   report() {
     if (this.url != '/home') {
       this.url = '/report';

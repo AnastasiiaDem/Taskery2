@@ -4,7 +4,7 @@ import {finalize, Subject, takeUntil} from 'rxjs';
 import {ProjectModel} from '../shared/models/project.model';
 import {TaskModel} from '../shared/models/task.model';
 import {ProjectsService} from '../shared/services/project.service';
-import {StatusEnum} from '../shared/enums';
+import {RoleEnum, StatusEnum} from '../shared/enums';
 import {BaseChartDirective} from 'ng2-charts';
 import {ApexChart} from 'ng-apexcharts';
 import {ApexFill, ApexStroke} from 'ng-apexcharts/lib/model/apex-types';
@@ -13,7 +13,6 @@ import {NgxSpinnerService} from 'ngx-spinner';
 import {EmailService} from '../shared/services/email.service';
 import {AlertService} from '../shared/services/alert.service';
 import {ToastrService} from 'ngx-toastr';
-import {Role} from '../shared/models/user.model';
 import {UserService} from '../shared/services/user.service';
 import {DatePipe} from '@angular/common';
 
@@ -75,13 +74,13 @@ export class ReportComponent implements OnInit, OnDestroy {
   exportStatus;
   currentDate = new Date();
   loading = false;
-  currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: Role; } = {
+  currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: RoleEnum; } = {
     _id: 0,
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-    role: Role.ProjectManager
+    role: RoleEnum.ProjectManager
   };
   report: { numberOfTasks: number; overdueTasks: number; status: string; projectStart: string; } = {
     numberOfTasks: 0,
@@ -528,7 +527,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   email(project) {
     this.report.status = project.status;
     this.report.projectStart = this.datepipe.transform(project.createdAt, 'YYYY-MM-dd');
-  
+    
     this.emailService.sendEmail(this.currentUser._id, project, '', this.report, 'report')
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(response => {

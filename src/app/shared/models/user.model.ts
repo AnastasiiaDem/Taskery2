@@ -1,3 +1,5 @@
+import { Role } from "../enums";
+
 export class UserModel {
   id: number;
   firstName: string;
@@ -8,10 +10,4 @@ export class UserModel {
   sendAssignedEmail: boolean;
   sendTaskEmail: boolean;
   sendTaskOverdueEmail: boolean;
-}
-
-export enum Role {
-  TeamMember = 'TeamMember',
-  ProjectManager = 'ProjectManager',
-  Admin = 'Admin'
 }

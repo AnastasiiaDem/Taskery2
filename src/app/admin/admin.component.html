@@ -67,7 +67,8 @@
             </thead>
             <tbody>
             <tr *ngFor="let user of users; let idx = index">
-              <td title="{{user._id}}" style="overflow: hidden; text-overflow: ellipsis;white-space: nowrap;max-width: 110px;">{{user._id}}</td>
+              <td title="{{user._id}}"
+                  style="overflow: hidden; text-overflow: ellipsis;white-space: nowrap;max-width: 110px;">{{user._id}}</td>
               <td>{{user.firstName}} {{user.lastName}}</td>
               <td style="width: 140px;">{{user.role}}</td>
               <td>{{user.email}}</td>
@@ -131,9 +132,9 @@
         </div>
       </div>
       <div class="card-footer px-lg-5">
-<!--        <button class="btn btn-outline-primary" (click)="onSubmit(respondData, modal)"-->
-<!--                [disabled]="respondData.description == ''">respond-->
-<!--        </button>-->
+        <!--        <button class="btn btn-outline-primary" (click)="onSubmit(respondData, modal)"-->
+        <!--                [disabled]="respondData.description == ''">respond-->
+        <!--        </button>-->
         <div class="action-btns">
           <button class="update-task" (click)="onSubmit(respondData, modal, 'respond')">
             Respond

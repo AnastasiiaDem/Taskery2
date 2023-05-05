@@ -1,26 +1,32 @@
-import { HTTP_INTERCEPTORS, HttpEvent, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest
+} from '@angular/common/http';
+import {Injectable} from '@angular/core';
 
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, filter, switchMap, take } from 'rxjs/operators';
+import {BehaviorSubject, Observable, throwError} from 'rxjs';
+import {catchError, filter, switchMap, take} from 'rxjs/operators';
 import {TokenStorageService} from './token.service';
 import {AuthService} from './auth.service';
 
-// const TOKEN_HEADER_KEY = 'Authorization';  // for Spring Boot back-end
-const TOKEN_HEADER_KEY = 'x-access-token';    // for Node.js Express back-end
+const TOKEN_HEADER_KEY = 'x-access-token';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   
-  constructor(private tokenService: TokenStorageService, private authService: AuthService) { }
+  constructor(private tokenService: TokenStorageService, private authService: AuthService) {
+  }
   
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<Object>> {
     let authReq = req;
     const token = this.tokenService.getToken();
-  
+    
     if (token != null) {
       authReq = AuthInterceptor.addTokenHeader(req, token);
     }
@@ -68,10 +74,10 @@ export class AuthInterceptor implements HttpInterceptor {
   
   private static addTokenHeader(request: HttpRequest<any>, token: string) {
     
-    return request.clone({ headers: request.headers.set(TOKEN_HEADER_KEY, token) });
+    return request.clone({headers: request.headers.set(TOKEN_HEADER_KEY, token)});
   }
 }
 
 export const authInterceptorProviders = [
-  { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
 ];

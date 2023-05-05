@@ -6,8 +6,7 @@ import {UserService} from '../shared/services/user.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Select2OptionData} from 'ng-select2';
 import {ProjectsService} from '../shared/services/project.service';
-import {Role} from '../shared/models/user.model';
-import {ColorPalette} from '../shared/enums';
+import {ColorPalette, RoleEnum} from '../shared/enums';
 import {TaskModel} from '../shared/models/task.model';
 import {DatePipe} from '@angular/common';
 import {EmailService} from '../shared/services/email.service';
@@ -43,13 +42,13 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedProject = null;
   AllIssues = true;
   projectsData: Array<Select2OptionData> = [];
-  currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: Role; } = {
+  currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: RoleEnum; } = {
     _id: 0,
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-    role: Role.ProjectManager
+    role: RoleEnum.ProjectManager
   };
   date: any = new jqx.date(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate());
   appointmentDataFields =
@@ -141,7 +140,7 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(user => {
           this.currentUser = user;
-          this.AllIssues = (this.currentUser.role == Role.ProjectManager);
+          this.AllIssues = (this.currentUser.role == RoleEnum.ProjectManager);
         },
         err => {
           console.log(err);

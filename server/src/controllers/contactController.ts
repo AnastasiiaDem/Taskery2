@@ -3,8 +3,6 @@ import express from 'express';
 import mongoose from 'mongoose';
 import User from '../model/UserModel';
 import nodemailer from 'nodemailer';
-import Token from '../model/TokenModel';
-import Task from '../model/TaskModel';
 
 export const sendRequest = async (req: express.Request, res: express.Response) => {
   const {userId, firstName, lastName, email, description} = req.body;
@@ -35,25 +33,24 @@ export const sendRespond = async (req: express.Request, res: express.Response) =
   const {userId, firstName, lastName, email, description, respond} = req.body;
   
   const foundUser = await User.findOne({_id: userId}).exec();
-
+  
   
   if (!foundUser) return res.status(409).json({message: `No user`});
   
   let html = '';
   let subject = '';
   
-    subject = 'The Respond To Your Request // Taskery.com';
-    
-    html = '<style>' +
-      '.email-text {display: flex; align-items: flex-start; justify-content: flex-start;flex-direction: column; width: 500px;}' +
-      '</style>' +
-      '    <div class="email-text" style="font-size: 15px;"> \n' +
-      '    <p>Hi, <b style="font-size: 20px;">' + firstName + ' ' + lastName + '</b></p>\n' +
-      '    <p style="font-style: italic; text-align: center;">Thank you for contacting us. <b style="color: rgb(76 126 253) !important;">Taskery.com</b> website</p>\n' +
-      '    <p>Your request was: <b>' + description + '</b></p>\n' +
-      '    <p>RESPOND: <b>' + respond + '</b></p>\n' +
-      '  </div>';
-    
+  subject = 'The Respond To Your Request // Taskery.com';
+  
+  html = '<style>' +
+    '.email-text {display: flex; align-items: flex-start; justify-content: flex-start;flex-direction: column; width: 500px;}' +
+    '</style>' +
+    '    <div class="email-text" style="font-size: 15px;"> \n' +
+    '    <p>Hi, <b style="font-size: 20px;">' + firstName + ' ' + lastName + '</b></p>\n' +
+    '    <p style="font-style: italic; text-align: center;">Thank you for contacting us. <b style="color: rgb(76 126 253) !important;">Taskery.com</b> website</p>\n' +
+    '    <p>Your request was: <b>' + description + '</b></p>\n' +
+    '    <p>RESPOND: <b>' + respond + '</b></p>\n' +
+    '  </div>';
   
   
   return new Promise<any>((resolve, reject) => {
@@ -94,7 +91,7 @@ export const deleteRequest = async (req: express.Request, res: express.Response)
   const id = req.params.id;
   
   !id && res.status(400).json({error: 'no id'});
- 
+  
   try {
     const result = await Request.findByIdAndDelete(id);
     res.status(200).json({message: 'Request is deleted'});

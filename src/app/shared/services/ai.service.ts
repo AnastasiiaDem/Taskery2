@@ -15,6 +15,7 @@ export class AIService {
   }
   
   getAIresponse(prompt): Observable<any> {
+    debugger
     return this.http.post(`${apiUrl}/ai`, {prompt: prompt}, options);
   }
 }

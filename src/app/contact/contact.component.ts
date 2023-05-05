@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {NavigationStart, Router} from '@angular/router';
 import {AuthService} from '../shared/services/auth.service';
 import {Subject, takeUntil} from 'rxjs';
-import {Role, UserModel} from '../shared/models/user.model';
+import {UserModel} from '../shared/models/user.model';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {filter, first} from 'rxjs/operators';
 import {UserService} from '../shared/services/user.service';
@@ -11,6 +11,7 @@ import {ToastrService} from 'ngx-toastr';
 import {AlertService} from '../shared/services/alert.service';
 import {ContactService} from '../shared/services/contact.service';
 import {RequestModel} from '../shared/models/request.model';
+import {RoleEnum} from '../shared/enums';
 
 @Component({
   selector: 'contact',
@@ -29,7 +30,7 @@ export class ContactComponent implements OnInit {
     lastName: '',
     email: '',
     password: '',
-    role: Role.TeamMember,
+    role: RoleEnum.TeamMember,
     sendAssignedEmail: false,
     sendTaskEmail: false,
     sendTaskOverdueEmail: false
@@ -65,12 +66,12 @@ export class ContactComponent implements OnInit {
     }
     this.router.events
       .pipe(
-        filter( event =>event instanceof NavigationStart)
+        filter(event => event instanceof NavigationStart)
       )
       .subscribe((event: NavigationStart) => {
           this.url = event.url;
         }
-      )
+      );
     
     this.contactForm = this.formBuilder.group({
       firstName: ['', Validators.required],
@@ -105,10 +106,10 @@ export class ContactComponent implements OnInit {
   }
   
   contactUs() {
-      this.url = '/contact';
-      setTimeout(() => {
-        this.router.navigate(['/contact']);
-      }, 510);
+    this.url = '/contact';
+    setTimeout(() => {
+      this.router.navigate(['/contact']);
+    }, 510);
   }
   
   getStarted() {

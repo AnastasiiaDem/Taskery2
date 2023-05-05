@@ -9,7 +9,7 @@ import {ProjectsComponent} from './projects/projects.component';
 import {ReportComponent} from './report/report.component';
 import {AccountComponent} from './account/account.component';
 import {NotificationsComponent} from './notifications/notifications.component';
-import {InitialComponent} from "./initial/initial.component";
+import {InitialComponent} from './initial/initial.component';
 import {SchedulerComponent} from './scheduler/scheduler.component';
 import {ContactComponent} from './contact/contact.component';
 import {AdminComponent} from './admin/admin.component';

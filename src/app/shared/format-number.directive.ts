@@ -20,14 +20,14 @@ export class NumberCommaDirective implements OnInit, OnDestroy {
     this.subscription = control.valueChanges.pipe(
       map(value => {
         if (value != '') {
-          const parts = value.toString().split(".");
+          const parts = value.toString().split('.');
           parts[0] = this.decimal.transform(parts[0].replace(/,/g, ''));
           return parts.join('.');
         } else {
           return '0';
         }
       })
-    ).subscribe(v => control.setValue(v, { emitEvent: false }));
+    ).subscribe(v => control.setValue(v, {emitEvent: false}));
   }
   
   ngOnDestroy() {
