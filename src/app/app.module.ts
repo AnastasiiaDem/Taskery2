@@ -1,5 +1,5 @@
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -45,9 +45,18 @@ import {EmailService} from './shared/services/email.service';
 import {NotificationsComponent} from './notifications/notifications.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {QuillModule} from 'ngx-quill';
-import { SafeHtmlPipe } from './shared/safe-html.pipe';
-import {MainComponent} from "./main/main.component";
+import {SafeHtmlPipe} from './shared/safe-html.pipe';
+import {InitialComponent} from './initial/initial.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {SchedulerComponent} from './scheduler/scheduler.component';
+import {ScheduleModule} from '@syncfusion/ej2-angular-schedule';
+import {jqxSchedulerModule} from 'jqwidgets-ng/jqxscheduler';
+import {AIService} from './shared/services/ai.service';
+import {NumberPipePipe} from './shared/input-number.pipe';
+import {NumberCommaDirective} from './shared/format-number.directive';
+import {ContactComponent} from './contact/contact.component';
+import {ContactService} from './shared/services/contact.service';
+import {AdminComponent} from './admin/admin.component';
 
 @NgModule({
   declarations: [
@@ -61,8 +70,13 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     HeaderComponent,
     AccountComponent,
     NotificationsComponent,
-    MainComponent,
-    SafeHtmlPipe
+    InitialComponent,
+    SafeHtmlPipe,
+    SchedulerComponent,
+    NumberPipePipe,
+    NumberCommaDirective,
+    ContactComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
@@ -96,9 +110,11 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     MatSlideToggleModule,
     QuillModule.forRoot(),
     DragDropModule,
+    ScheduleModule,
+    jqxSchedulerModule
   ],
   providers: [HttpClientModule, TaskService, UserService, ProjectsService,
-    AlertService, AuthService, DatePipe, EmailService,
+    AlertService, AuthService, DatePipe, EmailService, AIService, ContactService,
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
   ],
   bootstrap: [AppComponent]

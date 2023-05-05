@@ -239,9 +239,22 @@ a {
   font-weight: 600;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-top: 5px;
   margin-bottom: 10px;
+  color: #000;
+
+  p {
+    margin: 0;
+    width: -webkit-fill-available;
+  }
+}
+
+.employee-name {
+  border-bottom: 1px solid rgb(224 224 224 / 40%);
+  background: white !important;
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 12px;
 
   p {
     margin: 0;
@@ -306,7 +319,6 @@ a {
 .card-deadline {
   font-size: 10px;
   font-weight: 600;
-  font-style: italic;
   width: 40% !important;
   text-align: right;
   padding-left: 5px;
@@ -597,4 +609,65 @@ mat-icon {
   &:hover {
     background: #fff;
   }
+}
+
+::ng-deep .ql-mention-list-container {
+  height: 105px;
+  z-index: 10000;
+  overflow-y: scroll;
+  background: #e6f2ff;
+  border-radius: 10px;
+
+  ul {
+    padding: 5px 15px 0 25px;
+    height: 100px;
+  }
+}
+
+.tooltiptemplate {
+  visibility: hidden;
+  width: max-content;
+  background-color: #f0f1f2;
+  color: #888E99;
+  font-weight: 500;
+  text-align: center;
+  padding: 3px 5px !important;
+  border-radius: 10px !important;
+  position: absolute;
+  z-index: 1;
+  top: -23px !important;
+  left: -48px !important;
+  font-size: 10px !important;
+  transition: visibility 1s cubic-bezier(0.76, -0.37, 0.15, 1.23);
+}
+
+.tooltiptemplate::after {
+  content: " ";
+  position: absolute;
+  top: 100%;
+  left: 70% !important;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #f0f1f2 transparent transparent transparent;
+}
+
+.generate-desc:hover .tooltiptemplate {
+  visibility: visible;
+  z-index: 1000000;
+}
+
+.tooltiptemplate {
+  left: -65px !important;
+}
+
+.calc-budget, .generate-desc {
+  height: 20px;
+  padding-left: 5px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+::ng-deep .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card, .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card {
+  box-shadow: 0 2px 3px 0 #E0E0E0 !important;
 }

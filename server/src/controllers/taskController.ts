@@ -2,7 +2,7 @@ import User from '../model/UserModel';
 import Token from '../model/TokenModel';
 import express from 'express';
 import Task from '../model/TaskModel';
-import mongoose, {Schema} from 'mongoose';
+import mongoose from 'mongoose';
 
 export const createTask = async (req: express.Request, res: express.Response) => {
   const {employeeId, projectId, title, description, status, deadline} = req.body;
@@ -46,7 +46,7 @@ export const updateTask = async (req: express.Request, res: express.Response) =>
   !id && res.status(400).json({error: 'no id'});
   
   const {title, description, status, deadline, employeeId} = req.body;
-
+  
   const cookies = req.cookies;
   if (!cookies?.token) return res.status(401).json({error: 'error no cookies'});
   
@@ -104,7 +104,7 @@ export const getTasks = async (req: express.Request, res: express.Response) => {
   const {title, description, status, deadline} = req.query;
   
   const cookies = req.cookies;
-
+  
   if (!cookies?.token) return res.status(401).json({error: 'error no cookies'});
   
   const refreshToken = cookies.token;
@@ -122,7 +122,7 @@ export const getTasks = async (req: express.Request, res: express.Response) => {
         {...(deadline ? {deadline: deadline} : {})}
       ],
     });
-  
+    
     if (tasks.length == 0) return res.status(400).json({message: 'No content'});
     
     res.status(200).json({tasks: tasks});

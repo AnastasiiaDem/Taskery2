@@ -32,12 +32,13 @@ export function printDiv(divId: string) {
         }
         .body-content {
           display: flex;
-          margin: 0 30px 0 20px;
+          padding: 0 30px 0 20px;
           justify-content: space-between;
           height: 350px;
+          width: 100% !important;
         }
         
-        .chart, .chart2, .block1, .block2, .block3 {
+        .chart, .chart2, .block1, .block2, .block3, .block4, .block5, .block6 {
           width: 40%;
           padding: 30px;
           display: flex;
@@ -70,7 +71,7 @@ export function printDiv(divId: string) {
           width: 60%;
         }
         
-        .block1, .block2, .block3, .block4 {
+        .block1, .block2, .block3, .block4, .block5, .block6 {
           width: 25%;
         
           img {
@@ -93,26 +94,34 @@ export function printDiv(divId: string) {
           font-weight: 900 !important;
         }
         
-        .block1 {
-          width: 220px;
+        .info-wrapper .date {
+          font-size: 25px;
+          font-weight: 700;
         }
         
-        .block2 {
-          width: 290px;
-        }
+        /*.block1 {*/
+        /*  width: 500px;*/
+        /*}*/
         
-        .block3 {
-          width: 400px;
-        }
+        /*.block2 {*/
+        /*  width: 205px;*/
+        /*}*/
         
-        .block4 {
-          width: 180px;
+        /*.block3 {*/
+        /*  width: 205px;*/
+        /*}*/
         
-          .date {
-            font-size: 15px;
-            font-weight: 500;
-          }
-        }
+        /*.block4 {*/
+        /*  width: 205px;*/
+        /*}*/
+        
+        /*.block5 {*/
+        /*  width: 205px;*/
+        /*}*/
+        
+        /*.block6 {*/
+        /*  width: 500px;*/
+        /*}*/
         
         .info-img-block {
           background: rgba(88, 227, 128, 0.2);

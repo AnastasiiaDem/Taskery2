@@ -21,22 +21,9 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
   let html = '';
   let subject = '';
   
-  if (content == 'project') {
-    html = '<style>' +
-      '.email-text {display: flex; align-items: flex-start; justify-content: flex-start;flex-direction: column; width: 500px;}' +
-      '</style>' +
-      '    <div class="email-text" style="font-size: 15px;"> \n' +
-      '    <p>Hi, <b style="font-size: 20px;">' + foundUser.firstName + ' ' + foundUser.lastName + '</b></p>\n' +
-      '    <p style="font-style: italic; text-align: center;">You have been assigned to a project on the <b style="color: rgb(76 126 253) !important;">Taskery.com</b> website</p>\n' +
-      '    <p>Project name: <b>' + project.projectName + '</b></p>\n' +
-      '    <p style="text-align: left;">Project description: <br><p style="margin-left: 50px;">' + project.description + '</p></p>\n' +
-      '    <p>Project status: <b>' + project.status + '</b></p>\n' +
-      '    <p>All assigned employees for this project: <p style="margin-left: 50px;">' + assignedList + '</p></p>\n' +
-      '  </div>';
+  if (content == 'task') {
+    subject = 'New Task // Taskery.com';
     
-    subject = 'New Project // Taskery.com';
-    
-  } else if (content == 'task') {
     html = '<style>' +
       '.email-text {display: flex; align-items: flex-start; justify-content: flex-start;flex-direction: column; width: 500px;}' +
       '</style>' +
@@ -45,13 +32,14 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
       '    <p style="font-style: italic; text-align: center;">You have new task on the <b style="color: rgb(76 126 253) !important;">Taskery.com</b> website</p>\n' +
       '    <p>Project name: <b>' + project.projectName + '</b></p>\n' +
       '    <p>Task name: <b>' + task.title + '</b></p>\n' +
+      '    <p>Task status: <b>' + task.status + '</b></p>\n' +
       '    <p style="text-align: left;">Task description: <br><p style="margin-left: 50px;">' + task.description + '</p></p>\n' +
       '    <p>Task deadline: <b>' + task.deadline + '</b></p>\n' +
       '  </div>';
     
-    subject = 'New Task // Taskery.com';
-    
   } else if (content == 'taskUpdate') {
+    subject = 'Task Update // Taskery.com';
+    
     html = '<style>' +
       '.email-text {display: flex; align-items: flex-start; justify-content: flex-start;flex-direction: column; width: 500px;}' +
       '</style>' +
@@ -60,13 +48,14 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
       '    <p style="font-style: italic; text-align: center;">Your task was updated on the <b style="color: rgb(76 126 253) !important;">Taskery.com</b> website</p>\n' +
       '    <p>Project name: <b>' + project.projectName + '</b></p>\n' +
       '    <p>Task name: <b>' + task.title + '</b></p>\n' +
+      '    <p>Task status: <b>' + task.status + '</b></p>\n' +
       '    <p style="text-align: left;">Task description: <br><p style="margin-left: 50px;">' + task.description + '</p></p>\n' +
       '    <p>Task deadline: <b>' + task.deadline + '</b></p>\n' +
       '  </div>';
     
-    subject = 'Task Update // Taskery.com';
-    
   } else if (content == 'report') {
+    subject = 'Report // Taskery.com';
+    
     html = '<style>' +
       '.email-text {display: flex; align-items: flex-start; justify-content: flex-start;flex-direction: column; width: 500px;}' +
       '</style>' +
@@ -80,7 +69,37 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
       '    <p>Number of overdue tasks: <b>' + report.overdueTasks + '</b></p>\n' +
       '  </div>';
     
-    subject = 'Report // Taskery.com';
+  } else if (content == 'mention') {
+    subject = 'Mention // Taskery.com';
+    
+    html = '<style>' +
+      '.email-text {display: flex; align-items: flex-start; justify-content: flex-start;flex-direction: column; width: 500px;}' +
+      '</style>' +
+      '    <div class="email-text" style="font-size: 15px;"> \n' +
+      '    <p>Hi, <b style="font-size: 20px;">' + foundUser.firstName + ' ' + foundUser.lastName + '</b></p>\n' +
+      '    <p style="font-style: italic; text-align: center;">You were mentioned in the task on the <b style="color: rgb(76 126 253) !important;">Taskery.com</b> website</p>\n' +
+      '    <p>Project name: <b>' + project.projectName + '</b></p>\n' +
+      '    <p>Task name: <b>' + task.title + '</b></p>\n' +
+      '    <p>Task status: <b>' + task.status + '</b></p>\n' +
+      '    <p style="text-align: left;">Task description: <br><p style="margin-left: 50px;">' + task.description + '</p></p>\n' +
+      '    <p>Task deadline: <b>' + task.deadline + '</b></p>\n' +
+      '  </div>';
+    
+  } else if (content == 'project') {
+    subject = 'New Project // Taskery.com';
+    
+    html = '<style>' +
+      '.email-text {display: flex; align-items: flex-start; justify-content: flex-start;flex-direction: column; width: 500px;}' +
+      '</style>' +
+      '    <div class="email-text" style="font-size: 15px;"> \n' +
+      '    <p>Hi, <b style="font-size: 20px;">' + foundUser.firstName + ' ' + foundUser.lastName + '</b></p>\n' +
+      '    <p style="font-style: italic; text-align: center;">You have been assigned to a project on the <b style="color: rgb(76 126 253) !important;">Taskery.com</b> website</p>\n' +
+      '    <p>Project name: <b>' + project.projectName + '</b></p>\n' +
+      '    <p style="text-align: left;">Project description: <br><p style="margin-left: 50px;">' + project.description + '</p></p>\n' +
+      '    <p>Project status: <b>' + project.status + '</b></p>\n' +
+      '    <p>All assigned employees for this project: <p style="margin-left: 50px;">' + assignedList + '</p></p>\n' +
+      '  </div>';
+    
   }
   
   
@@ -120,7 +139,7 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
       if (err) {
         return res.status(400).json({message: 'An error has occurred'});
       }
-      return res.status(200).json({message: 'The report has been sent to your email'});
+      return res.status(200).json({message: 'The email was sent successfully'});
     });
   });
 };

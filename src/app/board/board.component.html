@@ -8,6 +8,7 @@
           Add new task
         </button>
       </div>
+      
       <div class="d-flex align-items-center">
         <div ngbDropdown class="d-inline-block" placement="left-top" [autoClose]="'outside'"
              style="height: 23px !important;">
@@ -87,27 +88,30 @@
       </div>
     </div>
     
-    
     <ejs-kanban #kanban keyField='status'
                 [dataSource]='tasks'
                 [cardSettings]='cardSettings'
                 [sortSettings]='sortSettings'
                 (cardDoubleClick)='openModal(previewContent, $event)'
+                (dragStart)="dropStart($event)"
                 (dragStop)="drop($event)">
       <e-columns>
-        <e-column headerText='To Do' keyField='To Do'></e-column>
-        <e-column headerText='In Progress' keyField='In Progress'></e-column>
-        <e-column headerText='On Review' keyField='On Review'></e-column>
-        <e-column headerText='Done' keyField='Done'></e-column>
+        <e-column headerText='TO DO' keyField='To Do'></e-column>
+        <e-column headerText='IN PROGRESS' keyField='In Progress'></e-column>
+        <e-column headerText='ON REVIEW' keyField='On Review'></e-column>
+        <e-column headerText='DONE' keyField='Done'></e-column>
       </e-columns>
       <ng-template #cardSettingsTemplate let-data>
         <div class='e-card-content'>
           <table class="card-template-wrap">
             <tbody>
             <tr>
+              <p class="employee-name">{{data.employeeName}}</p>
+            </tr>
+            <tr>
               <td class="CardHeader">
                 <p>{{data.title}}</p>
-                <p class="card-deadline" [ngStyle]="overdueDateStyle(data)">{{data.deadline | date}}</p>
+                <p class="card-deadline" [ngStyle]="overdueDateStyle(data)">{{data.deadline | date:'MMM d'}}</p>
               </td>
             </tr>
             <tr>
@@ -138,6 +142,12 @@
             </div>
           </div>
           <div class="form-floating mb-3">
+            <p class="generate-desc">
+              <img src="https://img.icons8.com/ios-glyphs/90/null/adobe-illustrator.png" style="height: 20px;"
+                   (click)="writeBriefAI()"
+                   alt="">
+              <span class="tooltiptemplate">generate description by AI</span>
+            </p>
             <quill-editor class="form-control" style="padding: 1rem .75rem; height: 150px;"
                           formControlName="description" placeholder="Description"
                           [modules]="quillConfig"></quill-editor>
@@ -147,12 +157,12 @@
             </ng-select2>
           </div>
           <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-            <div class="form-floating mb-3" style="width: 30%;">
+            <div class="form-floating mb-3" [ngStyle]="{width: addTaskFlag ? '100%' : '30%'}">
               <input class="form-control" type="date" placeholder="Deadline date" formControlName="deadline"
                      [ngClass]="{ 'is-invalid': submitted && taskForm.invalid && f.deadline.errors }" required>
               <label>Deadline date</label>
             </div>
-            <div class="form-floating right-field" style="width: 70%;">
+            <div *ngIf="addTaskFlag == false" class="form-floating right-field" style="width: 70%;">
               <ng-select2 formControlName="status" [width]="'100%'" [data]="statusData">
               </ng-select2>
             </div>

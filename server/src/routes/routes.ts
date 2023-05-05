@@ -13,6 +13,8 @@ import {
 } from '../controllers/projectController';
 import {createTask, deleteTask, getTasks, updateTask} from '../controllers/taskController';
 import {sendEmail} from '../controllers/emailController';
+import {getAItext} from '../controllers/aiController';
+import {deleteRequest, getRequests, sendRequest, sendRespond} from '../controllers/contactController';
 
 require('dotenv').config();
 
@@ -44,6 +46,13 @@ routes.put('/user/update', updateUser);
 routes.delete('/user/delete/:id', deleteUser);
 
 routes.post('/email', sendEmail);
+
+routes.post('/contact', sendRequest);
+routes.get('/getRequests', getRequests);
+routes.post('/respond', sendRespond);
+routes.delete('/request/delete/:id', deleteRequest);
+
+routes.post('/ai', getAItext);
 
 module.exports = routes;
 

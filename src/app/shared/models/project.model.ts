@@ -1,4 +1,4 @@
-import { StatusEnum } from "../enums";
+import {StatusEnum} from '../enums';
 
 export class ProjectModel {
   id: number;
@@ -9,4 +9,5 @@ export class ProjectModel {
   assignedUsers: Array<any>;
   createdAt: string;
   updatedAt: string;
+  budget: number;
 }

@@ -4,13 +4,15 @@
       <div class="nav-item nav-link logo-link">
         <img src="./assets/images/icons8-network-2-64.png" alt="" class="net-icon">
       </div>
+      <div class="nav-block" style="margin-right: 2.6rem;">
+        <a class="nav-item nav-link project-list" (click)="contactUs()">Contact Us</a>
+      </div>
       <div class="nav-block">
-        <a class="nav-item nav-link contact" (click)="contacts()">Contact us</a>
         <button type="button" class='avatar'></button>
       </div>
     </div>
   </nav>
-
+  
   <div class="main-body-contents w3-animate-opacity">
     <div class="w3-animate-opacity">
       <div class="background background2"></div>
@@ -26,7 +28,7 @@
         </div>
         <img class="image2" src="./assets/images/hand_image2.avif" alt="">
       </div>
-
+      
       <div class="main-content main-content-second">
         <div class="col-lg-10">
           <p class="second-head-text">It’s more than work. It’s a way of working together.</p>
@@ -34,10 +36,11 @@
             Manage projects, organize tasks, and build team spirit-all in one place. Customize and expand with more
             features as your teamwork grows. Start with a Taskery board, lists, and cards.
           </p>
-          <p><a (click)="getStarted()" class="btn btn-outline-primary btn-lg px-3" style="margin-left: 10px;">Sign Up&nbsp;&nbsp;&nbsp; →</a></p>
+          <p><a (click)="getStarted()" class="btn btn-outline-primary btn-lg px-3" style="margin-left: 10px;">Sign Up&nbsp;&nbsp;
+            →</a></p>
         </div>
       </div>
-
+    
     </div>
   </div>
   <footer class="footer">

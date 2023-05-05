@@ -15,6 +15,12 @@ export class EmailService {
   }
   
   sendEmail(userId, project, task, report, content): Observable<any> {
-    return this.http.post(`${apiUrl}/email`, {userId: userId, project: project, task: task, report: report, content: content}, options);
+    return this.http.post(`${apiUrl}/email`, {
+      userId: userId,
+      project: project,
+      task: task,
+      report: report,
+      content: content
+    }, options);
   }
 }

@@ -9,18 +9,24 @@ import {ProjectsComponent} from './projects/projects.component';
 import {ReportComponent} from './report/report.component';
 import {AccountComponent} from './account/account.component';
 import {NotificationsComponent} from './notifications/notifications.component';
-import {MainComponent} from "./main/main.component";
+import {InitialComponent} from './initial/initial.component';
+import {SchedulerComponent} from './scheduler/scheduler.component';
+import {ContactComponent} from './contact/contact.component';
+import {AdminComponent} from './admin/admin.component';
 
 const routes: Routes = [
-  {path: '', component: MainComponent},
+  {path: '', component: InitialComponent},
+  {path: 'contact', component: ContactComponent},
   {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
+  {path: 'admin', component: AdminComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent, data: {animation: 'login'}},
   {path: 'register', component: RegisterComponent, data: {animation: 'register'}},
   {path: 'board', component: BoardComponent, data: {animation: 'board'}},
-  {path: 'projects', component: ProjectsComponent, data: {animation: 'projects'}},
+  {path: 'projects', component: ProjectsComponent, canActivate: [AuthGuard], data: {animation: 'projects'}},
   {path: 'account', component: AccountComponent, data: {animation: 'account'}},
   {path: 'notifications', component: NotificationsComponent, data: {animation: 'notifications'}},
-  {path: 'report', component: ReportComponent, canActivate: [AuthGuard], data: {animation: 'report'}}
+  {path: 'report', component: ReportComponent, canActivate: [AuthGuard], data: {animation: 'report'}},
+  {path: 'scheduler', component: SchedulerComponent, canActivate: [AuthGuard], data: {animation: 'scheduler'}}
 ];
 
 @NgModule({

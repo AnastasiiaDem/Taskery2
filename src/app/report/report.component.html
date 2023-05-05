@@ -9,26 +9,47 @@
       </mat-expansion-panel-header>
       <div class="panel-body">
         <button class="btn btn-outline-primary" type="button" (click)="export(project)">print</button>
-                <button class="btn btn-outline-primary" style="margin-left: 10px" type="button"
-                        (click)="email(project)">email
-                </button>
+        <button class="btn btn-outline-primary" style="margin-left: 10px" type="button"
+                (click)="email(project)">email
+        </button>
         <div [id]="'printBody_' + project.id">
           <div class="body-content" style="height: 150px; margin-top: 20px;">
-            <div class="block1">
+            <div class="block1" style="width: 45%;">
+              <div class="info-wrapper">
+                <p>Budget</p>
+                <p class="info-data">≈ ${{project.budget | numberPipe}}</p>
+              </div>
+              <img src="./assets/images/Ellipse1.png" alt="">
+            </div>
+            <div class="block2" style="width: 25%;">
+              <div class="info-wrapper" style="margin-bottom: 3px;">
+                <p>Project Start</p>
+                <p class="date">{{project.createdAt | date: 'short'}}</p>
+              </div>
+            </div>
+            <div class="block3" style="width: 25%;">
+              <div class="info-wrapper" style="margin-top: 3px;">
+                <p>Current Date</p>
+                <p class="date">{{currentDate | date: 'short'}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="body-content" style="height: 150px;">
+            <div class="block4" style="width: 25%;">
               <div class="info-wrapper">
                 <p>Tasks</p>
                 <p class="info-data">{{tasksNumber(project)}}</p>
               </div>
               <img src="./assets/images/Ellipse.png" alt="">
             </div>
-            <div class="block2">
+            <div class="block5" style="width: 30%;">
               <div class="info-wrapper">
                 <p>Overdue Tasks</p>
                 <p class="info-data">{{overdueTasksNumber(project)}}</p>
               </div>
               <img src="./assets/images/Ellipse2.png" alt="">
             </div>
-            <div class="block3">
+            <div class="block6" style="width: 40%;">
               <!--              [ngStyle]="{'width': (project.status == 'Done' || project.status == 'To Do') ? '25%' : '40%'}"-->
               <div class="info-wrapper">
                 <p>Status</p>
@@ -36,51 +57,51 @@
               </div>
               <img src='{{ "./assets/images/" + statusEllipse(project) + ".png" }}' alt="">
             </div>
-            <div class="block4">
-              <div class="date-block">
-                <div class="info-wrapper date-block-wrapper" style="margin-bottom: 3px;">
-                  <p>Project Start</p>
-                  <p class="date">{{project.createdAt | date: 'short'}}</p>
-                </div>
-                <div class="info-wrapper date-block-wrapper" style="margin-top: 3px;">
-                  <p>Current Date</p>
-                  <p class="date">{{currentDate | date: 'short'}}</p>
-                </div>
-              </div>
-            </div>
+            <!--            <div class="block4">-->
+            <!--              <div class="date-block">-->
+            <!--                <div class="info-wrapper date-block-wrapper" style="margin-bottom: 3px;">-->
+            <!--                  <p>Project Start</p>-->
+            <!--                  <p class="date">{{project.createdAt | date: 'short'}}</p>-->
+            <!--                </div>-->
+            <!--                <div class="info-wrapper date-block-wrapper" style="margin-top: 3px;">-->
+            <!--                  <p>Current Date</p>-->
+            <!--                  <p class="date">{{currentDate | date: 'short'}}</p>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
           </div>
           <div class="body-content">
             <div class="chart">
               <div class="chart-wrapper">
                 <apx-chart #pieChart
-                    [series]="pieChartOptions[i].series"
-                    [chart]="pieChartOptions[i].chart"
-                    [labels]="pieChartOptions[i].labels"
-                    [title]="pieChartOptions[i].title"
-                    [responsive]="pieChartOptions[i].responsive"
-                    [legend]="pieChartOptions[i].legend"
-                    [colors]="pieChartOptions[i].colors"
-                    [stroke]="pieChartOptions[i].stroke"
-                    [dataLabels]="pieChartOptions[i].dataLabels"
+                           [series]="pieChartOptions[i].series"
+                           [chart]="pieChartOptions[i].chart"
+                           [labels]="pieChartOptions[i].labels"
+                           [title]="pieChartOptions[i].title"
+                           [responsive]="pieChartOptions[i].responsive"
+                           [legend]="pieChartOptions[i].legend"
+                           [colors]="pieChartOptions[i].colors"
+                           [stroke]="pieChartOptions[i].stroke"
+                           [dataLabels]="pieChartOptions[i].dataLabels"
                 ></apx-chart>
               </div>
             </div>
             <div class="chart2">
               <div class="chart-wrapper">
                 <apx-chart #barChart
-                    [series]="barChartOptions[i].series"
-                    [chart]="barChartOptions[i].chart"
-                    [dataLabels]="barChartOptions[i].dataLabels"
-                    [plotOptions]="barChartOptions[i].plotOptions"
-                    [xaxis]="barChartOptions[i].xaxis"
-                    [stroke]="barChartOptions[i].stroke"
-                    [fill]="barChartOptions[i].fill"
-                    [yaxis]="barChartOptions[i].yaxis"
-                    [title]="barChartOptions[i].title"
-                    [tooltip]="barChartOptions[i].tooltip"
-                    [colors]="barChartOptions[i].colors"
-                    [grid]="barChartOptions[i].grid"
-                    [legend]="barChartOptions[i].legend"
+                           [series]="barChartOptions[i].series"
+                           [chart]="barChartOptions[i].chart"
+                           [dataLabels]="barChartOptions[i].dataLabels"
+                           [plotOptions]="barChartOptions[i].plotOptions"
+                           [xaxis]="barChartOptions[i].xaxis"
+                           [stroke]="barChartOptions[i].stroke"
+                           [fill]="barChartOptions[i].fill"
+                           [yaxis]="barChartOptions[i].yaxis"
+                           [title]="barChartOptions[i].title"
+                           [tooltip]="barChartOptions[i].tooltip"
+                           [colors]="barChartOptions[i].colors"
+                           [grid]="barChartOptions[i].grid"
+                           [legend]="barChartOptions[i].legend"
                 ></apx-chart>
               </div>
             </div>
@@ -89,9 +110,9 @@
       </div>
     </mat-expansion-panel>
   </mat-accordion>
-
+  
   <div class="no-content" *ngIf="isProjects == false">
-        <p>There is no data to display, you don't have any project😢</p>
+    <p>There is no data to display, you don't have any project😢</p>
   </div>
 </div>
 

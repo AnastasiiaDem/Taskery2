@@ -1,7 +1,6 @@
 import {AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {TaskModel} from 'src/app/shared/models/task.model';
 import {TaskService} from 'src/app/shared/services/task.service';
-import {StatusEnum} from 'src/app/shared/enums';
+import {RoleEnum, StatusEnum} from 'src/app/shared/enums';
 import {CardSettingsModel, KanbanComponent, SortSettingsModel} from '@syncfusion/ej2-angular-kanban';
 import {Select2OptionData} from 'ng-select2';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -10,7 +9,6 @@ import * as $ from 'jquery';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {Subject, takeUntil} from 'rxjs';
-import {Role} from '../shared/models/user.model';
 import {ProjectsService} from '../shared/services/project.service';
 import {ProjectModel} from '../shared/models/project.model';
 import {faCalendarDays} from '@fortawesome/free-solid-svg-icons';
@@ -22,11 +20,12 @@ import {Query} from '@syncfusion/ej2-data';
 import {EmailService} from '../shared/services/email.service';
 import {QuillModules} from 'ngx-quill/lib/quill-editor.interfaces';
 import 'quill-emoji/dist/quill-emoji.js';
-
 import * as QuillNamespace from 'quill';
 import ImageCompress from 'quill-image-compress';
 import Emoji from 'quill-emoji';
 import Mention from 'quill-mention';
+import {Configuration, OpenAIApi} from 'openai';
+import {AIService} from '../shared/services/ai.service';
 
 let Quill: any = QuillNamespace;
 
@@ -47,8 +46,8 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   @ViewChild('kanban') kanban: KanbanComponent;
   
   taskForm: FormGroup;
-  tasks: TaskModel[] = [];
-  tasksList: TaskModel[] = [];
+  tasks = [];
+  tasksList = [];
   cardSettings: CardSettingsModel = {
     contentField: 'description',
     headerField: 'id'
@@ -63,13 +62,13 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   filterStatus = false;
   public dropdownSettings: IDropdownSettings = {};
   private readonly unsubscribe: Subject<void> = new Subject();
-  currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: Role; } = {
+  currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: RoleEnum; } = {
     _id: 0,
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-    role: Role.ProjectManager
+    role: RoleEnum.ProjectManager
   };
   currentProject: ProjectModel;
   calendarIcon;
@@ -84,13 +83,19 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   date2Value;
   searchText;
   overdue;
+  initialStatus;
   previewData;
   submitted = false;
   
-  atValues = [
-    {id: 1, value: 'Fredrik Sundqvist', link: 'https://google.com'},
-    {id: 2, value: 'Patrik Sjölin'}
-  ];
+  configuration = new Configuration({
+    apiKey: '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',
+  });
+  
+  openai = new OpenAIApi(this.configuration);
+  aiResponse: any;
+  aiData: any = '';
+  
+  atValues = [];
   
   quillConfig: QuillModules = {
     toolbar: {
@@ -140,6 +145,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               public taskService: TaskService,
               private modalService: NgbModal,
               private userService: UserService,
+              private aiService: AIService,
               private route: ActivatedRoute,
               private projectsService: ProjectsService,
               private datepipe: DatePipe,
@@ -213,38 +219,17 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     
     const dom: HTMLElement = this.elementRef.nativeElement;
     dom.querySelectorAll('.e-item-count').forEach(el => {
-      el.innerHTML = el.innerHTML.replace('items', 'tasks');
+      el.innerHTML = el.innerHTML.replace('items', '');
     });
     
     dom.querySelectorAll('.e-header-text').forEach(el => {
-      if (el.innerHTML.includes(StatusEnum.todo)) {
-        $(el).css({'color': 'rgb(57 197 255)'});
-      }
-      if (el.innerHTML.includes(StatusEnum.inProgress)) {
-        $(el).css({'color': 'rgb(255 149 119)'});
-      }
-      if (el.innerHTML.includes(StatusEnum.onReview)) {
-        $(el).css({'color': 'rgb(101 85 255)'});
-      }
-      if (el.innerHTML.includes(StatusEnum.done)) {
-        $(el).css({'color': 'rgb(58 224 104)'});
-      }
-      $(el).css({'font-weight': '600'});
+      $(el).css({'color': '#4D4B54'});
+      $(el).css({'font-size': '12px'});
+      $(el).css({'font-weight': '800'});
     });
     
     dom.querySelectorAll('.e-header-cells').forEach(el => {
-      if (el.innerHTML.includes(StatusEnum.todo)) {
-        $(el).css({'background-color': '#EDF9FF'});
-      }
-      if (el.innerHTML.includes(StatusEnum.inProgress)) {
-        $(el).css({'background-color': '#FFEFEA'});
-      }
-      if (el.innerHTML.includes(StatusEnum.onReview)) {
-        $(el).css({'background-color': '#EAE8FF'});
-      }
-      if (el.innerHTML.includes(StatusEnum.done)) {
-        $(el).css({'background-color': '#E8FBED'});
-      }
+      $(el).css({'background-color': '#F4F5F7'});
     });
     
     dom.querySelectorAll('.e-content-cells').forEach(el => {
@@ -305,7 +290,8 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               status: task.status,
               deadline: task.deadline,
               employeeId: task.employeeId,
-              projectId: task.projectId
+              projectId: task.projectId,
+              employeeName: this.currentProject.assignedUsers.find(employee => employee.id == task.employeeId)?.text
             });
           });
           
@@ -339,6 +325,15 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               }
             });
           });
+          
+          this.atValues = [];
+          users.filter(u => u._id != this.currentUser._id || !!this.employeeData.find(usr => usr.id == u._id)).forEach(user => {
+            this.atValues.push({
+              id: user._id,
+              value: user.firstName + ' ' + user.lastName,
+              link: 'https://mail.google.com/mail/u/' + this.currentUser.email + '/?view=cm&to=' + user.email
+            });
+          });
           this.firstUserId = this.employeeData[0].id;
         },
         err => {
@@ -346,16 +341,30 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
         });
   }
   
+  dropStart(event) {
+    this.initialStatus = event.data[0].status;
+  }
+  
   drop(event) {
     this.taskService.updateTask(event.data[0])
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(data => {
-          debugger
           this.currentProject.updatedAt = new Date().toString();
           this.projectsService.updateProject(this.currentProject)
             .pipe(takeUntil(this.unsubscribe))
-            .subscribe(message => {
-                console.log(message)
+            .subscribe(res => {
+                console.log(res.message);
+              },
+              err => {
+                console.log(err);
+              });
+          this.userService.getUsers()
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe(users => {
+                let taskUser = users.find(u => u._id === event.data[0].employeeId);
+                if (taskUser.sendTaskOverdueEmail) {
+                  this.email(taskUser._id, this.currentProject, event.data[0], 'taskUpdate');
+                }
               },
               err => {
                 console.log(err);
@@ -369,7 +378,15 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   openModal(content, task) {
     this.addTaskFlag = false;
-    this.taskForm.setValue(task.data);
+    this.taskForm.setValue({
+      id: task.data.id,
+      title: task.data.title,
+      description: task.data.description,
+      status: task.data.status,
+      deadline: task.data.deadline,
+      employeeId: task.data.employeeId,
+      projectId: task.data.projectId
+    });
     this.previewData = {
       title: task.data.title,
       description: task.data.description,
@@ -394,18 +411,16 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
         .subscribe(data => {
             console.log(data.message);
             this.kanban.updateCard(this.taskForm.value);
-    
-            debugger
             this.currentProject.updatedAt = new Date().toString();
+            this.submitted = false;
             this.projectsService.updateProject(this.currentProject)
               .pipe(takeUntil(this.unsubscribe))
-              .subscribe(message => {
-                  console.log(message)
+              .subscribe(res => {
+                  console.log(res.message);
                 },
                 err => {
                   console.log(err);
                 });
-            
             this.userService.getUsers()
               .pipe(takeUntil(this.unsubscribe))
               .subscribe(users => {
@@ -413,6 +428,19 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
                   if (taskUser.sendTaskOverdueEmail) {
                     this.email(taskUser._id, this.currentProject, this.taskForm.value, 'taskUpdate');
                   }
+                  
+                  setTimeout(() => {
+                    let parentHTML = document.querySelectorAll('[data-id="' + this.taskForm.value.id + '"]');
+                    let descriptionHTML = parentHTML[0].getElementsByClassName('mention');
+                    if (!!descriptionHTML.length) {
+                      let mentionId = descriptionHTML[0]['dataset'].id;
+                      
+                      let mentionedUser = users.find(u => u._id === mentionId);
+                      if (mentionedUser.sendTaskOverdueEmail) {
+                        this.email(mentionedUser._id, this.currentProject, this.taskForm.value, 'mention');
+                      }
+                    }
+                  }, 500);
                 },
                 err => {
                   console.log(err);
@@ -426,12 +454,11 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       this.taskService.addTask(this.taskForm.value)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(task => {
-          debugger
             this.currentProject.updatedAt = new Date().toString();
             this.projectsService.updateProject(this.currentProject)
               .pipe(takeUntil(this.unsubscribe))
-              .subscribe(message => {
-                  console.log(message)
+              .subscribe(res => {
+                  console.log(res.message);
                 },
                 err => {
                   console.log(err);
@@ -454,6 +481,17 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
                   if (taskUser.sendTaskEmail && this.taskForm.value.status == 'To Do') {
                     this.email(taskUser._id, this.currentProject, this.taskForm.value, 'task');
                   }
+                  
+                  setTimeout(() => {
+                    let parentHTML = document.querySelectorAll('[data-id="' + this.taskForm.value.id + '"]');
+                    let descriptionHTML = parentHTML[0].getElementsByClassName('mention');
+                    let mentionId = descriptionHTML[0]['dataset'].id;
+                    
+                    let mentionedUser = users.find(u => u._id === mentionId);
+                    if (mentionedUser.sendTaskOverdueEmail) {
+                      this.email(mentionedUser._id, this.currentProject, this.taskForm.value, 'mention');
+                    }
+                  }, 500);
                 },
                 err => {
                   console.log(err);
@@ -491,12 +529,11 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       this.taskService.deleteTask(this.taskForm.value.id)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(data => {
-            debugger
             this.currentProject.updatedAt = new Date().toString();
             this.projectsService.updateProject(this.currentProject)
               .pipe(takeUntil(this.unsubscribe))
-              .subscribe(message => {
-                  console.log(message)
+              .subscribe(res => {
+                  console.log(res.message);
                 },
                 err => {
                   console.log(err);
@@ -513,7 +550,6 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       modal.close();
     }
   }
-  
   
   showIssues() {
     this.AllIssues = !this.AllIssues;
@@ -537,9 +573,9 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.overdue = task.deadline < this.currentDate;
     
     if (this.overdue && task.status != StatusEnum.done) {
-      return {'color': 'rgb(221 4 38 / 70%)'};
+      return {'color': '#DF2134'};
     } else {
-      return {'color': '#66666666'};
+      return {'color': '#9E9FA1'};
     }
   }
   
@@ -730,6 +766,22 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       this.sortSettings = {
         sortBy: 'DataSourceOrder'
       };
+    }
+  }
+  
+  writeBriefAI() {
+    if (this.taskForm.value.title != '') {
+      this.spinner.show();
+      this.aiService.getAIresponse('Write a specific brief for the task(purpose, functionality, technical requirements): ' + this.taskForm.value.title + 'for the project: ' + this.currentProject?.projectName)
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe(response => {
+            this.taskForm.controls['description'].setValue(response.choices[0].text);
+            this.spinner.hide();
+          },
+          error => {
+            console.log(error);
+            this.spinner.hide();
+          });
     }
   }
 }

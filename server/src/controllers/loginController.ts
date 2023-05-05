@@ -40,7 +40,7 @@ const loginUser = async (req: express.Request, res: express.Response) => {
       REFRESH_TOKEN_SECRET,
       {expiresIn: '1d'}
     );
-
+    
     Token.findOne({userId: foundUser._id}, function (err: Error, token: any) {
       if (err) return res.status(400).json({error: err});
       
@@ -52,7 +52,7 @@ const loginUser = async (req: express.Request, res: express.Response) => {
         });
       }
     });
-
+    
     res.cookie('token', refreshToken, {
       httpOnly: true,
       sameSite: 'none',

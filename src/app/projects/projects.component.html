@@ -1,5 +1,5 @@
 <div>
-  <div class="w3-animate-opacity" style="margin: 0 auto; width: 95%;">
+  <div class="w3-animate-opacity" style="margin: 5rem auto 0 auto; width: 95%;">
     <div style="margin: 3rem auto 1rem;" *ngIf="currentUser.role == 'ProjectManager'">
       <button (click)="addProject(addUpdateContent, $event)" class="add-btn">
         <mat-icon class="add-btn-icon">add</mat-icon>
@@ -64,22 +64,48 @@
             <label>Project Name</label>
           </div>
           <div class="form-floating mb-3">
+            <p class="generate-desc">
+              <img src="https://img.icons8.com/ios-glyphs/90/null/adobe-illustrator.png" style="height: 20px;"
+                   (click)="writeBriefAI()"
+                   alt="">
+              <span class="tooltiptemplate">generate description by AI</span>
+            </p>
             <quill-editor class="form-control" style="padding: 1rem .75rem; height: 150px;"
                           formControlName="description" placeholder="Description"
                           [modules]="quillConfig"></quill-editor>
           </div>
-          <div class="form-floating right-field" style="margin-left: 0 !important;">
+          <div *ngIf="addProjectFlag == false" class="form-floating right-field" style="margin-left: 0 !important;">
             <ng-select2 formControlName="status" [width]="'100%'" [data]="statusData">
             </ng-select2>
           </div>
-          <div class="form-floating right-field" style="margin-left: 0 !important;">
-            <ng-multiselect-dropdown
-                [placeholder]="'Assign this project to the employees'"
-                [settings]="dropdownSettings"
-                [data]="usersData"
-                formControlName="assignedUsers"
-            >
-            </ng-multiselect-dropdown>
+          <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+            <div class="form-floating" style="margin-left: 0 !important;width: 68%;">
+              <ng-multiselect-dropdown
+                  style="width: 60%;"
+                  [placeholder]="'Assign this project to the employees'"
+                  [settings]="dropdownSettings"
+                  [data]="usersData"
+                  formControlName="assignedUsers">
+              </ng-multiselect-dropdown>
+            </div>
+            <div class="form-floating"
+                 style="width: 32%; display: flex;justify-content: flex-end; align-items: center; position: relative;">
+              <!--              <p style="margin: 0 10px;">$</p>-->
+              <!--              <div class="form-floating" style="width: 50%">-->
+              <span style="position: absolute;right: 65%;">$</span>
+              <input class="form-control" type="float" placeholder="Budget"
+                     inputWithComma
+                     [ngModelOptions]="{standalone: true}"
+                     [(ngModel)]="projectForm.value.budget" (ngModelChange)="budgetChanged($event)"
+                     style="height: 30px;padding: 0.3rem 0.5rem 0.3rem 1.3rem;width: 60%;"
+                     [ngClass]="{ 'is-invalid': submitted && projectForm.invalid && f.budget.errors }" required>
+              <p class="calc-budget">
+                <img src="https://img.icons8.com/material-outlined/96/null/calculator--v1.png" style="height: 20px;"
+                     (click)="calcBudgetAI()"
+                     alt="">
+                <span class="tooltipcalc">calculate approximate budget by AI</span>
+              </p>
+            </div>
           </div>
           <button class="btn btn-primary close-button" type="submit"
                   style="border-radius: 0 0 calc(1rem - 1px) calc(1rem - 1px)"
@@ -108,6 +134,10 @@
             <div class="form-floating">
               <p>Created</p>
               <span>{{previewData.createdAt | date: 'shortDate'}}</span>
+            </div>
+            <div class="form-floating">
+              <p>Budget</p>
+              <span>≈ ${{previewData.budget | numberPipe}}</span>
             </div>
             <div class="form-floating">
               <p>ASSIGNED EMPLOYEES</p>

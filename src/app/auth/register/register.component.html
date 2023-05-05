@@ -54,7 +54,7 @@
                        [ngClass]="{ 'is-invalid': submitted && f.password.errors }" required>
                 <label>Password</label>
                 <fa-icon [icon]="faIcon" (click)="toggleFieldTextType()"></fa-icon>
-
+                
                 <mat-error class="error-message" *ngIf="f.password.errors && f.password.errors.minlength">
                   Password must be at least 6 characters long
                   <br>

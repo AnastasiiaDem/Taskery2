@@ -117,7 +117,7 @@ settings-modal {
 }
 
 body.settings-modal-open {
-  /* body overflow is hidden to hide main scrollbar when modal window is open */
+  /* body overflow is hidden to hide initial scrollbar when modal window is open */
   overflow: hidden;
 }
 
@@ -170,7 +170,7 @@ ngb-carousel .picsum-img-wrapper {
   padding-top: 55%; /* Keep ratio for 900x500 images */
 }
 
-ngb-carousel .picsum-img-wrapper>img {
+ngb-carousel .picsum-img-wrapper > img {
   position: absolute;
   top: 0;
   left: 0;
@@ -242,4 +242,18 @@ ngb-carousel .picsum-img-wrapper>img {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+ng-select2 {
+  .select2-selection {
+    height: 56px !important;
+
+    .select2-selection__rendered {
+      line-height: 54px !important;
+    }
+
+    .select2-selection__arrow {
+      height: 54px !important;
+    }
+  }
 }
