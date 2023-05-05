@@ -1,13 +1,19 @@
 export {};
 import mongoose, {Schema} from 'mongoose';
 
+enum RoleEnum {
+  'TeamMember' = 'TeamMember',
+  'ProjectManager' = 'ProjectManager',
+  'Admin' = 'Admin'
+}
+
 interface IUser {
   _id: Schema.Types.ObjectId;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  role: string;
+  role: RoleEnum;
   sendAssignedEmail: boolean;
   sendTaskEmail: boolean;
   sendTaskOverdueEmail: boolean;
@@ -19,7 +25,7 @@ export const UserSchema = new Schema<IUser>({
   lastName: {type: String, required: true},
   email: {type: String, required: true},
   password: {type: String, required: true},
-  role: {type: String, default: 'TeamMember'},
+  role: {type: String, enum: RoleEnum, default: RoleEnum.TeamMember},
   sendAssignedEmail: {type: Boolean, default: false},
   sendTaskEmail: {type: Boolean, default: false},
   sendTaskOverdueEmail: {type: Boolean, default: false},
