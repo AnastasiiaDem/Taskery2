@@ -40,6 +40,7 @@ export class AdminComponent implements OnInit {
   respondData: RequestModel;
   submitted = false;
   respondMsg = '';
+  answered = false;
   
   constructor(private spinner: NgxSpinnerService,
               public taskService: TaskService,
@@ -150,6 +151,7 @@ export class AdminComponent implements OnInit {
           )
           .subscribe(res => {
               this.submitted = false;
+              this.answered = true;
               this.deleteRequest(data, modal);
               this.toastr.success('Respond was sent successfully');
             },
@@ -170,7 +172,10 @@ export class AdminComponent implements OnInit {
       .subscribe(data => {
           this.submitted = false;
           this.allRequests = this.allRequests.filter(req => req._id !== data._id);
-          this.toastr.success('Request was deleted');
+          if (!this.answered) {
+            this.toastr.success('Request was deleted');
+          }
+          this.answered = false;
           modal.close();
         },
         err => {

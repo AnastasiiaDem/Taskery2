@@ -7,6 +7,7 @@ import {NgxSpinnerService} from 'ngx-spinner';
 import {filter} from 'rxjs/operators';
 import {UserService} from '../shared/services/user.service';
 import {RoleEnum} from '../shared/enums';
+import {TranslocoService} from '@ngneat/transloco';
 
 @Component({
   selector: 'app-home',
@@ -29,10 +30,13 @@ export class InitialComponent implements OnInit {
     sendTaskEmail: false,
     sendTaskOverdueEmail: false
   };
+  currentLanguage = 'en';
+  
   
   constructor(private router: Router,
               private spinner: NgxSpinnerService,
               private userService: UserService,
+              private translocoService: TranslocoService,
               private authenticationService: AuthService) {
     this.authenticationService.currentUser
       .pipe(takeUntil(this.unsubscribe))
@@ -43,6 +47,8 @@ export class InitialComponent implements OnInit {
   }
   
   ngOnInit(): void {
+    this.currentLanguage = this.translocoService.getActiveLang();
+    
     this.router.events
       .pipe(
         filter(event => event instanceof NavigationStart)
@@ -76,5 +82,10 @@ export class InitialComponent implements OnInit {
     setTimeout(() => {
       this.spinner.hide();
     }, 950);
+  }
+  
+  changeLanguage(lang: string) {
+    this.translocoService.setActiveLang(lang);
+    this.currentLanguage = lang;
   }
 }

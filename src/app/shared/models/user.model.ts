@@ -1,4 +1,4 @@
-import { Role } from "../enums";
+import { RoleEnum } from "../enums";
 
 export class UserModel {
   id: number;
@@ -6,7 +6,7 @@ export class UserModel {
   lastName: string;
   email: string;
   password: string;
-  role: Role;
+  role: RoleEnum;
   sendAssignedEmail: boolean;
   sendTaskEmail: boolean;
   sendTaskOverdueEmail: boolean;

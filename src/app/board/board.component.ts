@@ -26,6 +26,7 @@ import Emoji from 'quill-emoji';
 import Mention from 'quill-mention';
 import {Configuration, OpenAIApi} from 'openai';
 import {AIService} from '../shared/services/ai.service';
+import {TranslocoService} from '@ngneat/transloco';
 
 let Quill: any = QuillNamespace;
 
@@ -152,6 +153,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               private emailService: EmailService,
               private _focusMonitor: FocusMonitor,
               private spinner: NgxSpinnerService,
+              private translocoService: TranslocoService,
               private elementRef: ElementRef) {
     this.route.params
       .pipe(takeUntil(this.unsubscribe))
@@ -290,8 +292,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               status: task.status,
               deadline: task.deadline,
               employeeId: task.employeeId,
-              projectId: task.projectId,
-              employeeName: this.currentProject.assignedUsers.find(employee => employee.id == task.employeeId)?.text
+              projectId: task.projectId
             });
           });
           
@@ -411,6 +412,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
         .subscribe(data => {
             console.log(data.message);
             this.kanban.updateCard(this.taskForm.value);
+            this.kanban.render();
             this.currentProject.updatedAt = new Date().toString();
             this.submitted = false;
             this.projectsService.updateProject(this.currentProject)
@@ -473,6 +475,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               projectId: task.projectId
             };
             this.tasks.push(newTask);
+            this.submitted = false;
             this.kanban.render();
             this.userService.getUsers()
               .pipe(takeUntil(this.unsubscribe))
@@ -783,5 +786,9 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.spinner.hide();
           });
     }
+  }
+  
+  findEmployeeName(data) {
+    return this.currentProject.assignedUsers.find(employee => employee.id == data.employeeId)?.text;
   }
 }

@@ -48,7 +48,7 @@ export const sendRespond = async (req: express.Request, res: express.Response) =
     '    <div class="email-text" style="font-size: 15px;"> \n' +
     '    <p>Hi, <b style="font-size: 20px;">' + firstName + ' ' + lastName + '</b></p>\n' +
     '    <p style="font-style: italic; text-align: center;">Thank you for contacting us. <b style="color: rgb(76 126 253) !important;">Taskery.com</b> website</p>\n' +
-    '    <p>Your request was: <b>' + description + '</b></p>\n' +
+    '    <p><u>Your request was</u>: ' + description + '</p>\n' +
     '    <p>RESPOND: <b>' + respond + '</b></p>\n' +
     '  </div>';
   

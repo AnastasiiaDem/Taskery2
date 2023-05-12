@@ -232,13 +232,13 @@ a {
 
 .text-muted {
   overflow: hidden;
-  -webkit-line-clamp: 5;
+  -webkit-line-clamp: 3;
   text-align: justify;
   display: -webkit-box;
   word-wrap: break-word;
   -webkit-box-orient: vertical;
   max-height: 82px;
-  margin-bottom: 0;
+  margin-bottom: 1rem;
 }
 
 .scene5 {

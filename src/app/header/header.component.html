@@ -1,15 +1,26 @@
 <nav class="navbar navbar-expand">
   <div class="navbar-nav">
-    <div class="nav-item nav-link logo-link">
-      <img src="./assets/images/icons8-network-2-64.png" alt="" class="net-icon" routerLink="/">
-      <p class="head-text task-span" [ngClass]="url == '/home' ? 'task-span' : 'transition-task-span'">TASKERY</p>
+    <div class="d-flex align-items-center">
+      <div class="nav-item nav-link logo-link">
+        <img src="./assets/images/icons8-network-2-64.png" alt="" class="net-icon" routerLink="/">
+        <p class="head-text task-span" [ngClass]="url == '/home' ? 'task-span' : 'transition-task-span'">TASKERY</p>
+      </div>
+      <div class="nav-item" style="margin-left: 1rem;">
+        <button (click)="changeLanguage('en')" class="lang-btn"
+                [ngStyle]="{'color': currentLanguage == 'en' ? 'rgba(108,100,252,0.5)' : 'rgba(147, 147, 147, 0.5)'}">EN
+        </button>
+        <span style="color: rgba(147, 147, 147, 0.5);">/</span>
+        <button (click)="changeLanguage('ua')" class="lang-btn"
+                [ngStyle]="{'color': currentLanguage == 'ua' ? 'rgba(108,100,252,0.5)' : 'rgba(147, 147, 147, 0.5)'}">UA
+        </button>
+      </div>
     </div>
     <div class="nav-block" style="margin-right: 3rem;" *ngIf="currentUser.role != 'Admin'">
-      <a class="nav-item nav-link project-list" (click)="home()">Home</a>
-      <a class="nav-item nav-link project-list" id="projectList" (click)="projectList()">Project list</a>
-      <a class="nav-item nav-link report" (click)="scheduler()">Scheduler</a>
-      <a class="nav-item nav-link report" (click)="report()">Report</a>
-      <a class="nav-item nav-link project-list" style="margin-left: 4rem;" (click)="contactUs()">Contact Us</a>
+      <a class="nav-item nav-link project-list" (click)="home()">{{'home' | transloco}}</a>
+      <a class="nav-item nav-link project-list" id="projectList" (click)="projectList()">{{'project-list' | transloco}}</a>
+      <a class="nav-item nav-link report" (click)="scheduler()">{{'scheduler' | transloco}}</a>
+      <a class="nav-item nav-link report" (click)="report()">{{'report' | transloco}}</a>
+      <a class="nav-item nav-link project-list" style="margin-left: 4rem;" (click)="contactUs()">{{'contact' | transloco}}</a>
     </div>
     <div class="nav-block">
       <p style="margin: 0;padding: 0 1rem;font-size: 12px;line-height: 30px;color: #0d6efd;font-weight: 300;">
@@ -20,7 +31,7 @@
         <div ngbDropdownMenu aria-labelledby="dropdown" id="ngbDropdownMenu">
           <div class="px-3 py-3">
             <div class="mb-4 header">
-              <b style="font-size: 17px;">Account</b>
+              <b style="font-size: 17px;">{{'account' | transloco}}</b>
               <p style="margin-bottom: 0; font-size: 11px; color: #4650DD; font-weight: 600;">{{currentUserData.role}}</p>
             </div>
             <div class="mb-4">
@@ -30,18 +41,18 @@
             <div class="dropdown-divider"></div>
             <div class="mt-1 mb-1 settings-block">
               <button class="nav-item nav-link settings-btn" (click)="goToUserSettings()">
-                <img src="https://img.icons8.com/ios-glyphs/30/null/settings--v1.png" alt=""> User Settings
+                <img src="https://img.icons8.com/ios-glyphs/30/null/settings--v1.png" alt=""> {{'user-settings' | transloco}}
               </button>
             </div>
             <div class="mb-1" *ngIf="currentUserData.role == 'TeamMember'">
               <button class="nav-item nav-link settings-btn" (click)="goToNotifications()">
-                <img src="https://img.icons8.com/material/24/null/appointment-reminders--v1.png" alt=""> Notifications
+                <img src="https://img.icons8.com/material/24/null/appointment-reminders--v1.png" alt=""> {{'notifications' | transloco}}
               </button>
             </div>
             <div class="dropdown-divider"></div>
             <div class="mt-1">
               <button class="nav-item nav-link settings-btn" (click)="logout()">
-                <img src="https://img.icons8.com/ios-glyphs/30/null/exit.png" alt=""> Logout
+                <img src="https://img.icons8.com/ios-glyphs/30/null/exit.png" alt=""> {{'logout' | transloco}}
               </button>
             </div>
           </div>

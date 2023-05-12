@@ -4,10 +4,10 @@
       <div class="col-lg-6 px-lg-4">
         <div class="card">
           <div class="card-header px-lg-5">
-            <div class="card-heading text-primary">Taskery Register</div>
+            <div class="card-heading text-primary">Taskery {{'register' | transloco}}</div>
           </div>
           <div class="card-body" style="padding: 2rem!important;">
-            <h3 class="mb-4">Get started with Taskery</h3>
+            <h3 class="mb-4">{{'get-started-with' | transloco}} Taskery</h3>
             <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
               <div style="margin: -0.5rem auto 10px auto; text-align: center;">
                 <mat-button-toggle-group formControlName="role" #roleToggle="matButtonToggleGroup" multiple=false
@@ -28,56 +28,56 @@
               </div>
               <div class="form-floating mb-3">
                 <input class="form-control" formControlName="firstName" type="text"
-                       placeholder="First Name"
+                       placeholder="{{'first-name' | transloco}}"
                        [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" required>
-                <label>First Name</label>
+                <label>{{'first-name' | transloco}}</label>
               </div>
               <div class="form-floating mb-3">
                 <input class="form-control" formControlName="lastName" type="text"
-                       placeholder="Last Name"
+                       placeholder="{{'last-name' | transloco}}"
                        [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" required>
-                <label>Last Name</label>
+                <label>{{'last-name' | transloco}}</label>
               </div>
               <div class="form-floating mb-3">
                 <input class="form-control" formControlName="email" type="email"
                        placeholder="name@example.com"
                        [ngClass]="{ 'is-invalid': submitted && f.email.errors }" required>
-                <label>Email</label>
+                <label>{{'email' | transloco}}</label>
                 <mat-error class="error-message" *ngIf="f.email.errors && f.email.errors.email">
-                  Email must be valid
+                  {{'email-error' | transloco}}
                 </mat-error>
               </div>
               <div class="form-floating mb-3">
                 <input class="form-control" formControlName="password" type="password"
-                       placeholder="Password"
+                       placeholder="{{'password' | transloco}}"
                        [type]="fieldTextType ? 'text' : 'password'"
                        [ngClass]="{ 'is-invalid': submitted && f.password.errors }" required>
-                <label>Password</label>
+                <label>{{'password' | transloco}}</label>
                 <fa-icon [icon]="faIcon" (click)="toggleFieldTextType()"></fa-icon>
                 
                 <mat-error class="error-message" *ngIf="f.password.errors && f.password.errors.minlength">
-                  Password must be at least 6 characters long
+                  {{'password-length-error' | transloco}}
                   <br>
                 </mat-error>
                 <mat-error class="error-message" *ngIf="f.password.errors && f.password.errors.pattern">
-                  Your password must contain at least one uppercase, one lowercase, and one number
+                  {{'password-pattern-error' | transloco}}
                 </mat-error>
               </div>
               <div class="form-check mb-3" style="float: right;">
                 <input class="form-check-input" type="checkbox" formControlName="agree"
                        [ngClass]="{ 'is-invalid': submitted && f.agree.errors }" required>
-                <label class="form-check-label">I agree with the <a routerLink="/register"
+                <label class="form-check-label">{{'agree' | transloco}} <a routerLink="/register"
                                                                     href="/register">Terms &
                   Conditions</a></label>
               </div>
               <div class="form-group">
-                <button class="btn btn-primary" type="submit">Register</button>
+                <button class="btn btn-primary" type="submit">{{'register-submit' | transloco}}</button>
               </div>
             </form>
           </div>
           <div class="card-footer px-lg-5"
                style="padding-top: 0.5rem!important; padding-bottom: 0.5rem!important;">
-            <div class="text-sm text-muted">Already have an account? <a routerLink="/login" href="/login">Login</a>
+            <div class="text-sm text-muted">{{'have-acc' | transloco}} <a routerLink="/login" href="/login">{{'login' | transloco}}</a>
             </div>
           </div>
         </div>
@@ -85,9 +85,8 @@
       <div class="col-lg-6 col-xl-5 ms-xl-auto px-lg-4 text-center text-primary">
         <img src="./assets/images/the-importance-of-a-website-for-a-business-1768668%20(1).svg" alt=""
              class="business-img">
-        <h1 class="mb-4">Taskery.com <br class="d-none d-lg-inline">your free assistant.</h1>
-        <p class="lead text-muted" style="font-size: 1.1rem!important;">The best project management tool for
-          high quality development.</p>
+        <h2 class="mb-4">Taskery.com <br class="d-none d-lg-inline">{{'side-text' | transloco}}</h2>
+        <p class="lead text-muted" style="font-size: 1rem!important;">{{'side-undertext' | transloco}}</p>
       </div>
     </div>
   </div>

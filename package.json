@@ -28,6 +28,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@ng-bootstrap/ng-bootstrap": "^11.0.0",
+    "@ngneat/transloco": "^4.2.2",
     "@syncfusion/ej2-angular-charts": "^20.4.48",
     "@syncfusion/ej2-angular-kanban": "^19.4.38",
     "@syncfusion/ej2-angular-navigations": "^20.4.48",

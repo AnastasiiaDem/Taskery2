@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {jqxSchedulerComponent} from 'jqwidgets-ng/jqxscheduler';
 import {Subject, takeUntil} from 'rxjs';
 import {TaskService} from '../shared/services/task.service';
@@ -10,6 +10,7 @@ import {ColorPalette, RoleEnum} from '../shared/enums';
 import {TaskModel} from '../shared/models/task.model';
 import {DatePipe} from '@angular/common';
 import {EmailService} from '../shared/services/email.service';
+import {TranslocoService} from '@ngneat/transloco';
 
 
 @Component({
@@ -17,7 +18,7 @@ import {EmailService} from '../shared/services/email.service';
   templateUrl: './scheduler.component.html',
   styleUrls: ['./scheduler.component.scss']
 })
-export class SchedulerComponent implements OnInit, AfterViewInit, OnDestroy {
+export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   @ViewChild('schedulerReference', {static: false}) scheduler: jqxSchedulerComponent;
   private readonly unsubscribe: Subject<void> = new Subject();
@@ -39,6 +40,7 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnDestroy {
     employee: '',
     projectName: ''
   };
+  currentLang = 'en';
   selectedProject = null;
   AllIssues = true;
   projectsData: Array<Select2OptionData> = [];
@@ -106,14 +108,114 @@ export class SchedulerComponent implements OnInit, AfterViewInit, OnDestroy {
               private elementRef: ElementRef,
               private projectsService: ProjectsService,
               private emailService: EmailService,
+              private translocoService: TranslocoService,
               private datepipe: DatePipe) {
   }
   
   ngOnInit(): void {
+  
   }
   
-  ngAfterViewInit() {
+  ngAfterViewChecked() {
+    const dom: HTMLElement = this.elementRef.nativeElement;
+    const dayMap = {
+      'Monday': 'Понеділок',
+      'Tuesday': 'Вівторок',
+      'Wednesday': 'Середа',
+      'Thursday': 'Четвер',
+      'Friday': 'П`ятниця',
+      'Saturday': 'Субота',
+      'Sunday': 'Неділя',
+      'Понеділок': 'Monday',
+      'Вівторок': 'Tuesday',
+      'Середа': 'Wednesday',
+      'Четвер': 'Thursday',
+      'П`ятниця': 'Friday',
+      'Субота': 'Saturday',
+      'Неділя': 'Sunday'
+    };
+    const monthMap = {
+      'January': 'Січень',
+      'February': 'Лютий',
+      'March': 'Березень',
+      'April': 'Квітень',
+      'May': 'Травень',
+      'June': 'Червень',
+      'July': 'Липень',
+      'August': 'Серпень',
+      'September': 'Вересень',
+      'October': 'Жовтень',
+      'November': 'Листопад',
+      'December': 'Грудень',
+      'Січень': 'January',
+      'Лютий': 'February',
+      'Березень': 'March',
+      'Квітень': 'April',
+      'Травень': 'May',
+      'Червень': 'June',
+      'Липень': 'July',
+      'Серпень': 'August',
+      'Вересень': 'September',
+      'Жовтень': 'October',
+      'Листопад': 'November',
+      'Грудень': 'December'
+    };
+    const monthShortMap = {
+      'Jan': 'Січ',
+      'Feb': 'Лют',
+      'Mar': 'Бер',
+      'Apr': 'Квіт',
+      'May': 'Трав',
+      'Jun': 'Черв',
+      'Jul': 'Лип',
+      'Aug': 'Серп',
+      'Sep': 'Вер',
+      'Oct': 'Жовт',
+      'Nov': 'Лист',
+      'Dec': 'Груд',
+      'Січ': 'Jan',
+      'Лют': 'Feb',
+      'Бер': 'Mar',
+      'Квіт': 'Apr',
+      'Трав': 'May',
+      'Черв': 'Jun',
+      'Лип': 'Jul',
+      'Серп': 'Aug',
+      'Вер': 'Sep',
+      'Жовт': 'Oct',
+      'Лист': 'Nov',
+      'Груд': 'Dec'
+    };
+    
+    this.currentLang = this.translocoService.getActiveLang();
+    
+    dom.querySelectorAll('.jqx-grid-column-header').forEach(el => {
+      if (this.currentLang == 'ua') {
+        el.children[0].children[0].innerHTML = el.children[0].children[0].innerHTML.replace(/Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday/g, matched => dayMap[matched]);
+      } else {
+        el.children[0].children[0].innerHTML = el.children[0].children[0].innerHTML.replace(/Понеділок|Вівторок|Середа|Четвер|П`ятниця|Субота|Неділя/g, matched => this.getKeyByValue(dayMap, matched));
+      }
+    });
+    
+    dom.querySelectorAll('.jqx-scheduler-toolbar-details').forEach(el => {
+      if (this.currentLang == 'ua') {
+        el.innerHTML = el.innerHTML.replace(/January|February|March|April|May|June|July|August|September|October|November|December/g, matched => monthMap[matched]);
+      } else {
+        el.innerHTML = el.innerHTML.replace(/Січень|Лютий|Березень|Квітень|Травень|Червень|Липень|Серпень|Вересень|Жовтень|Листопад|Грудень/g, matched => this.getKeyByValue(monthMap, matched));
+      }
+    });
+    
+    dom.querySelectorAll('.jqx-scheduler-month-cell').forEach(el => {
+      if (this.currentLang == 'ua') {
+        el.innerHTML = el.innerHTML.replace(/Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec/g, matched => monthShortMap[matched]);
+      } else {
+        el.innerHTML = el.innerHTML.replace(/Січ|Лют|Бер|Квіт|Трав|Черв|Лип|Серп|Вер|Жовт|Лист|Груд/g, matched => this.getKeyByValue(monthShortMap, matched));
+      }
+    });
+  }
   
+  getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
   }
   
   ngOnDestroy() {

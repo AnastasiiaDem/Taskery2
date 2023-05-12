@@ -2,8 +2,8 @@
   <div class="main-content">
     <div class="description">
       <div class="main-text">
-        <p class="head-text">Hi, {{currentUser.firstName}} {{currentUser.lastName}}</p>
-        <p class="head-undertext">This is your Admin Page!</p>
+        <p class="head-text">{{'hi' | transloco}}, {{currentUser.firstName}} {{currentUser.lastName}}</p>
+        <p class="head-undertext">{{'admin-page' | transloco}}</p>
       </div>
       <!--      <div class="block1">-->
       <!--        <div class="info-wrapper">-->
@@ -12,7 +12,7 @@
       <!--        </div>-->
       <!--      </div>-->
       <div class="projects-wrapper w3-animate-opacity custom-table-responsive">
-        <h5 class="title">Queries</h5>
+        <h5 class="title">{{'queries' | transloco}}</h5>
         <div class="users-custom-table">
           <table class="custom-table" *ngIf="!!allRequests">
             <tbody>
@@ -22,7 +22,7 @@
               <td>{{req.firstName}} {{req.lastName}}</td>
               <td>
                 <a (click)="respond(req._id, sendContent)" class="btn corner">
-                  <span class="tooltiptext">respond to the request</span>
+                  <span class="tooltiptext">{{'respond-request' | transloco}}</span>
                   <mat-icon class="keyboard-tab">keyboard_tab
                   </mat-icon>
                 </a>
@@ -30,14 +30,14 @@
             </tr>
             </tbody>
           </table>
-          <h6 style="padding: 1rem;" *ngIf="!allRequests">No requests yet</h6>
+          <h6 style="padding: 1rem;" *ngIf="!allRequests">{{'no-req' | transloco}}</h6>
         </div>
       </div>
       
       <div class="projects-wrapper w3-animate-opacity users-custom-table-responsive custom-table-responsive">
         <div style="display: flex;align-items: center;justify-content: space-between;margin-bottom: 1rem;">
-          <h5 class="title">System Users</h5>
-          <h6 style="margin: 0;font-style: italic;font-size: 12px;">Number of users: {{numberOfUsers}}</h6>
+          <h5 class="title">{{'system-users' | transloco}}</h5>
+          <h6 style="margin: 0;font-style: italic;font-size: 12px;">{{'users-number' | transloco}}: {{numberOfUsers}}</h6>
         </div>
         <div class="mb-3" style="display: flex;align-items: center;padding: 0 1rem;">
           <ng-select2 [placeholder]="'search by'"
@@ -46,9 +46,9 @@
                       [data]="searchData">
           </ng-select2>
           <div class="form-group form-floating select-container">
-            <input class="form-control" id="myInput" type="text" placeholder="Search for user" style="height: 40px;"
+            <input class="form-control" id="myInput" type="text" placeholder="{{'search-user' | transloco}}" style="height: 40px;"
                    (keyup)="searchUser()">
-            <label>Search for user</label>
+            <label>{{'search-user' | transloco}}</label>
           </div>
         </div>
         <div class="users-custom-table">
@@ -56,13 +56,13 @@
             <thead>
             <tr>
               <th>#</th>
-              <th>Name</th>
-              <th>Role</th>
-              <th>Email</th>
+              <th>{{'first-name' | transloco}}</th>
+              <th>{{'role' | transloco}}</th>
+              <th>{{'email' | transloco}}</th>
               <!--            <th>Send email when</th>-->
-              <th>Send email when assigned to the project</th>
-              <th>Send email when get new task</th>
-              <th>Send email when task is updated</th>
+              <th>{{'email-assigned' | transloco}}</th>
+              <th>{{'email-new' | transloco}}</th>
+              <th>{{'email-updated' | transloco}}</th>
             </tr>
             </thead>
             <tbody>
@@ -104,17 +104,17 @@
     <div class="row align-items-center">
       <div class="card-body" style="padding: 2rem;">
         <div class="form-floating title-block">
-          Respond to the Request
+          {{'respond-request' | transloco}}
         </div>
         <hr class="line">
         <div class="body-content">
           <div class="left-block">
             <div class="form-floating">
-              <p>NAME</p>
+              <p>{{'first-name-uc' | transloco}}</p>
               <span>{{respondData.firstName}} {{respondData.lastName}}</span>
             </div>
             <div class="form-floating">
-              <p>EMAIL</p>
+              <p>{{'email-uc' | transloco}}</p>
               <span>{{respondData.email}}</span>
             </div>
           </div>
@@ -126,7 +126,7 @@
                               [(ngModel)]="respondMsg"
                               [ngClass]="{ 'is-invalid': submitted && respondMsg == ''}" required>
                     </textarea>
-              <label>Write your respond here</label>
+              <label>{{'write-respond' | transloco}}</label>
             </div>
           </div>
         </div>
@@ -137,10 +137,10 @@
         <!--        </button>-->
         <div class="action-btns">
           <button class="update-task" (click)="onSubmit(respondData, modal, 'respond')">
-            Respond
+            {{'respond' | transloco}}
           </button>
           <button class="delete-task" (click)="onSubmit(respondData, modal, 'delete')">
-            Delete
+            {{'delete' | transloco}}
           </button>
         </div>
       </div>

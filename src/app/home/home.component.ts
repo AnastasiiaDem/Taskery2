@@ -35,6 +35,7 @@ export class HomeComponent implements OnInit {
   upcoming;
   allProjects = [];
   
+  
   constructor(private spinner: NgxSpinnerService,
               public taskService: TaskService,
               public userService: UserService,

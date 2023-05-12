@@ -1,7 +1,7 @@
 <div style="margin-top: 3rem;">
   <div class="form-group form-floating mb-3 select-container"
        style="display: flex;justify-content: space-between;z-index: 1;align-items: flex-end;margin: 0 4rem;">
-    <ng-select2 [placeholder]="'Project Filter'"
+    <ng-select2 [placeholder]="'project-filter' | transloco"
                 [value]="selectedProject"
                 [width]="'300px'"
                 [data]="projectsData"
@@ -11,7 +11,7 @@
     
     <button *ngIf="currentUser.role != 'ProjectManager'" [ngClass]="AllIssues ? 'all-tasks' : 'my-tasks'"
             style="font-size: 11px; height: 22px; margin-right: 1rem;" (click)="showIssues(selectedProject)">
-      All Issues
+      {{'all-issues' | transloco}}
     </button>
   </div>
   <div style="margin-top: -2rem;">
@@ -49,19 +49,19 @@
         <div class="body-content">
           <div class="left-block">
             <div class="form-floating">
-              <p>PROJECT</p>
+              <p>{{'project-uc' | transloco}}</p>
               <span>{{previewData.projectName}}</span>
             </div>
             <div class="form-floating">
-              <p>STATUS</p>
+              <p>{{'status-uc' | transloco}}</p>
               <span>{{previewData.status}}</span>
             </div>
             <div class="form-floating">
-              <p>DEADLINE</p>
+              <p>{{'deadline-uc' | transloco}}</p>
               <span>{{previewData.deadline | date: 'YYYY-MM-dd'}}</span>
             </div>
             <div class="form-floating">
-              <p>ASSIGNEE</p>
+              <p>{{'assignee-uc' | transloco}}</p>
               <span>{{previewData.employee}}</span>
             </div>
           </div>
