@@ -119,5 +119,11 @@
   "from": "from",
   "to": "to",
   "title": "Title",
-  "deadline-date": "Deadline date"
+  "deadline-date": "Deadline date",
+  "To Do": "To Do",
+  "In Progress": "In Progress",
+  "On Review": "On Review",
+  "Done": "Done",
+  "notice": "If you are going to create an account for personal (individual) use, in order to get a full set of features, you should choose the Project Manager role",
+  "rights": "© All rights reserved."
 }

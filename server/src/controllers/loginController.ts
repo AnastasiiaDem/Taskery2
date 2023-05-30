@@ -10,12 +10,20 @@ const {ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET} = process.env;
 const loginUser = async (req: express.Request, res: express.Response) => {
   const {email, password} = req.body;
   
-  if (!email || !password) return res.status(400).json({message: `Incorrect password or email`});
+  if (!email || !password) return res.status(400).json({
+    message: {
+      messageEn: `Incorrect password or email`,
+      messageUa: `Пароль чи електронна пошта є неправильними`
+    }
+  });
   
   const foundUser = await User.findOne({email: email}).exec();
   
   
-  if (!foundUser) return res.status(409).json({message: `Incorrect password or email`});
+  if (!foundUser) return res.status(409).json({ message: {
+      messageEn: `Incorrect password or email`,
+      messageUa: `Пароль чи електронна пошта є неправильними`
+    }});
   
   // const validPassword = await bcrypt.compare(password, foundUser.password);
   

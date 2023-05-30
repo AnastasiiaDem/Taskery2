@@ -53,7 +53,7 @@
               <!--              [ngStyle]="{'width': (project.status == 'Done' || project.status == 'To Do') ? '25%' : '40%'}"-->
               <div class="info-wrapper">
                 <p>{{'status' | transloco}}</p>
-                <p class="info-data">{{project.status}}</p>
+                <p class="info-data">{{project.status | transloco}}</p>
               </div>
               <img src='{{ "./assets/images/" + statusEllipse(project) + ".png" }}' alt="">
             </div>

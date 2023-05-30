@@ -116,7 +116,9 @@ export class HomeComponent implements OnInit {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(res => {
           this.myTasks = {overdue: [], today: [], upcoming: []};
-          res.tasks.filter(t => t.employeeId == this.currentUser.id && t.status !== StatusEnum.done)
+          res.tasks.filter(t => {
+              return t.employeeId == this.currentUser.id && t.status !== StatusEnum.done && this.allProjects.find(p => p._id == t.projectId).status != StatusEnum.done
+            })
             .forEach(task => {
               if (!!task && task.deadline < this.datepipe.transform(this.currentDate, 'YYYY-MM-dd')) {
                 this.myTasks.overdue.push({

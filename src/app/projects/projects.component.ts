@@ -22,6 +22,7 @@ import ImageCompress from 'quill-image-compress';
 import Emoji from 'quill-emoji';
 import Mention from 'quill-mention';
 import {AIService} from '../shared/services/ai.service';
+import { TranslocoService } from '@ngneat/transloco';
 
 let Quill: any = QuillNamespace;
 
@@ -58,6 +59,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   };
   previewData;
   submitted = false;
+  descriptionText = '';
   
   atValues = [];
   
@@ -115,9 +117,9 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
         }
       },
     },
-    'emoji-toolbar': true,
+    'emoji-toolbar': false,
     'emoji-textarea': false,
-    'emoji-shortname': true,
+    'emoji-shortname': false,
   };
   
   
@@ -132,6 +134,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
               private toastr: ToastrService,
               private emailService: EmailService,
               private _focusMonitor: FocusMonitor,
+              private translocoService: TranslocoService,
               private spinner: NgxSpinnerService) {
   }
   
@@ -211,6 +214,31 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
         $(el).css({'background': 'rgb(58 224 104)'});
       }
     });
+  
+  
+    const statusMap = {
+      'To Do': 'Зробити',
+      'In Progress': 'У Процесі',
+      'On Review': 'На Перевірці',
+      'Done': 'Виконано',
+      'Зробити': 'To Do',
+      'У Процесі': 'In Progress',
+      'На Перевірці': 'On Review',
+      'Виконано': 'Done'
+    };
+    
+  
+    dom.querySelectorAll('.status-text').forEach(el => {
+      if (this.translocoService.getActiveLang() == 'ua') {
+        el.innerHTML = el.innerHTML.replace(/To Do|In Progress|On Review|Done/g, matched => statusMap[matched]);
+      } else {
+        el.innerHTML = el.innerHTML.replace(/Зробити|У Процесі|На Перевірці|Виконано/g, matched => this.getKeyByValue(statusMap, matched));
+      }
+    });
+  }
+  
+  getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
   }
   
   ngOnDestroy() {
@@ -482,10 +510,12 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   writeBriefAI() {
     if (this.projectForm.value.projectName != '') {
       this.spinner.show();
-      this.aiService.getAIresponse('Write a specific brief for the project(purpose, functionality, technical requirements): ' + this.projectForm.value.projectName)
+      this.aiService.getAIproject((this.translocoService.getActiveLang() == 'ua' ?
+          'Напишіть загальний опис на початок проєкту, де є мета. Назва проєкту: '
+          : 'Write a brief with a purpose for the start of the project. Project title: ') + this.projectForm.value.projectName)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(response => {
-            this.projectForm.controls['description'].setValue(response.choices[0].text);
+            this.projectForm.controls['description'].setValue(response.choices[0].message.content);
             this.spinner.hide();
           },
           error => {
@@ -498,21 +528,29 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   calcBudgetAI() {
     if (this.projectForm.value.projectName != '') {
       this.spinner.show();
-      const assignedUsersNum = this.projectForm.value.assignedUsers.length > 0 ? this.projectForm.value.assignedUsers.length : '1';
-      this.aiService.getAIresponse('What is the estimated cost for the project (THE OUTPUT MUST CONTAIN ONLY ONE NUMBER WITHOUT TEXT, between 1000 and 50000), based on number of employees: ' + assignedUsersNum + ';\nproject name: ' + this.projectForm.value.projectName + ';\ndescription: ' + this.projectForm.value.description)
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe(response => {
-            this.projectForm.controls['budget'].setValue(parseInt(response.choices[0].text.replace(/[^0-9]/g, '')));
-            this.spinner.hide();
-          },
-          error => {
-            console.log(error);
-            this.spinner.hide();
-          });
+        this.aiService.getAIbudget(
+            this.translocoService.getActiveLang() == 'ua' ?
+              ('ТВОЯ ВІДПОВІДЬ ПОВИННА МІСТИТИ ЛИШЕ ОДНЕ ЧИСЛО БЕЗ ТЕКСТУ. Яка мінімальна вартість проекту на місяць в доларах, включно із заробітною платою та технічними витратами, обов`язково враховуючи кількість працівників (де зарплата одного приблизно 1500 доларів), також орієнтуватись на назву та опис проєкту? де кількості працівників: ' + this.projectForm.value.assignedUsers.length + ';\nназва проєкту: ' + this.projectForm.value.projectName + ';\nопис: ' + this.descriptionText)
+              : ('YOUR RESPOND HAVE TO CONTAIN ONLY ONE NUMBER WITHOUT TEXT. What is the minimum cost of the project per month, including salaries and technical expenses, based on the number of employees, project name and description? where number of employees: ' + this.projectForm.value.assignedUsers.length + ';\nproject name: ' + this.projectForm.value.projectName + ';\nDescription: ' + this.descriptionText)
+          )
+          .pipe(takeUntil(this.unsubscribe))
+          .subscribe(response => {
+              this.projectForm.controls['budget'].setValue(parseInt(response.choices[0].message.content.replace(/[^0-9]/g, '')));
+              this.spinner.hide();
+            },
+            error => {
+              console.log(error);
+              this.spinner.hide();
+            });
     }
   }
   
   budgetChanged(event) {
     this.projectForm.value.budget = parseInt(this.projectForm.value.budget.replace(/[^0-9]/g, ''));
+  }
+  
+  contentChanged(event) {
+    this.projectForm.value.description = event.html;
+    this.descriptionText = event.text;
   }
 }

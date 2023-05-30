@@ -30,12 +30,8 @@ export const sendRequest = async (req: express.Request, res: express.Response) =
 };
 
 export const sendRespond = async (req: express.Request, res: express.Response) => {
-  const {userId, firstName, lastName, email, description, respond} = req.body;
+  const {firstName, lastName, email, description, respond} = req.body;
   
-  const foundUser = await User.findOne({_id: userId}).exec();
-  
-  
-  if (!foundUser) return res.status(409).json({message: `No user`});
   
   let html = '';
   let subject = '';

@@ -97,10 +97,10 @@
                 (dragStart)="dropStart($event)"
                 (dragStop)="drop($event)">
       <e-columns>
-        <e-column headerText='TO DO' keyField='To Do'></e-column>
-        <e-column headerText='IN PROGRESS' keyField='In Progress'></e-column>
-        <e-column headerText='ON REVIEW' keyField='On Review'></e-column>
-        <e-column headerText='DONE' keyField='Done'></e-column>
+        <e-column headerText='{{getHeaderStyle("To Do" | transloco)}}' keyField='To Do'></e-column>
+        <e-column headerText='{{getHeaderStyle("In Progress" | transloco)}}' keyField='In Progress'></e-column>
+        <e-column headerText='{{getHeaderStyle("On Review" | transloco)}}' keyField='On Review'></e-column>
+        <e-column headerText='{{getHeaderStyle("Done" | transloco)}}' keyField='Done'></e-column>
       </e-columns>
       <ng-template #cardSettingsTemplate let-data>
         <div class='e-card-content'>
@@ -191,7 +191,7 @@
           <div class="left-block">
             <div class="form-floating">
               <p>{{'status-uc' | transloco}}</p>
-              <span>{{previewData.status}}</span>
+              <span>{{previewData.status | transloco}}</span>
             </div>
             <div class="form-floating">
               <p>{{'deadline-uc' | transloco}}</p>

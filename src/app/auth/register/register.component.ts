@@ -10,6 +10,7 @@ import {Subject, takeUntil} from 'rxjs';
 import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 import {ToastrService} from 'ngx-toastr';
 import {RoleEnum} from '../../shared/enums';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-register',
@@ -31,6 +32,7 @@ export class RegisterComponent implements OnInit {
               private toastr: ToastrService,
               private authenticationService: AuthService,
               private userService: UserService,
+              private translocoService: TranslocoService,
               private alertService: AlertService) {
     if (this.authenticationService.currentUserValue) {
       this.router.navigate(['/home']);
@@ -102,6 +104,8 @@ export class RegisterComponent implements OnInit {
       
       this.loading = true;
       
+      const currentLang = this.translocoService.getActiveLang();
+      
       this.userService.addUser(userObject)
         .pipe(
           takeUntil(this.unsubscribe),
@@ -110,11 +114,11 @@ export class RegisterComponent implements OnInit {
         .subscribe(
           data => {
             this.submitted = false;
-            this.toastr.success('Registration successful');
+            this.toastr.success( currentLang == 'ua' ? 'Користувача успішно зареєстровано' : 'Registration successful');
             this.router.navigate(['/login']);
           },
           err => {
-            this.toastr.error(err);
+            this.toastr.error(currentLang == 'ua' ? err?.messageUa : err?.messageEn);
             this.loading = false;
           });
     }, 1000);

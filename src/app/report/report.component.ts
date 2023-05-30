@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {TaskService} from '../shared/services/task.service';
 import {finalize, Subject, takeUntil} from 'rxjs';
 import {ProjectModel} from '../shared/models/project.model';
@@ -15,6 +15,8 @@ import {AlertService} from '../shared/services/alert.service';
 import {ToastrService} from 'ngx-toastr';
 import {UserService} from '../shared/services/user.service';
 import {DatePipe} from '@angular/common';
+import {TranslocoService} from '@ngneat/transloco';
+import * as $ from 'jquery';
 
 
 export type barChartOptions = {
@@ -56,7 +58,7 @@ colorValue;
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.scss']
 })
-export class ReportComponent implements OnInit, OnDestroy {
+export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
   @ViewChild(BaseChartDirective) pieChart: BaseChartDirective;
@@ -97,6 +99,7 @@ export class ReportComponent implements OnInit, OnDestroy {
               private datepipe: DatePipe,
               private elementRef: ElementRef,
               private userService: UserService,
+              private translocoService: TranslocoService,
               private spinner: NgxSpinnerService) {
   }
   
@@ -104,6 +107,34 @@ export class ReportComponent implements OnInit, OnDestroy {
     this.spinner.show();
     this.getCurrentUser();
     this.taskAndProjectData();
+  }
+  
+  ngAfterViewChecked() {
+    const dom: HTMLElement = this.elementRef.nativeElement;
+   
+    const statusMap = {
+      'To Do': 'Зробити',
+      'In Progress': 'У Процесі',
+      'On Review': 'На Перевірці',
+      'Done': 'Виконано',
+      'Зробити': 'To Do',
+      'У Процесі': 'In Progress',
+      'На Перевірці': 'On Review',
+      'Виконано': 'Done'
+    };
+    
+    
+    dom.querySelectorAll('.apexcharts-legend-text').forEach(el => {
+      if (this.translocoService.getActiveLang() == 'ua') {
+        el.innerHTML = el.innerHTML.replace(/To Do|In Progress|On Review|Done/g, matched => statusMap[matched]);
+      } else {
+        el.innerHTML = el.innerHTML.replace(/Зробити|У Процесі|На Перевірці|Виконано/g, matched => this.getKeyByValue(statusMap, matched));
+      }
+    });
+  }
+  
+  getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
   }
   
   ngOnDestroy(): void {
@@ -259,7 +290,7 @@ export class ReportComponent implements OnInit, OnDestroy {
         labels: ['To Do', 'In Progress', 'On Review', 'Done'],
         title: {
           align: 'left',
-          text: 'Task Status %',
+          text: this.translocoService.getActiveLang() == 'ua' ? 'Статус завдань %' : 'Task Status %',
           offsetY: -5,
           style: {
             fontSize: '20px',
@@ -348,7 +379,7 @@ export class ReportComponent implements OnInit, OnDestroy {
           colors: ['#fff']
         },
         title: {
-          text: 'Employees Task Status %',
+          text: this.translocoService.getActiveLang() == 'ua' ? 'Статус завдань працівників %' : 'Employees Task Status %',
           offsetY: 16,
           style: {
             fontSize: '20px',
@@ -531,11 +562,10 @@ export class ReportComponent implements OnInit, OnDestroy {
     this.emailService.sendEmail(this.currentUser._id, project, '', this.report, 'report')
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(response => {
-          console.log(response.message);
-          this.toastr.success(response.message);
+        debugger
+          this.toastr.success(this.translocoService.getActiveLang() == 'ua' ? response.message.messageUa : response.message.messageEn);
         },
         error => {
-          console.log(error);
           this.toastr.error(error);
         });
   }

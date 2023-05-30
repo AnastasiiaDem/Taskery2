@@ -169,7 +169,7 @@ export class ContactComponent implements OnInit {
                 lastName: this.currentUserData.lastName,
                 description: ''
               });
-            this.toastr.success('Request was sent successfully');
+            this.toastr.success(this.currentLanguage == 'ua' ? 'Запит був успішно надісланий' : 'Request was sent successfully');
           },
           err => {
             this.toastr.error(err);

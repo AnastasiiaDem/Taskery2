@@ -139,7 +139,12 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
       if (err) {
         return res.status(400).json({message: 'An error has occurred'});
       }
-      return res.status(200).json({message: 'The email was sent successfully'});
+      return res.status(200).json({
+        message: {
+          messageEn: `The email was sent successfully`,
+          messageUa: `Звіт був успішно надісланий на вашу електронну пошту`
+        }
+      });
     });
   });
 };

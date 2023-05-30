@@ -4,25 +4,21 @@ import express from 'express';
 import Project from '../model/ProjectModel';
 import mongoose from 'mongoose';
 import Task from '../model/TaskModel';
-
+//додавання проєкту в бд
 export const createProject = async (req: express.Request, res: express.Response) => {
   const {projectName, description, status, assignedUsers, createdAt, updatedAt, budget} = req.body;
   
   const cookies = req.cookies;
-  
   if (!cookies?.token) return res.status(401).json({error: 'error no cookies'});
   
   const refreshToken = cookies.token;
   const foundToken = await Token.findOne({refreshToken: refreshToken}).exec();
   const foundUser = await User.findById(foundToken?.userId);
-  
   if (!foundUser) return res.status(403).json({error: 'error user not found'});
-  
   if (!projectName || !description || !status || !createdAt)
     return res.status(400).json({message: `Properties are required`});
   
   const id = new mongoose.Types.ObjectId();
-  
   const newProject = new Project({
     _id: id,
     userId: foundUser._id,
@@ -34,7 +30,6 @@ export const createProject = async (req: express.Request, res: express.Response)
     updatedAt: updatedAt,
     budget: budget
   });
-  
   newProject.save((err, data) => {
     if (err) {
       return res.status(500).json({error: err});
@@ -42,21 +37,18 @@ export const createProject = async (req: express.Request, res: express.Response)
     return res.status(200).json(data);
   });
 };
-
+//оновлення проєкту в бд
 export const updateProject = async (req: express.Request, res: express.Response) => {
   const id = req.params.id;
-  
   !id && res.status(400).json({error: 'no id'});
   
   const {projectName, description, status, assignedUsers, createdAt, updatedAt, budget} = req.body;
-  
   const cookies = req.cookies;
   if (!cookies?.token) return res.status(401).json({error: 'error no cookies'});
   
   const refreshToken = cookies.token;
   const foundToken = await Token.findOne({refreshToken: refreshToken}).exec();
   const foundUser = await User.findById(foundToken?.userId);
-  
   if (!foundUser) return res.status(403).json({error: 'error user not found'});
   
   if (!projectName || !description || !status || !createdAt)
@@ -71,32 +63,26 @@ export const updateProject = async (req: express.Request, res: express.Response)
     ...(updatedAt ? {updatedAt: updatedAt} : {}),
     ...(budget ? {budget: budget} : {}),
   };
-  
   try {
     const result = await Project.findByIdAndUpdate(id, update, {new: true});
-    
     res.status(200).json({message: 'Project is updated'});
   } catch (error: any) {
     console.log(error);
     res.status(400).json({error: error});
   }
 };
-
+//видалення проєкту з бд
 export const deleteProject = async (req: express.Request, res: express.Response) => {
   const id = req.params.id;
-  
   !id && res.status(400).json({error: 'no id'});
   
   const cookies = req.cookies;
-  
   if (!cookies?.token) return res.status(401).json({error: 'error no cookies'});
   
   const refreshToken = cookies.token;
   const foundToken = await Token.findOne({refreshToken: refreshToken}).exec();
   const foundUser = await User.findById(foundToken?.userId);
-  
   if (!foundUser) return res.status(403).json({error: 'error user not found'});
-  
   try {
     const result = await Project.findByIdAndDelete(id);
     const result2 = await Task.deleteMany({projectId: id});
@@ -105,49 +91,41 @@ export const deleteProject = async (req: express.Request, res: express.Response)
     res.status(400).json({error: error});
   }
 };
-
+//отримання списку усіх проєктів з бд
 export const getProjects = async (req: express.Request, res: express.Response) => {
   const cookies = req.cookies;
-  
   if (!cookies?.token) return res.status(401).json({error: 'error no cookies'});
   
   const refreshToken = cookies.token;
   const foundToken = await Token.findOne({refreshToken: refreshToken}).exec();
   const foundUser = await User.findById(foundToken?.userId);
-  
   if (!foundUser) return res.status(403).json({error: 'error user not found'});
   
   try {
     const projects = await Project.find({});
-    
     if (projects.length == 0) return res.status(400).json({message: 'No content'});
-    
     res.status(200).json({projects: projects});
   } catch (error) {
     console.log(error);
     res.status(400).json({error: error});
   }
 };
-
+//отримання даних поточного проєкту з бд
 export const getCurrentProject = async (req: express.Request, res: express.Response) => {
   const id = req.params.id;
-  
   !id && res.status(400).json({error: 'no id'});
   
   const cookies = req.cookies;
-  
   if (!cookies?.token) return res.status(401).json({error: 'error no cookies'});
   
   const refreshToken = cookies.token;
   const foundToken = await Token.findOne({refreshToken: refreshToken}).exec();
   const foundUser = await User.findById(foundToken?.userId);
-  
   if (!foundUser) return res.status(403).json({error: 'error user not found'});
   
   try {
     const project = await Project.findById(id);
     if (!project) return res.status(400).json({message: 'No content'});
-    
     res.status(200).json(project);
   } catch (error) {
     console.log(error);

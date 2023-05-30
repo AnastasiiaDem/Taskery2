@@ -69,7 +69,9 @@
               <span class="tooltiptemplate">{{'desc-ai' | transloco}}</span>
             </p>
             <quill-editor class="form-control" style="padding: 1rem .75rem; height: 150px;"
+                          format="html"
                           formControlName="description" placeholder="{{'desc' | transloco}}"
+                          (onEditorChanged)="contentChanged($event)"
                           [modules]="quillConfig"></quill-editor>
           </div>
           <div *ngIf="addProjectFlag == false" class="form-floating right-field" style="margin-left: 0 !important;">
@@ -127,7 +129,7 @@
           <div class="left-block">
             <div class="form-floating">
               <p>{{'status-uc' | transloco}}</p>
-              <span>{{previewData.status}}</span>
+              <span>{{previewData.status | transloco}}</span>
             </div>
             <div class="form-floating">
               <p>{{'сreated-uc' | transloco}}</p>
