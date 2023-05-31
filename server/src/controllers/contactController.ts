@@ -37,7 +37,7 @@ export const sendRespond = async (req: express.Request, res: express.Response) =
   let subject = '';
   
   subject = 'The Respond To Your Request // Taskery.com';
-  
+
   html = '<style>' +
     '.email-text {display: flex; align-items: flex-start; justify-content: flex-start;flex-direction: column; width: 500px;}' +
     '</style>' +
@@ -47,6 +47,18 @@ export const sendRespond = async (req: express.Request, res: express.Response) =
     '    <p><u>Your request was</u>: ' + description + '</p>\n' +
     '    <p>RESPOND: <b>' + respond + '</b></p>\n' +
     '  </div>';
+  
+  // subject = 'Відповідь на ваш запит // Taskery.com';
+  //
+  // html = '<style>' +
+  //   '.email-text {display: flex; align-items: flex-start; justify-content: flex-start;flex-direction: column; width: 500px;}' +
+  //   '</style>' +
+  //   '    <div class="email-text" style="font-size: 15px;"> \n' +
+  //   '    <p>Добрий день, <b style="font-size: 20px;">' + firstName + ' ' + lastName + '</b></p>\n' +
+  //   '    <p style="font-style: italic; text-align: center;">Дякую за звернення. <b style="color: rgb(76 126 253) !important;">Taskery.com</b></p>\n' +
+  //   '    <p><u>Ваш запит</u>: ' + description + '</p>\n' +
+  //   '    <p>ВІДПОВІДЬ: <b>' + respond + '</b></p>\n' +
+  //   '  </div>';
   
   
   return new Promise<any>((resolve, reject) => {

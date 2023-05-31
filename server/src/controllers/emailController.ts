@@ -102,6 +102,86 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
     
   }
   
+  // if (content == 'task') {
+  //   subject = 'Нове завдання // Taskery.com';
+  //
+  //   html = '<style>' +
+  //     '.email-text {display: flex; align-items: flex-start; justify-content: flex-start;flex-direction: column; width: 500px;}' +
+  //     '</style>' +
+  //     '    <div class="email-text" style="font-size: 15px;"> \n' +
+  //     '    <p>Добрий день, <b style="font-size: 20px;">' + foundUser.firstName + ' ' + foundUser.lastName + '</b></p>\n' +
+  //     '    <p style="font-style: italic; text-align: center;">Вам було додано нове завдання на сайті <b style="color: rgb(76 126 253) !important;">Taskery.com</b></p>\n' +
+  //     '    <p>Назва проєкту: <b>' + project.projectName + '</b></p>\n' +
+  //     '    <p>Завдання: <b>' + task.title + '</b></p>\n' +
+  //     '    <p style="text-align: left;">Опис: <br><p style="margin-left: 50px;">' + task.description + '</p></p>\n' +
+  //     '    <p>Зробити до: <b>' + task.deadline + '</b></p>\n' +
+  //     '  </div>';
+  //
+  // } else if (content == 'taskUpdate') {
+  //   subject = 'Зміни у завданні // Taskery.com';
+  //
+  //   html = '<style>' +
+  //     '.email-text {display: flex; align-items: flex-start; justify-content: flex-start;flex-direction: column; width: 500px;}' +
+  //     '</style>' +
+  //     '    <div class="email-text" style="font-size: 15px;"> \n' +
+  //     '    <p>Добрий день, <b style="font-size: 20px;">' + foundUser.firstName + ' ' + foundUser.lastName + '</b></p>\n' +
+  //     '    <p style="font-style: italic; text-align: center;">Ваше завдання було оновлено на сайті <b style="color: rgb(76 126 253) !important;">Taskery.com</b></p>\n' +
+  //     '    <p>Назва проєкту: <b>' + project.projectName + '</b></p>\n' +
+  //     '    <p>Завдання: <b>' + task.title + '</b></p>\n' +
+  //     '    <p>Статус: <b>' + task.status + '</b></p>\n' +
+  //     '    <p style="text-align: left;">Опис: <br><p style="margin-left: 50px;">' + task.description + '</p></p>\n' +
+  //     '    <p>Зробити до: <b>' + task.deadline + '</b></p>\n' +
+  //     '  </div>';
+  //
+  // } else if (content == 'report') {
+  //   subject = 'Звіт // Taskery.com';
+  //
+  //   html = '<style>' +
+  //     '.email-text {display: flex; align-items: flex-start; justify-content: flex-start;flex-direction: column; width: 500px;}' +
+  //     '</style>' +
+  //     '    <div class="email-text" style="font-size: 15px;"> \n' +
+  //     '    <p>Добрий день, <b style="font-size: 20px;">' + foundUser.firstName + ' ' + foundUser.lastName + '</b></p>\n' +
+  //     '    <p style="font-style: italic; text-align: center;">Ось звіт щодо вашого проєкту на сайті <b style="color: rgb(76 126 253) !important;">Taskery.com</b></p>\n' +
+  //     '    <p>Назва проєкту: <b>' + project.projectName + '</b></p>\n' +
+  //     '    <p>Статус: <b>' + report.status + '</b></p>\n' +
+  //     '    <p>Початок проєкту: <b>' + report.projectStart + '</b></p>\n' +
+  //     '    <p>Загальна кількість завдань: <b>' + report.numberOfTasks + '</b></p>\n' +
+  //     '    <p>Кількість прострочених завдань: <b>' + report.overdueTasks + '</b></p>\n' +
+  //     '  </div>';
+  //
+  // } else if (content == 'mention') {
+  //   subject = 'Згадка // Taskery.com';
+  //
+  //   html = '<style>' +
+  //     '.email-text {display: flex; align-items: flex-start; justify-content: flex-start;flex-direction: column; width: 500px;}' +
+  //     '</style>' +
+  //     '    <div class="email-text" style="font-size: 15px;"> \n' +
+  //     '    <p>Добрий день, <b style="font-size: 20px;">' + foundUser.firstName + ' ' + foundUser.lastName + '</b></p>\n' +
+  //     '    <p style="font-style: italic; text-align: center;">Вас було згадано у завданні на сайті <b style="color: rgb(76 126 253) !important;">Taskery.com</b></p>\n' +
+  //     '    <p>Назва проєкту: <b>' + project.projectName + '</b></p>\n' +
+  //     '    <p>Завдання: <b>' + task.title + '</b></p>\n' +
+  //     '    <p>Статус: <b>' + task.status + '</b></p>\n' +
+  //     '    <p style="text-align: left;">Опис: <br><p style="margin-left: 50px;">' + task.description + '</p></p>\n' +
+  //     '    <p>Зробити до: <b>' + task.deadline + '</b></p>\n' +
+  //     '  </div>';
+  //
+  // } else if (content == 'project') {
+  //   subject = 'Новий проєкт // Taskery.com';
+  //
+  //   html = '<style>' +
+  //     '.email-text {display: flex; align-items: flex-start; justify-content: flex-start;flex-direction: column; width: 500px;}' +
+  //     '</style>' +
+  //     '    <div class="email-text" style="font-size: 15px;"> \n' +
+  //     '    <p>Добрий день, <b style="font-size: 20px;">' + foundUser.firstName + ' ' + foundUser.lastName + '</b></p>\n' +
+  //     '    <p style="font-style: italic; text-align: center;">Вас було назначено на новий проєкт на сайті <b style="color: rgb(76 126 253) !important;">Taskery.com</b></p>\n' +
+  //     '    <p>Назва проєкту: <b>' + project.projectName + '</b></p>\n' +
+  //     '    <p style="text-align: left;">Опис: <br><p style="margin-left: 50px;">' + project.description + '</p></p>\n' +
+  //     '    <p>Статус: <b>' + project.status + '</b></p>\n' +
+  //     '    <p>Усі назначені розробники на цей проєкт: <p style="margin-left: 50px;">' + assignedList + '</p></p>\n' +
+  //     '  </div>';
+  //
+  // }
+  
   
   return new Promise<any>((resolve, reject) => {
     var transporter = nodemailer.createTransport({
