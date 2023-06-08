@@ -24,7 +24,6 @@ import * as QuillNamespace from 'quill';
 import ImageCompress from 'quill-image-compress';
 import Emoji from 'quill-emoji';
 import Mention from 'quill-mention';
-import {Configuration, OpenAIApi} from 'openai';
 import {AIService} from '../shared/services/ai.service';
 import {TranslocoService} from '@ngneat/transloco';
 
@@ -87,12 +86,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   initialStatus;
   previewData;
   submitted = false;
-
-  configuration = new Configuration({
-    apiKey: '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',
-  });
   
-  openai = new OpenAIApi(this.configuration);
   aiResponse: any;
   aiData: any = '';
   
