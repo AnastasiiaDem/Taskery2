@@ -5,14 +5,14 @@
       <div class="col-md-8 col-sm-8 text-center text-primary">
         <div class="card card2">
           <div class="card-body" style="padding: 2rem!important; text-align: left; color: #212529; font-size: 20px;">
-            <p>Send me email notification when:</p>
+            <p>{{'send-when' | transloco}}:</p>
             <section>
               <mat-slide-toggle
                   color="primary"
                   labelPosition="before"
                   [checked]="sendAssignedEmail"
                   (change)="toggleNotification($event, 'sendAssignedEmail')">
-                I am assigned to the project
+                {{'i-assigned' | transloco}}
               </mat-slide-toggle>
             </section>
             <section>
@@ -21,7 +21,7 @@
                   labelPosition="before"
                   [checked]="sendTaskEmail"
                   (change)="toggleNotification($event, 'sendTaskEmail')">
-                I get new task
+                {{'i-new' | transloco}}
               </mat-slide-toggle>
             </section>
             <section>
@@ -30,7 +30,7 @@
                   labelPosition="before"
                   [checked]="sendTaskOverdueEmail"
                   (change)="toggleNotification($event, 'sendTaskOverdueEmail')">
-                My task is updated
+                {{'i-updated' | transloco}}
               </mat-slide-toggle>
             </section>
           </div>

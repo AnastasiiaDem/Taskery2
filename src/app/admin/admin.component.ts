@@ -11,6 +11,7 @@ import {RequestModel} from '../shared/models/request.model';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ToastrService} from 'ngx-toastr';
 import {RoleEnum} from '../shared/enums';
+import {TranslocoService} from '@ngneat/transloco';
 
 @Component({
   selector: 'admin',
@@ -40,12 +41,14 @@ export class AdminComponent implements OnInit {
   respondData: RequestModel;
   submitted = false;
   respondMsg = '';
+  answered = false;
   
   constructor(private spinner: NgxSpinnerService,
               public taskService: TaskService,
               public userService: UserService,
               private toastr: ToastrService,
               public modalService: NgbModal,
+              private translocoService: TranslocoService,
               public contactService: ContactService) {
     this.getCurrentUser();
   }
@@ -150,8 +153,9 @@ export class AdminComponent implements OnInit {
           )
           .subscribe(res => {
               this.submitted = false;
+              this.answered = true;
               this.deleteRequest(data, modal);
-              this.toastr.success('Respond was sent successfully');
+              this.toastr.success(this.translocoService.getActiveLang() == 'ua' ? 'Відповідь була успішно надіслана' : 'Respond was sent successfully');
             },
             err => {
               this.toastr.error(err);
@@ -170,7 +174,10 @@ export class AdminComponent implements OnInit {
       .subscribe(data => {
           this.submitted = false;
           this.allRequests = this.allRequests.filter(req => req._id !== data._id);
-          this.toastr.success('Request was deleted');
+          if (!this.answered) {
+            this.toastr.success(this.translocoService.getActiveLang() == 'ua' ? 'Запит було видалено' : 'Request was deleted');
+          }
+          this.answered = false;
           modal.close();
         },
         err => {

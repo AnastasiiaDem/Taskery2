@@ -26,6 +26,7 @@ import Emoji from 'quill-emoji';
 import Mention from 'quill-mention';
 import {Configuration, OpenAIApi} from 'openai';
 import {AIService} from '../shared/services/ai.service';
+import {TranslocoService} from '@ngneat/transloco';
 
 let Quill: any = QuillNamespace;
 
@@ -86,7 +87,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   initialStatus;
   previewData;
   submitted = false;
-  
+
   configuration = new Configuration({
     apiKey: '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',
   });
@@ -152,6 +153,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               private emailService: EmailService,
               private _focusMonitor: FocusMonitor,
               private spinner: NgxSpinnerService,
+              private translocoService: TranslocoService,
               private elementRef: ElementRef) {
     this.route.params
       .pipe(takeUntil(this.unsubscribe))
@@ -235,6 +237,49 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     dom.querySelectorAll('.e-content-cells').forEach(el => {
       $(el).css({'background-color': '#F4F5F7'});
     });
+  
+    const monthShortMap = {
+      'Jan': 'Січ',
+      'Feb': 'Лют',
+      'Mar': 'Бер',
+      'Apr': 'Квіт',
+      'May': 'Трав',
+      'Jun': 'Черв',
+      'Jul': 'Лип',
+      'Aug': 'Серп',
+      'Sep': 'Вер',
+      'Oct': 'Жовт',
+      'Nov': 'Лист',
+      'Dec': 'Груд',
+      'Січ': 'Jan',
+      'Лют': 'Feb',
+      'Бер': 'Mar',
+      'Квіт': 'Apr',
+      'Трав': 'May',
+      'Черв': 'Jun',
+      'Лип': 'Jul',
+      'Серп': 'Aug',
+      'Вер': 'Sep',
+      'Жовт': 'Oct',
+      'Лист': 'Nov',
+      'Груд': 'Dec'
+    };
+  
+    dom.querySelectorAll('.card-deadline').forEach(el => {
+      if (this.translocoService.getActiveLang() == 'ua') {
+        el.innerHTML = el.innerHTML.replace(/Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec/g, matched => monthShortMap[matched]);
+      } else {
+        el.innerHTML = el.innerHTML.replace(/Січ|Лют|Бер|Квіт|Трав|Черв|Лип|Серп|Вер|Жовт|Лист|Груд/g, matched => this.getKeyByValue(monthShortMap, matched));
+      }
+    });
+  }
+  
+  getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
+  }
+  
+  getHeaderStyle(title) {
+    return title.toUpperCase();
   }
   
   ngOnDestroy() {
@@ -290,8 +335,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               status: task.status,
               deadline: task.deadline,
               employeeId: task.employeeId,
-              projectId: task.projectId,
-              employeeName: this.currentProject.assignedUsers.find(employee => employee.id == task.employeeId)?.text
+              projectId: task.projectId
             });
           });
           
@@ -411,6 +455,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
         .subscribe(data => {
             console.log(data.message);
             this.kanban.updateCard(this.taskForm.value);
+            this.kanban.render();
             this.currentProject.updatedAt = new Date().toString();
             this.submitted = false;
             this.projectsService.updateProject(this.currentProject)
@@ -473,6 +518,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               projectId: task.projectId
             };
             this.tasks.push(newTask);
+            this.submitted = false;
             this.kanban.render();
             this.userService.getUsers()
               .pipe(takeUntil(this.unsubscribe))
@@ -772,10 +818,12 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   writeBriefAI() {
     if (this.taskForm.value.title != '') {
       this.spinner.show();
-      this.aiService.getAIresponse('Write a specific brief for the task(purpose, functionality, technical requirements): ' + this.taskForm.value.title + 'for the project: ' + this.currentProject?.projectName)
+      this.aiService.getAItask(this.translocoService.getActiveLang() == 'ua' ?
+        'Напишіть загальний опис на задачу, де є мета. Назва задачі: ' + this.taskForm.value.title + '. для проєкту: ' + this.currentProject?.projectName
+        : 'Write a brief with a purpose for the task. Task title: ' + this.taskForm.value.title + 'for the project: ' + this.currentProject?.projectName)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(response => {
-            this.taskForm.controls['description'].setValue(response.choices[0].text);
+            this.taskForm.controls['description'].setValue(response.choices[0].message.content);
             this.spinner.hide();
           },
           error => {
@@ -783,5 +831,9 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.spinner.hide();
           });
     }
+  }
+  
+  findEmployeeName(data) {
+    return this.currentProject.assignedUsers.find(employee => employee.id == data.employeeId)?.text;
   }
 }

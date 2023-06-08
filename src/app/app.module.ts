@@ -57,6 +57,7 @@ import {NumberCommaDirective} from './shared/format-number.directive';
 import {ContactComponent} from './contact/contact.component';
 import {ContactService} from './shared/services/contact.service';
 import {AdminComponent} from './admin/admin.component';
+import { TranslocoRootModule } from './transloco-root.module';
 
 @NgModule({
   declarations: [
@@ -111,7 +112,8 @@ import {AdminComponent} from './admin/admin.component';
     QuillModule.forRoot(),
     DragDropModule,
     ScheduleModule,
-    jqxSchedulerModule
+    jqxSchedulerModule,
+    TranslocoRootModule
   ],
   providers: [HttpClientModule, TaskService, UserService, ProjectsService,
     AlertService, AuthService, DatePipe, EmailService, AIService, ContactService,

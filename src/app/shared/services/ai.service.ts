@@ -14,8 +14,15 @@ export class AIService {
   constructor(private http: HttpClient) {
   }
   
-  getAIresponse(prompt): Observable<any> {
-    debugger
-    return this.http.post(`${apiUrl}/ai`, {prompt: prompt}, options);
+  getAIproject(prompt): Observable<any> {
+    return this.http.post(`${apiUrl}/aiProject`, {prompt: prompt}, options);
+  }
+  
+  getAIbudget(prompt): Observable<any> {
+    return this.http.post(`${apiUrl}/aiBudget`, {prompt: prompt}, options);
+  }
+  
+  getAItask(prompt): Observable<any> {
+    return this.http.post(`${apiUrl}/aiTask`, {prompt: prompt}, options);
   }
 }

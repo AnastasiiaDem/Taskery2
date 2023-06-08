@@ -12,7 +12,12 @@ const createUser = async (req: express.Request, res: express.Response) => {
     return res.status(400).json({message: `Properties are required`});
   
   if (await User.findOne({email: email}).exec())
-    return res.status(409).json({message: `User with such email (${email}) exists`});
+    return res.status(409).json({
+      message: {
+        messageEn: `User with such email (${email}) exists`,
+        messageUa: `Користувач з даною електронною поштою (${email}) вже зареєстрований`
+      }
+    });
   
   // const hashPassword = await bcrypt.hashSync(password, 8);
   const id = new mongoose.Types.ObjectId();

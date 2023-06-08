@@ -223,16 +223,15 @@
 
 .text-muted {
   overflow: hidden;
-  -webkit-line-clamp: 5;
+  -webkit-line-clamp: 3;
   text-align: justify;
   display: -webkit-box;
   word-wrap: break-word;
   -webkit-box-orient: vertical;
-  margin-bottom: 0;
+  margin-bottom: 1rem;
   width: auto;
   font-size: 12px;
   padding: 1rem 2rem;
-  max-height: 60px;
 }
 
 .keyboard-tab {
@@ -338,7 +337,7 @@
 }
 
 .project-name {
-  opacity: 0.5;
+  opacity: 0.4;
   font-size: 12px;
   font-weight: 500;
 }

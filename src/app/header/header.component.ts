@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {Subject, takeUntil} from 'rxjs';
 import {AlertService} from '../shared/services/alert.service';
 import {ToastrService} from 'ngx-toastr';
@@ -10,6 +10,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder} from '@angular/forms';
 import {filter} from 'rxjs/operators';
 import {RoleEnum} from '../shared/enums';
+import {TranslocoService} from '@ngneat/transloco';
 
 @Component({
   selector: 'header',
@@ -34,6 +35,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     sendTaskEmail: false,
     sendTaskOverdueEmail: false
   };
+  currentLanguage = 'en';
+  
   
   constructor(private alertService: AlertService,
               private toastr: ToastrService,
@@ -41,6 +44,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private modalService: NgbModal,
               private formBuilder: FormBuilder,
               private authenticationService: AuthService,
+              private translocoService: TranslocoService,
               private userService: UserService) {
     this.authenticationService.currentUser
       .pipe(takeUntil(this.unsubscribe))
@@ -48,6 +52,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
   
   ngOnInit() {
+    this.currentLanguage = this.translocoService.getActiveLang();
+  
     this.getCurrentUser();
     this.router.events
       .pipe(
@@ -173,5 +179,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.router.navigate(['/contact']);
       }, 550);
     }
+  }
+  
+  changeLanguage(lang: string) {
+    this.translocoService.setActiveLang(lang);
+    this.currentLanguage = lang;
   }
 }

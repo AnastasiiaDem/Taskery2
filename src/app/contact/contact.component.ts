@@ -12,6 +12,7 @@ import {AlertService} from '../shared/services/alert.service';
 import {ContactService} from '../shared/services/contact.service';
 import {RequestModel} from '../shared/models/request.model';
 import {RoleEnum} from '../shared/enums';
+import {TranslocoService} from '@ngneat/transloco';
 
 @Component({
   selector: 'contact',
@@ -39,6 +40,8 @@ export class ContactComponent implements OnInit {
   submitted = false;
   loading = false;
   showHeader = true;
+  currentLanguage = 'en';
+  
   
   constructor(private router: Router,
               private spinner: NgxSpinnerService,
@@ -47,6 +50,7 @@ export class ContactComponent implements OnInit {
               private contactService: ContactService,
               private formBuilder: FormBuilder,
               private toastr: ToastrService,
+              private translocoService: TranslocoService,
               private authenticationService: AuthService) {
     this.authenticationService.currentUser
       .pipe(takeUntil(this.unsubscribe))
@@ -61,6 +65,8 @@ export class ContactComponent implements OnInit {
   }
   
   ngOnInit(): void {
+    this.currentLanguage = this.translocoService.getActiveLang();
+  
     if (this.currentUser) {
       this.getCurrentUser();
     }
@@ -163,12 +169,17 @@ export class ContactComponent implements OnInit {
                 lastName: this.currentUserData.lastName,
                 description: ''
               });
-            this.toastr.success('Request was sent successfully');
+            this.toastr.success(this.currentLanguage == 'ua' ? 'Запит був успішно надісланий' : 'Request was sent successfully');
           },
           err => {
             this.toastr.error(err);
             this.loading = false;
           });
     }, 1000);
+  }
+  
+  changeLanguage(lang: string) {
+    this.translocoService.setActiveLang(lang);
+    this.currentLanguage = lang;
   }
 }

@@ -17,6 +17,7 @@ export class AppComponent implements OnInit, OnDestroy {
   message: any;
   currentUser: UserModel;
   url;
+  lang = 'en';
   private readonly unsubscribe: Subject<void> = new Subject();
   
   constructor(private alertService: AlertService,

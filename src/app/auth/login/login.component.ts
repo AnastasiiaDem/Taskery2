@@ -11,6 +11,7 @@ import {UserModel} from '../../shared/models/user.model';
 import {TokenStorageService} from '../../shared/services/token.service';
 import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 import {ToastrService} from 'ngx-toastr';
+import { TranslocoService } from '@ngneat/transloco';
 
 
 @Component({
@@ -36,6 +37,7 @@ export class LoginComponent implements OnInit {
               private userService: UserService,
               private authenticationService: AuthService,
               private tokenStorage: TokenStorageService,
+              private translocoService: TranslocoService,
               private alertService: AlertService) {
     if (this.authenticationService.currentUserValue) {
       this.router.navigate(['/home']);
@@ -88,7 +90,7 @@ export class LoginComponent implements OnInit {
           this.submitted = false;
         },
         err => {
-          this.toastr.error(err);
+          this.toastr.error(this.translocoService.getActiveLang() == 'ua' ? err?.messageUa : err?.messageEn);
           this.loading = false;
         });
   }
