@@ -231,7 +231,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     dom.querySelectorAll('.e-content-cells').forEach(el => {
       $(el).css({'background-color': '#F4F5F7'});
     });
-  
+    
     const monthShortMap = {
       'Jan': 'Січ',
       'Feb': 'Лют',
@@ -258,7 +258,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       'Лист': 'Nov',
       'Груд': 'Dec'
     };
-  
+    
     dom.querySelectorAll('.card-deadline').forEach(el => {
       if (this.translocoService.getActiveLang() == 'ua') {
         el.innerHTML = el.innerHTML.replace(/Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec/g, matched => monthShortMap[matched]);
@@ -813,8 +813,8 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     if (this.taskForm.value.title != '') {
       this.spinner.show();
       this.aiService.getAItask(this.translocoService.getActiveLang() == 'ua' ?
-        'Напишіть загальний опис на задачу, де є мета. Назва задачі: ' + this.taskForm.value.title + '. для проєкту: ' + this.currentProject?.projectName
-        : 'Write a brief with a purpose for the task. Task title: ' + this.taskForm.value.title + 'for the project: ' + this.currentProject?.projectName)
+          'Напишіть загальний опис на задачу, де є мета. Назва задачі: ' + this.taskForm.value.title + '. для проєкту: ' + this.currentProject?.projectName
+          : 'Write a brief with a purpose for the task. Task title: ' + this.taskForm.value.title + 'for the project: ' + this.currentProject?.projectName)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(response => {
             this.taskForm.controls['description'].setValue(response.choices[0].message.content);
