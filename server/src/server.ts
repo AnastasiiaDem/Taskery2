@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 app.use(cors(corsOptions));
 
 mongoose
-  .connect(MONGODB_LOCAL, {
+  .connect(MONGODB_LINK, {
     useNewUrlParser: true,
   })
   .catch((err: any) => console.log(err));
