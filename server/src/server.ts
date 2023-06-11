@@ -11,7 +11,7 @@ const apiRoutes = require('./routes/routes');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const PORT = process.env.PORT;
-const {HOST, PORT_DB, DB} = process.env;
+const {MONGODB_LINK, MONGODB_LOCAL} = process.env;
 
 const corsOptions = {
   origin: true,
@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 app.use(cors(corsOptions));
 
 mongoose
-  .connect(`mongodb://${HOST}:${PORT_DB}/${DB}`, {
+  .connect(MONGODB_LOCAL, {
     useNewUrlParser: true,
   })
   .catch((err: any) => console.log(err));
