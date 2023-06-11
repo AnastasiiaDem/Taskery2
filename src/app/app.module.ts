@@ -20,8 +20,6 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {KanbanModule} from '@syncfusion/ej2-angular-kanban';
 import {ReportComponent} from './report/report.component';
-import {AccumulationChartModule} from '@syncfusion/ej2-angular-charts';
-import {AccordionModule} from '@syncfusion/ej2-angular-navigations';
 import {NgSelect2Module} from 'ng-select2';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {ToastrModule} from 'ngx-toastr';
@@ -33,7 +31,6 @@ import {HeaderComponent} from './header/header.component';
 import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {AccountComponent} from './account/account.component';
-import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatInputModule} from '@angular/material/input';
 import {MatNativeDateModule} from '@angular/material/core';
@@ -49,7 +46,6 @@ import {SafeHtmlPipe} from './shared/safe-html.pipe';
 import {InitialComponent} from './initial/initial.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {SchedulerComponent} from './scheduler/scheduler.component';
-import {ScheduleModule} from '@syncfusion/ej2-angular-schedule';
 import {jqxSchedulerModule} from 'jqwidgets-ng/jqxscheduler';
 import {AIService} from './shared/services/ai.service';
 import {NumberPipePipe} from './shared/input-number.pipe';
@@ -58,6 +54,7 @@ import {ContactComponent} from './contact/contact.component';
 import {ContactService} from './shared/services/contact.service';
 import {AdminComponent} from './admin/admin.component';
 import { TranslocoRootModule } from './transloco-root.module';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -94,13 +91,10 @@ import { TranslocoRootModule } from './transloco-root.module';
     MatButtonModule,
     MatListModule,
     MatIconModule,
-    AccumulationChartModule,
-    AccordionModule,
     MatButtonToggleModule,
     MatFormFieldModule,
     NgMultiSelectDropDownModule.forRoot(),
     MatTooltipModule,
-    FontAwesomeModule,
     MatDatepickerModule,
     MatInputModule,
     MatNativeDateModule,
@@ -111,9 +105,9 @@ import { TranslocoRootModule } from './transloco-root.module';
     MatSlideToggleModule,
     QuillModule.forRoot(),
     DragDropModule,
-    ScheduleModule,
     jqxSchedulerModule,
-    TranslocoRootModule
+    TranslocoRootModule,
+    FontAwesomeModule
   ],
   providers: [HttpClientModule, TaskService, UserService, ProjectsService,
     AlertService, AuthService, DatePipe, EmailService, AIService, ContactService,
