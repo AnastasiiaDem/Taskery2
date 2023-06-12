@@ -8,7 +8,6 @@ app.use(cookieParser());
 app.use(express.json());
 
 const serverless = require('serverless-http');
-const cors = require('cors');
 const apiRoutes = require('./routes/routes');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -17,11 +16,6 @@ const {MONGODB_LINK, MONGODB_LOCAL} = process.env;
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-
-app.use(cors({
-  origin: 'https://taskery2.vercel.app',
-  credentials: true
-}));
 
 mongoose
   .connect(MONGODB_LINK, {
