@@ -14,15 +14,15 @@ const bodyParser = require('body-parser');
 const PORT = process.env.PORT;
 const {MONGODB_LINK, MONGODB_LOCAL} = process.env;
 
-const corsOptions = {
-  origin: 'https://taskery2.vercel.app',
-  credentials: true,
-};
+// const corsOptions = {
+//   origin: 'https://taskery2.vercel.app',
+//   credentials: true,
+// };
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 mongoose
   .connect(MONGODB_LINK, {
