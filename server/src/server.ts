@@ -5,12 +5,13 @@ const app = express();
 
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
+app.use(express.json());
 
 const cors = require('cors');
 const apiRoutes = require('./routes/routes');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const PORT = process.env.PORT;
+// const PORT = process.env.PORT;
 const {MONGODB_LINK, MONGODB_LOCAL} = process.env;
 
 const corsOptions = {
@@ -25,13 +26,13 @@ app.use(cors(corsOptions));
 
 mongoose
   .connect(MONGODB_LINK, {
-    useNewUrlParser: false,
+    useNewUrlParser: true,
   })
   .catch((err: any) => console.log(err));
 mongoose.connection.on('connected', () => console.log('Connected to db'));
 
-app.listen(PORT, () => {
-  console.log(`Server is working on ${PORT} port`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server is working on ${PORT} port`);
+// });
 
 app.use('/api', apiRoutes);
