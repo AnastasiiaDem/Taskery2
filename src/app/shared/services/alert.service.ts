@@ -4,6 +4,7 @@ import {Observable, Subject, takeUntil} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class AlertService {
+  
   private subject = new Subject<any>();
   private keepAfterRouteChange = false;
   private readonly unsubscribe: Subject<void> = new Subject();
