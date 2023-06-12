@@ -4,11 +4,13 @@ const express = require('express');
 const app = express();
 
 const cookieParser = require('cookie-parser');
+
 app.use(cookieParser());
 app.use(express.json());
 
 const serverless = require('serverless-http');
-const apiRoutes = require('./routes/routes');
+const cors = require('cors');
+const apiRoutes = require('./src/routes/routes');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const PORT = process.env.PORT;
@@ -16,6 +18,11 @@ const {MONGODB_LINK, MONGODB_LOCAL} = process.env;
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 
 mongoose
   .connect(MONGODB_LINK, {
