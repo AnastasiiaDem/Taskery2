@@ -25,7 +25,7 @@ app.use(cors(corsOptions));
 
 mongoose
   .connect(MONGODB_LINK, {
-    useNewUrlParser: true,
+    useNewUrlParser: false,
   })
   .catch((err: any) => console.log(err));
 mongoose.connection.on('connected', () => console.log('Connected to db'));
