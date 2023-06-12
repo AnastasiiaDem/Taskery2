@@ -15,7 +15,7 @@ const PORT = process.env.PORT;
 const {MONGODB_LINK, MONGODB_LOCAL} = process.env;
 
 const corsOptions = {
-  origin: true,
+  origin: 'https://taskery2.vercel.app',
   credentials: true,
 };
 
