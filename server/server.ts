@@ -9,7 +9,7 @@ app.use(express.json());
 
 const serverless = require('serverless-http');
 const cors = require('cors');
-const apiRoutes = require('./routes/routes');
+const apiRoutes = require('./src/routes/routes');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const PORT = process.env.PORT;
@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 app.use(cors({
-  origin: 'https://taskery2.vercel.app',
+  origin: true,
   credentials: true
 }));
 
