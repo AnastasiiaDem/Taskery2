@@ -4,6 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {ProjectModel} from '../models/project.model';
 
 const apiUrl = 'https://taskery2.vercel.app/api';
+
 const options = {
   headers: {'Content-Type': 'application/json'},
   withCredentials: true

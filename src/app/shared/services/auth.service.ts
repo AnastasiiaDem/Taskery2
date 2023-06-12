@@ -6,6 +6,7 @@ import {UserModel} from '../models/user.model';
 import {TokenStorageService} from './token.service';
 
 const apiUrl = 'https://taskery2.vercel.app/api';
+
 const options = {
   headers: {'Content-Type': 'application/json'},
   withCredentials: true
@@ -13,6 +14,7 @@ const options = {
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
+  
   private currentUserSubject: BehaviorSubject<UserModel>;
   public currentUser: Observable<UserModel>;
   

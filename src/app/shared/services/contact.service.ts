@@ -3,6 +3,7 @@ import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 
 const apiUrl = 'https://taskery2.vercel.app/api';
+
 const options = {
   headers: {'Content-Type': 'application/json'},
   withCredentials: true
