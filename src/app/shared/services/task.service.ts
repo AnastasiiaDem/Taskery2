@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {TaskModel} from '../models/task.model';
 
-const apiUrl = 'http://localhost:2200/api';
+const apiUrl = 'http://localhost:3000/api';
 
 const options = {
   headers: {'Content-Type': 'application/json'},
