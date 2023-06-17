@@ -106,7 +106,7 @@ export class RegisterComponent implements OnInit {
       
       const currentLang = this.translocoService.getActiveLang();
       
-      this.userService.addUser(userObject)
+      this.authenticationService.register(userObject)
         .pipe(
           takeUntil(this.unsubscribe),
           first()

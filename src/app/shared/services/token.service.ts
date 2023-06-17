@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 
-const TOKEN_KEY = 'auth-token';
-const REFRESHTOKEN_KEY = 'auth-refreshtoken';
-const USER_KEY = 'auth-user';
+const TOKEN_KEY = 'auth.ts-token';
+const REFRESHTOKEN_KEY = 'auth.ts-refreshtoken';
+const USER_KEY = 'auth.ts-user';
 
 @Injectable({
   providedIn: 'root'

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 
-const apiUrl = 'http://localhost:3000/api';
+const apiUrl = 'http://localhost:3000/api/ai';
 
 const options = {
   headers: {'Content-Type': 'application/json'},
@@ -16,14 +16,14 @@ export class AIService {
   }
   
   getAIproject(prompt): Observable<any> {
-    return this.http.post(`${apiUrl}/aiProject`, {prompt: prompt}, options);
+    return this.http.post(`${apiUrl}/project`, {prompt: prompt}, options);
   }
   
   getAIbudget(prompt): Observable<any> {
-    return this.http.post(`${apiUrl}/aiBudget`, {prompt: prompt}, options);
+    return this.http.post(`${apiUrl}/budget`, {prompt: prompt}, options);
   }
   
   getAItask(prompt): Observable<any> {
-    return this.http.post(`${apiUrl}/aiTask`, {prompt: prompt}, options);
+    return this.http.post(`${apiUrl}/task`, {prompt: prompt}, options);
   }
 }

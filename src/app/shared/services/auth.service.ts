@@ -5,7 +5,7 @@ import {map} from 'rxjs/operators';
 import {UserModel} from '../models/user.model';
 import {TokenStorageService} from './token.service';
 
-const apiUrl = 'http://localhost:3000/api';
+const apiUrl = 'http://localhost:3000/api/auth';
 
 const options = {
   headers: {'Content-Type': 'application/json'},
@@ -26,6 +26,10 @@ export class AuthService {
   
   public get currentUserValue(): UserModel {
     return this.currentUserSubject.value;
+  }
+  
+  register(body: Object): Observable<any> {
+    return this.http.post(`${apiUrl}/register`, body, options);
   }
   
   login(email, password) {
