@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 
-const apiUrl = 'http://localhost:3000/api';
+const apiUrl = 'http://localhost:3000/api/contact';
 
 const options = {
   headers: {'Content-Type': 'application/json'},
@@ -16,7 +16,7 @@ export class ContactService {
   }
   
   sendRequest(body: Object): Observable<any> {
-    return this.http.post(`${apiUrl}/contact`, body, options);
+    return this.http.post(`${apiUrl}/request`, body, options);
   }
   
   sendRespond(body: Object): Observable<any> {

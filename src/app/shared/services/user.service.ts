@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 
-const apiUrl = 'http://localhost:3000/api';
+const apiUrl = 'http://localhost:3000/api/user';
 
 const options = {
   headers: {'Content-Type': 'application/json'},
@@ -16,22 +16,18 @@ export class UserService {
   }
   
   getUsers(): Observable<any> {
-    return this.http.get(`${apiUrl}/users`, options);
+    return this.http.get(`${apiUrl}/all`, options);
   }
   
   getCurrentUser() {
-    return this.http.get<any>(`${apiUrl}/user/current`, options);
+    return this.http.get<any>(`${apiUrl}/current`, options);
   }
   
   updateUser(body: Object): Observable<any> {
-    return this.http.put(`${apiUrl}/user/update`, body, options);
-  }
-  
-  addUser(body: Object): Observable<any> {
-    return this.http.post(`${apiUrl}/register`, body, options);
+    return this.http.put(`${apiUrl}/update`, body, options);
   }
   
   deleteUser(userId): Observable<any> {
-    return this.http.delete(`${apiUrl}/user/delete/${userId}`, options);
+    return this.http.delete(`${apiUrl}/delete/${userId}`, options);
   }
 }

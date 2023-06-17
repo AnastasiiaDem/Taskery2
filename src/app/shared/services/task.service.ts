@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {TaskModel} from '../models/task.model';
 
-const apiUrl = 'http://localhost:3000/api';
+const apiUrl = 'http://localhost:3000/api/task';
 
 const options = {
   headers: {'Content-Type': 'application/json'},
@@ -17,20 +17,20 @@ export class TaskService {
   }
   
   getTasks(): Observable<any> {
-    return this.http.get(`${apiUrl}/tasks`, options);
+    return this.http.get(`${apiUrl}/all`, options);
   }
   
   addTask(body: TaskModel): Observable<any> {
-    return this.http.post(`${apiUrl}/task/create`, body, options);
+    return this.http.post(`${apiUrl}/create`, body, options);
   }
   
   deleteTask(taskId: number): Observable<any> {
-    const url = `${apiUrl}/task/delete/${taskId}`;
+    const url = `${apiUrl}/delete/${taskId}`;
     return this.http.delete(url, options);
   }
   
   updateTask(body: TaskModel): Observable<any> {
-    const url = `${apiUrl}/task/update/${body.id}`;
+    const url = `${apiUrl}/update/${body.id}`;
     return this.http.put(url, body, options);
   }
 }
