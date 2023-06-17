@@ -33,6 +33,7 @@
     "nodemailer": "^6.9.1",
     "nodemailer-express-handlebars": "^6.0.0",
     "pdfmake": "^0.2.7",
-    "serverless-http": "^3.2.0"
+    "serverless-http": "^3.2.0",
+    "vercel": "^30.2.2"
   }
 }

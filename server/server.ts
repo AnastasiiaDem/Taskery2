@@ -14,15 +14,18 @@ const apiRoutes = require('./src/routes/routes');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const PORT = process.env.PORT;
-const {MONGODB_LINK, MONGODB_LOCAL} = process.env;
+const { MONGODB_LINK, MONGODB_LOCAL } = process.env;
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(cors({
-  origin: true,
-  credentials: true
-}));
+app.use((req: any, res: { setHeader: (arg0: string, arg1: string) => void; }, next: () => void) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 
 mongoose
   .connect(MONGODB_LINK, {
