@@ -5,7 +5,7 @@ import {map} from 'rxjs/operators';
 import {UserModel} from '../models/user.model';
 import {TokenStorageService} from './token.service';
 
-const apiUrl = 'http://localhost:3000/api/auth';
+const apiUrl = 'http://127.0.0.1:3000/api/auth';
 
 const options = {
   headers: {'Content-Type': 'application/json'},
