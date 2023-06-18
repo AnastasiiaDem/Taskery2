@@ -1,4 +1,4 @@
-﻿import {Component, OnInit} from '@angular/core';
+﻿import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {first} from 'rxjs/operators';
@@ -6,18 +6,19 @@ import {AuthService} from '../../shared/services/auth.service';
 import {UserService} from '../../shared/services/user.service';
 import {AlertService} from '../../shared/services/alert.service';
 import {UserModel} from 'src/app/shared/models/user.model';
-import {Subject, takeUntil} from 'rxjs';
+import {finalize, Subject, takeUntil} from 'rxjs';
 import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 import {ToastrService} from 'ngx-toastr';
 import {RoleEnum} from '../../shared/enums';
-import { TranslocoService } from '@ngneat/transloco';
+import {TranslocoService} from '@ngneat/transloco';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'app-register',
   templateUrl: 'register.component.html',
   styleUrls: ['register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   registerForm: FormGroup;
   loading = false;
   submitted = false;
@@ -32,6 +33,7 @@ export class RegisterComponent implements OnInit {
               private toastr: ToastrService,
               private authenticationService: AuthService,
               private userService: UserService,
+              private spinner: NgxSpinnerService,
               private translocoService: TranslocoService,
               private alertService: AlertService) {
     if (this.authenticationService.currentUserValue) {
@@ -82,8 +84,10 @@ export class RegisterComponent implements OnInit {
     }
     
     setTimeout(() => {
+      this.spinner.show();
       this.userService.getUsers()
         .pipe(
+          finalize(() => this.spinner.hide()),
           takeUntil(this.unsubscribe)
         )
         .subscribe(users => {
@@ -105,16 +109,17 @@ export class RegisterComponent implements OnInit {
       this.loading = true;
       
       const currentLang = this.translocoService.getActiveLang();
-      
+      this.spinner.show();
       this.authenticationService.register(userObject)
         .pipe(
+          finalize(() => this.spinner.hide()),
           takeUntil(this.unsubscribe),
           first()
         )
         .subscribe(
           data => {
             this.submitted = false;
-            this.toastr.success( currentLang == 'ua' ? 'Користувача успішно зареєстровано' : 'Registration successful');
+            this.toastr.success(currentLang == 'ua' ? 'Користувача успішно зареєстровано' : 'Registration successful');
             this.router.navigate(['/login']);
           },
           err => {

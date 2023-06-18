@@ -1,17 +1,18 @@
-﻿import {Component, OnInit} from '@angular/core';
+﻿import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {first} from 'rxjs/operators';
 import {AuthService} from '../../shared/services/auth.service';
 import {AlertService} from '../../shared/services/alert.service';
-import {Subject, takeUntil} from 'rxjs';
+import {finalize, Subject, takeUntil} from 'rxjs';
 import {UserService} from '../../shared/services/user.service';
 import {Select2OptionData} from 'ng-select2';
 import {UserModel} from '../../shared/models/user.model';
 import {TokenStorageService} from '../../shared/services/token.service';
 import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 import {ToastrService} from 'ngx-toastr';
-import { TranslocoService } from '@ngneat/transloco';
+import {TranslocoService} from '@ngneat/transloco';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 
 @Component({
@@ -19,7 +20,7 @@ import { TranslocoService } from '@ngneat/transloco';
   templateUrl: 'login.component.html',
   styleUrls: ['login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
   loading = false;
   submitted = false;
@@ -38,6 +39,7 @@ export class LoginComponent implements OnInit {
               private authenticationService: AuthService,
               private tokenStorage: TokenStorageService,
               private translocoService: TranslocoService,
+              private spinner: NgxSpinnerService,
               private alertService: AlertService) {
     if (this.authenticationService.currentUserValue) {
       this.router.navigate(['/home']);
@@ -73,8 +75,10 @@ export class LoginComponent implements OnInit {
     }
     
     this.loading = true;
+    this.spinner.show();
     this.authenticationService.login(this.f.email.value, this.f.password.value)
       .pipe(
+        finalize(() => this.spinner.hide()),
         takeUntil(this.unsubscribe),
         first()
       )

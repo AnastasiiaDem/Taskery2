@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {NavigationStart, Router} from '@angular/router';
 import {AuthService} from '../shared/services/auth.service';
-import {Subject, takeUntil} from 'rxjs';
+import {finalize, Subject, takeUntil} from 'rxjs';
 import {UserModel} from '../shared/models/user.model';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {filter, first} from 'rxjs/operators';
@@ -19,7 +19,7 @@ import {TranslocoService} from '@ngneat/transloco';
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.scss', '../home/home.component.scss', '../header/header.component.scss', '../app.component.scss'],
 })
-export class ContactComponent implements OnInit {
+export class ContactComponent implements OnInit, OnDestroy {
   
   private readonly unsubscribe: Subject<void> = new Subject();
   currentUser: UserModel;
@@ -53,7 +53,9 @@ export class ContactComponent implements OnInit {
               private translocoService: TranslocoService,
               private authenticationService: AuthService) {
     this.authenticationService.currentUser
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(x => this.currentUser = x);
     if (this.authenticationService.currentUserValue) {
       this.showHeader = false;
@@ -93,8 +95,12 @@ export class ContactComponent implements OnInit {
   }
   
   getCurrentUser() {
+    this.spinner.show();
     this.userService.getCurrentUser()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(user => {
           this.currentUserData = user;
           this.url = this.router.url;
@@ -154,9 +160,11 @@ export class ContactComponent implements OnInit {
       
       this.loading = true;
       
+      this.spinner.show();
       this.contactService.sendRequest(requestObject)
         .pipe(
-          takeUntil(this.unsubscribe),
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe),
           first()
         )
         .subscribe(

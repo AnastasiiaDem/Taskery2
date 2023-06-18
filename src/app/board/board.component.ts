@@ -8,7 +8,7 @@ import {UserService} from 'src/app/shared/services/user.service';
 import * as $ from 'jquery';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
-import {Subject, takeUntil} from 'rxjs';
+import {finalize, Subject, takeUntil} from 'rxjs';
 import {ProjectsService} from '../shared/services/project.service';
 import {ProjectModel} from '../shared/models/project.model';
 import {faCalendarDays} from '@fortawesome/free-solid-svg-icons';
@@ -150,7 +150,9 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               private translocoService: TranslocoService,
               private elementRef: ElementRef) {
     this.route.params
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(param => {
         this.selectedProjectId = param['paramKey'];
       });
@@ -282,8 +284,12 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   getCurrentProject() {
+    this.spinner.show();
     this.projectsService.getCurrentProject(this.selectedProjectId)
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(project => {
           this.currentProject = project;
           this.getCurrentUser();
@@ -306,7 +312,9 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   getCurrentUser() {
     this.userService.getCurrentUser()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(user => {
           this.currentUser = user;
         },
@@ -317,7 +325,10 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   getAllTasks() {
     this.taskService.getTasks()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(res => {
           this.tasksList = [];
           this.tasks = [];
@@ -351,7 +362,9 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   getAllUsers() {
     this.userService.getUsers()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(users => {
           this.currentProject.assignedUsers?.forEach(u => {
             users.forEach(user => {
@@ -384,12 +397,18 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   drop(event) {
+    this.spinner.show();
     this.taskService.updateTask(event.data[0])
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(data => {
           this.currentProject.updatedAt = new Date().toString();
           this.projectsService.updateProject(this.currentProject)
-            .pipe(takeUntil(this.unsubscribe))
+            .pipe(
+              takeUntil(this.unsubscribe)
+            )
             .subscribe(res => {
                 console.log(res.message);
               },
@@ -397,7 +416,9 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
                 console.log(err);
               });
           this.userService.getUsers()
-            .pipe(takeUntil(this.unsubscribe))
+            .pipe(
+              takeUntil(this.unsubscribe)
+            )
             .subscribe(users => {
                 let taskUser = users.find(u => u._id === event.data[0].employeeId);
                 if (taskUser.sendTaskOverdueEmail) {
@@ -443,9 +464,14 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   onSubmit(modal) {
     this.submitted = true;
+    this.spinner.show();
+  
     if (!this.addTaskFlag) {
       this.taskService.updateTask(this.taskForm.value)
-        .pipe(takeUntil(this.unsubscribe))
+        .pipe(
+          finalize(() => this.spinner.hide()),
+          takeUntil(this.unsubscribe)
+        )
         .subscribe(data => {
             console.log(data.message);
             this.kanban.updateCard(this.taskForm.value);
@@ -453,7 +479,9 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.currentProject.updatedAt = new Date().toString();
             this.submitted = false;
             this.projectsService.updateProject(this.currentProject)
-              .pipe(takeUntil(this.unsubscribe))
+              .pipe(
+                takeUntil(this.unsubscribe)
+              )
               .subscribe(res => {
                   console.log(res.message);
                 },
@@ -461,7 +489,9 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
                   console.log(err);
                 });
             this.userService.getUsers()
-              .pipe(takeUntil(this.unsubscribe))
+              .pipe(
+                takeUntil(this.unsubscribe)
+              )
               .subscribe(users => {
                   let taskUser = users.find(u => u._id === this.taskForm.value.employeeId);
                   if (taskUser.sendTaskOverdueEmail) {
@@ -491,11 +521,16 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       this.kanban.closeDialog();
     } else {
       this.taskService.addTask(this.taskForm.value)
-        .pipe(takeUntil(this.unsubscribe))
+        .pipe(
+          finalize(() => this.spinner.hide()),
+          takeUntil(this.unsubscribe)
+        )
         .subscribe(task => {
             this.currentProject.updatedAt = new Date().toString();
             this.projectsService.updateProject(this.currentProject)
-              .pipe(takeUntil(this.unsubscribe))
+              .pipe(
+                takeUntil(this.unsubscribe)
+              )
               .subscribe(res => {
                   console.log(res.message);
                 },
@@ -515,7 +550,9 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.submitted = false;
             this.kanban.render();
             this.userService.getUsers()
-              .pipe(takeUntil(this.unsubscribe))
+              .pipe(
+                takeUntil(this.unsubscribe)
+              )
               .subscribe(users => {
                   let taskUser = users.find(u => u._id === this.taskForm.value.employeeId);
                   if (taskUser.sendTaskEmail && this.taskForm.value.status == 'To Do') {
@@ -566,12 +603,18 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   isDelete(action, modal) {
     if (action == 'confirm') {
+      this.spinner.show();
       this.taskService.deleteTask(this.taskForm.value.id)
-        .pipe(takeUntil(this.unsubscribe))
+        .pipe(
+          finalize(() => this.spinner.hide()),
+          takeUntil(this.unsubscribe)
+        )
         .subscribe(data => {
             this.currentProject.updatedAt = new Date().toString();
             this.projectsService.updateProject(this.currentProject)
-              .pipe(takeUntil(this.unsubscribe))
+              .pipe(
+                takeUntil(this.unsubscribe)
+              )
               .subscribe(res => {
                   console.log(res.message);
                 },
@@ -595,6 +638,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.AllIssues = !this.AllIssues;
     this.tasks = [];
     this.tasksList = [];
+    this.spinner.show();
     this.getAllTasks();
     setTimeout(() => {
       this.tasks = this.tasksList.filter(task => {
@@ -621,8 +665,12 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   filterMenu() {
     this.filterStatus = !this.filterStatus;
+    this.spinner.show();
     this.userService.getUsers()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(users => {
           this.usersData = [];
           this.currentProject.assignedUsers?.forEach(u => {
@@ -777,8 +825,12 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   email(userId, project, task, type) {
+    this.spinner.show();
     this.emailService.sendEmail(userId, project, task, '', type)
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(response => {
           console.log(response.message);
           // this.toastr.success(response.message);
@@ -815,14 +867,15 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       this.aiService.getAItask(this.translocoService.getActiveLang() == 'ua' ?
           'Напишіть загальний опис на задачу, де є мета. Назва задачі: ' + this.taskForm.value.title + '. для проєкту: ' + this.currentProject?.projectName
           : 'Write a brief with a purpose for the task. Task title: ' + this.taskForm.value.title + 'for the project: ' + this.currentProject?.projectName)
-        .pipe(takeUntil(this.unsubscribe))
+        .pipe(
+          finalize(() => this.spinner.hide()),
+          takeUntil(this.unsubscribe)
+        )
         .subscribe(response => {
             this.taskForm.controls['description'].setValue(response.choices[0].message.content);
-            this.spinner.hide();
           },
           error => {
             console.log(error);
-            this.spinner.hide();
           });
     }
   }

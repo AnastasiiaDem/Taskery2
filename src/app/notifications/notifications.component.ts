@@ -1,7 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from '../shared/services/user.service';
-import {Subject, takeUntil} from 'rxjs';
+import {finalize, Subject, takeUntil} from 'rxjs';
 import {UserModel} from '../shared/models/user.model';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'notifications',
@@ -15,12 +16,17 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   sendTaskEmail: boolean;
   sendTaskOverdueEmail: boolean;
   
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService,
+              private spinner: NgxSpinnerService) {
   }
   
   ngOnInit() {
+    this.spinner.show();
     this.userService.getCurrentUser()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(u => {
           this.currentUser = u;
           this.sendAssignedEmail = u.sendAssignedEmail;
@@ -39,8 +45,12 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   
   toggleNotification(e, field) {
     this.currentUser[field] = e.checked;
+    this.spinner.show();
     this.userService.updateUser(this.currentUser)
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(u => {
           console.log(u.body);
           console.log(u.message);

@@ -1,6 +1,6 @@
 import {AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {jqxSchedulerComponent} from 'jqwidgets-ng/jqxscheduler';
-import {Subject, takeUntil} from 'rxjs';
+import {finalize, Subject, takeUntil} from 'rxjs';
 import {TaskService} from '../shared/services/task.service';
 import {UserService} from '../shared/services/user.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -11,6 +11,7 @@ import {TaskModel} from '../shared/models/task.model';
 import {DatePipe} from '@angular/common';
 import {EmailService} from '../shared/services/email.service';
 import {TranslocoService} from '@ngneat/transloco';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 
 @Component({
@@ -83,8 +84,12 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
     ];
   
   ready = () => {
+    this.spinner.show();
     this.userService.getUsers()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(users => {
         this.usersList = [];
         users.forEach((user, i) => {
@@ -109,7 +114,8 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
               private projectsService: ProjectsService,
               private emailService: EmailService,
               private translocoService: TranslocoService,
-              private datepipe: DatePipe) {
+              private datepipe: DatePipe,
+              private spinner: NgxSpinnerService) {
   }
   
   ngOnInit(): void {
@@ -239,7 +245,9 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   getCurrentUser() {
     this.userService.getCurrentUser()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(user => {
           this.currentUser = user;
           this.AllIssues = (this.currentUser.role == RoleEnum.ProjectManager);
@@ -251,7 +259,9 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   getAllTasks() {
     this.taskService.getTasks()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(res => {
           this.tasks = [];
           let colorAndProject = [];
@@ -335,7 +345,9 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   getAllProjects() {
     this.projectService.getProjects()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(res => {
           this.projectsData = [];
           this.projects = [];
@@ -410,11 +422,19 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
       status: event.args.appointment.originalData.status
     };
     let currentProject = this.projects.find(p => p._id == updatedTask.projectId);
-    this.taskService.updateTask(updatedTask).pipe(takeUntil(this.unsubscribe))
+    
+    this.spinner.show();
+    this.taskService.updateTask(updatedTask)
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(data => {
           currentProject.updatedAt = new Date().toString();
           this.projectsService.updateProject(currentProject)
-            .pipe(takeUntil(this.unsubscribe))
+            .pipe(
+              takeUntil(this.unsubscribe)
+            )
             .subscribe(res => {
                 console.log(res.message);
               },
@@ -422,7 +442,9 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
                 console.log(err);
               });
           this.userService.getUsers()
-            .pipe(takeUntil(this.unsubscribe))
+            .pipe(
+              takeUntil(this.unsubscribe)
+            )
             .subscribe(users => {
                 let taskUser = users.find(u => u._id === updatedTask.employeeId);
                 if (taskUser.sendTaskOverdueEmail) {
@@ -441,7 +463,9 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   email(userId, project, task, type) {
     this.emailService.sendEmail(userId, project, task, '', type)
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(response => {
           console.log(response.message);
         },

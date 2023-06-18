@@ -7,7 +7,7 @@
         <p class="head-undertext">{{'initial-head-undertext' | transloco}}</p>
       </div>
       <p style="position: absolute;bottom: 10%;left: 20%;display: flex;flex-direction: column;align-items: center;"
-         *ngIf="currentUser.role !== 'ProjectManager'">
+         *ngIf="currentUser.role == 'TeamMember'">
         <a (click)="scroll(daily)" class="daily-link">{{'see-day-tasks' | transloco}}</a>
         <img src="./assets/images/icons8-double-down-50.png" style="height: 25px;">
       </p>
@@ -117,5 +117,4 @@
   </span>
 </div>
 
-<ngx-spinner bdColor="rgb(170 170 170 / 50%)" size="small" color="rgb(32 32 32)" type="ball-beat"
-             [fullScreen]="true"></ngx-spinner>
+<ngx-spinner bdColor="rgb(238 238 238 / 60%)" size="default" color="rgb(15 16 72)" type="ball-beat" [fullScreen]="true"></ngx-spinner>

@@ -1,7 +1,7 @@
 // @ts-ignore
 const app = require("../src/server");
-const auth = require("../routes/auth");
+const ai = require("../routes/ai");
 
-app.use("/api/", auth);
+app.use("/api/", ai);
 
 module.exports = app;

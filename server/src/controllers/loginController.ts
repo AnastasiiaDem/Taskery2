@@ -68,7 +68,7 @@ const loginUser = async (req: express.Request, res: express.Response) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
     
-    res.status(200).json({message: 'Authorized', role, accessToken, refreshToken});
+    res.status(200).json({message: 'Authorized', accessToken, refreshToken, foundUser});
   } else {
     res.status(400).json({message: `Incorrect password or email`});
   }
