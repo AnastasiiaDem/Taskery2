@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {Subject, takeUntil} from 'rxjs';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {finalize, Subject, takeUntil} from 'rxjs';
 import {UserModel} from '../shared/models/user.model';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {UserService} from '../shared/services/user.service';
@@ -18,7 +18,7 @@ import {TranslocoService} from '@ngneat/transloco';
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss'],
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent implements OnInit, OnDestroy {
   
   private readonly unsubscribe: Subject<void> = new Subject();
   myTasks: { overdue: Array<TaskModel>, today: Array<TaskModel>, upcoming: Array<TaskModel> };
@@ -68,8 +68,12 @@ export class AdminComponent implements OnInit {
   }
   
   getCurrentUser() {
+    this.spinner.show();
     this.userService.getCurrentUser()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(user => {
           this.currentUser = {
             id: user._id,
@@ -89,8 +93,12 @@ export class AdminComponent implements OnInit {
   }
   
   getAllUsers() {
+    this.spinner.show();
     this.userService.getUsers()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(users => {
           this.numberOfUsers = users.length;
           this.users = users;
@@ -101,8 +109,12 @@ export class AdminComponent implements OnInit {
   }
   
   getRequests() {
+    this.spinner.show();
     this.contactService.getAllRequests()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(requests => {
           this.allRequests = requests;
         },
@@ -138,6 +150,7 @@ export class AdminComponent implements OnInit {
   
   onSubmit(data, modal, task) {
     this.submitted = true;
+    this.spinner.show();
     if (this.respondMsg != '') {
       if (task == 'respond') {
         this.contactService.sendRespond({
@@ -149,6 +162,7 @@ export class AdminComponent implements OnInit {
             respond: this.respondMsg
           })
           .pipe(
+            finalize(() => this.spinner.hide()),
             takeUntil(this.unsubscribe)
           )
           .subscribe(res => {
@@ -169,6 +183,7 @@ export class AdminComponent implements OnInit {
   deleteRequest(data, modal) {
     this.contactService.deleteRequest(data._id)
       .pipe(
+        finalize(() => this.spinner.hide()),
         takeUntil(this.unsubscribe)
       )
       .subscribe(data => {

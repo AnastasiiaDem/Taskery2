@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subject, takeUntil} from 'rxjs';
 import {AlertService} from '../shared/services/alert.service';
 import {ToastrService} from 'ngx-toastr';
@@ -11,6 +11,7 @@ import {FormBuilder} from '@angular/forms';
 import {filter} from 'rxjs/operators';
 import {RoleEnum} from '../shared/enums';
 import {TranslocoService} from '@ngneat/transloco';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'header',
@@ -20,11 +21,10 @@ import {TranslocoService} from '@ngneat/transloco';
 export class HeaderComponent implements OnInit, OnDestroy {
   
   private readonly unsubscribe: Subject<void> = new Subject();
-  currentUser: UserModel;
   messageText: string;
   message: any;
-  url;
-  currentUserData: UserModel = {
+  url = '/home';
+  currentUser: UserModel = {
     id: 0,
     firstName: '',
     lastName: '',
@@ -45,16 +45,39 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private formBuilder: FormBuilder,
               private authenticationService: AuthService,
               private translocoService: TranslocoService,
-              private userService: UserService) {
+              private userService: UserService,
+              private spinner: NgxSpinnerService) {
     this.authenticationService.currentUser
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(x => this.currentUser = x);
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
+      .subscribe(x => {
+        this.authenticationService.currentUser
+          .pipe(
+            takeUntil(this.unsubscribe)
+          )
+          .subscribe(x => {
+            this.currentUser = {
+              id: x['foundUser']._id,
+              firstName: x['foundUser'].firstName,
+              lastName: x['foundUser'].lastName,
+              email: x['foundUser'].email,
+              password: x['foundUser'].password,
+              role: x['foundUser'].role,
+              sendAssignedEmail: x['foundUser'].sendAssignedEmail,
+              sendTaskEmail: x['foundUser'].sendTaskEmail,
+              sendTaskOverdueEmail: x['foundUser'].sendTaskOverdueEmail
+            };
+          });
+      });
+  }
+  
+  get getAbbr() {
+    return this.currentUser.firstName.charAt(0) + this.currentUser.lastName.charAt(0);
   }
   
   ngOnInit() {
     this.currentLanguage = this.translocoService.getActiveLang();
-  
-    this.getCurrentUser();
     this.router.events
       .pipe(
         filter(event => event instanceof NavigationStart)
@@ -65,31 +88,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
       );
   }
   
-  getCurrentUser() {
-    this.userService.getCurrentUser()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(user => {
-          this.currentUserData = user;
-          this.url = this.router.url;
-        },
-        err => {
-          console.log(err);
-        });
-  }
-  
   logout() {
-    this.authenticationService.logout().subscribe(sub => {
-      this.router.navigate(['/']);
-    });
+    this.spinner.show();
+    this.authenticationService.logout()
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
+      .subscribe(sub => {
+        this.router.navigate(['/']);
+        this.spinner.hide();
+      });
   }
   
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
-  }
-  
-  userSettings(content) {
-    this.modalService.open(content, {centered: true});
   }
   
   goToUserSettings() {
@@ -123,7 +136,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
   
   getUpdatedData() {
-    this.getCurrentUser();
+    this.userService.getCurrentUser()
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
+      .subscribe(user => {
+          this.currentUser = user;
+          this.url = this.router.url;
+        },
+        err => {
+          console.log(err);
+        });
   }
   
   home() {

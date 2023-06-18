@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {Subject, takeUntil} from 'rxjs';
+import {finalize, Subject, takeUntil} from 'rxjs';
 import {RoleEnum, StatusEnum} from '../shared/enums';
 import {TaskService} from '../shared/services/task.service';
 import {UserService} from '../shared/services/user.service';
@@ -8,13 +8,14 @@ import {DatePipe} from '@angular/common';
 import {Router} from '@angular/router';
 import {UserModel} from '../shared/models/user.model';
 import {ProjectsService} from '../shared/services/project.service';
+import { AuthService } from '../shared/services/auth.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   
   private readonly unsubscribe: Subject<void> = new Subject();
   myTasks: { overdue: Array<any>, today: Array<any>, upcoming: Array<any> };
@@ -34,15 +35,32 @@ export class HomeComponent implements OnInit {
   today;
   upcoming;
   allProjects = [];
-  
+  currentUserRole = 'ProjectManager';
   
   constructor(private spinner: NgxSpinnerService,
               public taskService: TaskService,
               public userService: UserService,
               private datepipe: DatePipe,
               public projectService: ProjectsService,
+              private authenticationService: AuthService,
               private router: Router) {
-    this.getCurrentUser();
+    this.authenticationService.currentUser
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
+      .subscribe(x => {
+        this.currentUser = {
+          id: x['foundUser']._id,
+          firstName: x['foundUser'].firstName,
+          lastName: x['foundUser'].lastName,
+          email: x['foundUser'].email,
+          password: x['foundUser'].password,
+          role: x['foundUser'].role,
+          sendAssignedEmail: x['foundUser'].sendAssignedEmail,
+          sendTaskEmail: x['foundUser'].sendTaskEmail,
+          sendTaskOverdueEmail: x['foundUser'].sendTaskOverdueEmail
+        };
+      });
   }
   
   ngOnInit(): void {
@@ -69,27 +87,6 @@ export class HomeComponent implements OnInit {
     el.scrollIntoView({behavior: 'smooth'});
   }
   
-  getCurrentUser() {
-    this.userService.getCurrentUser()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(user => {
-          this.currentUser = {
-            id: user._id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            password: user.password,
-            role: user.role,
-            sendAssignedEmail: user.sendAssignedEmail,
-            sendTaskEmail: user.sendTaskEmail,
-            sendTaskOverdueEmail: user.sendTaskOverdueEmail
-          };
-        },
-        err => {
-          console.log(err);
-        });
-  }
-  
   sortTasks(tasks) {
     tasks.sort((a, b) => {
       return new Date(b.deadline).getTime() - new Date(a.deadline).getTime();
@@ -98,8 +95,12 @@ export class HomeComponent implements OnInit {
   }
   
   getAllProjects() {
+    this.spinner.show();
     this.projectService.getProjects()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(res => {
           this.allProjects = [];
           res.projects.forEach(project => {
@@ -112,8 +113,12 @@ export class HomeComponent implements OnInit {
   }
   
   getAllTasks() {
+    this.spinner.show();
     this.taskService.getTasks()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(res => {
           this.myTasks = {overdue: [], today: [], upcoming: []};
           res.tasks.filter(t => {

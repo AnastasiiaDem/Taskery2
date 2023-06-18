@@ -16,7 +16,6 @@ import {ToastrService} from 'ngx-toastr';
 import {UserService} from '../shared/services/user.service';
 import {DatePipe} from '@angular/common';
 import {TranslocoService} from '@ngneat/transloco';
-import * as $ from 'jquery';
 
 
 export type barChartOptions = {
@@ -111,7 +110,7 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   ngAfterViewChecked() {
     const dom: HTMLElement = this.elementRef.nativeElement;
-   
+    
     const statusMap = {
       'To Do': 'Зробити',
       'In Progress': 'У Процесі',
@@ -170,7 +169,9 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   getCurrentUser() {
     this.userService.getCurrentUser()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(user => {
           this.currentUser = user;
         },
@@ -202,7 +203,9 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
             });
           });
           this.projectService.getProjects()
-            .pipe(takeUntil(this.unsubscribe))
+            .pipe(
+              takeUntil(this.unsubscribe)
+            )
             .subscribe(res => {
                 let projectsList = [];
                 res.projects.filter(p => {
@@ -558,11 +561,13 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
   email(project) {
     this.report.status = project.status;
     this.report.projectStart = this.datepipe.transform(project.createdAt, 'YYYY-MM-dd');
-    
+    this.spinner.show();
     this.emailService.sendEmail(this.currentUser._id, project, '', this.report, 'report')
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(response => {
-        debugger
           this.toastr.success(this.translocoService.getActiveLang() == 'ua' ? response.message.messageUa : response.message.messageEn);
         },
         error => {

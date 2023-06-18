@@ -1,10 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subject, takeUntil} from 'rxjs';
+import {finalize, Subject, takeUntil} from 'rxjs';
 import {AlertService} from './shared/services/alert.service';
 import {ToastrService} from 'ngx-toastr';
 import {UserModel} from './shared/models/user.model';
 import {Router} from '@angular/router';
 import {AuthService} from './shared/services/auth.service';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'app-root',
@@ -23,9 +24,12 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private alertService: AlertService,
               private toastr: ToastrService,
               private router: Router,
+              private spinner: NgxSpinnerService,
               private authenticationService: AuthService) {
     this.authenticationService.currentUser
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(x => this.currentUser = x);
   }
   

@@ -7,7 +7,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Select2OptionData} from 'ng-select2';
 import {TaskService} from '../shared/services/task.service';
 import * as $ from 'jquery';
-import {Subject, takeUntil} from 'rxjs';
+import {finalize, Subject, takeUntil} from 'rxjs';
 import {UserService} from '../shared/services/user.service';
 import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {NgxSpinnerService} from 'ngx-spinner';
@@ -22,7 +22,7 @@ import ImageCompress from 'quill-image-compress';
 import Emoji from 'quill-emoji';
 import Mention from 'quill-mention';
 import {AIService} from '../shared/services/ai.service';
-import { TranslocoService } from '@ngneat/transloco';
+import {TranslocoService} from '@ngneat/transloco';
 
 let Quill: any = QuillNamespace;
 
@@ -214,8 +214,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
         $(el).css({'background': 'rgb(58 224 104)'});
       }
     });
-  
-  
+    
+    
     const statusMap = {
       'To Do': 'Зробити',
       'In Progress': 'У Процесі',
@@ -227,7 +227,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       'Виконано': 'Done'
     };
     
-  
+    
     dom.querySelectorAll('.status-text').forEach(el => {
       if (this.translocoService.getActiveLang() == 'ua') {
         el.innerHTML = el.innerHTML.replace(/To Do|In Progress|On Review|Done/g, matched => statusMap[matched]);
@@ -247,8 +247,12 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   getAllProjects() {
+    this.spinner.show();
     this.projectService.getProjects()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(res => {
           res.projects.filter(p => {
             return (p.userId == this.currentUser._id || p.assignedUsers.find(u => u.id == this.currentUser._id));
@@ -283,8 +287,12 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   getAllTasks() {
+    this.spinner.show();
     this.taskService.getTasks()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(res => {
           this.tasksData = res.tasks.map(task => {
             return {
@@ -309,8 +317,12 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   getAllUsers() {
+    this.spinner.show();
     this.userService.getUsers()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(users => {
           this.usersData = users.filter(user => {
             return (user.role != RoleEnum.ProjectManager) && (user._id != this.currentUser._id);
@@ -327,8 +339,12 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
   
   getCurrentUser() {
+    this.spinner.show();
     this.userService.getCurrentUser()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(user => {
           this.currentUser = user;
         },
@@ -368,8 +384,12 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   onSubmit(modal) {
     this.submitted = true;
     if (!this.addProjectFlag) {
+      this.spinner.show();
       this.projectService.updateProject(this.projectForm.value)
-        .pipe(takeUntil(this.unsubscribe))
+        .pipe(
+          finalize(() => this.spinner.hide()),
+          takeUntil(this.unsubscribe)
+        )
         .subscribe(data => {
             this.projectForm.value.updatedAt = new Date();
             console.log(data.message);
@@ -381,8 +401,12 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
             console.log(err);
           });
     } else {
+      this.spinner.show();
       this.projectService.addProject(this.projectForm.value)
-        .pipe(takeUntil(this.unsubscribe))
+        .pipe(
+          finalize(() => this.spinner.hide()),
+          takeUntil(this.unsubscribe)
+        )
         .subscribe(p => {
             this.projects.push({
               id: p._id,
@@ -403,7 +427,10 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
     
     this.userService.getUsers()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(users => {
           this.projectForm.value.assignedUsers?.forEach(assigned => {
             let projectUser = users.find(u => u._id === assigned.id);
@@ -462,7 +489,10 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   isDelete(action, modal) {
     if (action == 'confirm') {
       this.projectService.deleteProject(this.projectForm.value.id)
-        .pipe(takeUntil(this.unsubscribe))
+        .pipe(
+          finalize(() => this.spinner.hide()),
+          takeUntil(this.unsubscribe)
+        )
         .subscribe(data => {
             this.projects = this.projects.filter(project => project.id !== this.projectForm.value.id);
             console.log(data.message);
@@ -490,7 +520,10 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   
   email(userId, project) {
     this.emailService.sendEmail(userId, project, '', '', 'project')
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(response => {
           console.log(response.message);
           // this.toastr.success(response.message);
@@ -513,14 +546,15 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       this.aiService.getAIproject((this.translocoService.getActiveLang() == 'ua' ?
           'Напишіть загальний опис на початок проєкту, де є мета. Назва проєкту: '
           : 'Write a brief with a purpose for the start of the project. Project title: ') + this.projectForm.value.projectName)
-        .pipe(takeUntil(this.unsubscribe))
+        .pipe(
+          finalize(() => this.spinner.hide()),
+          takeUntil(this.unsubscribe)
+        )
         .subscribe(response => {
             this.projectForm.controls['description'].setValue(response.choices[0].message.content);
-            this.spinner.hide();
           },
           error => {
             console.log(error);
-            this.spinner.hide();
           });
     }
   }
@@ -528,20 +562,21 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   calcBudgetAI() {
     if (this.projectForm.value.projectName != '') {
       this.spinner.show();
-        this.aiService.getAIbudget(
-            this.translocoService.getActiveLang() == 'ua' ?
-              ('ТВОЯ ВІДПОВІДЬ ПОВИННА МІСТИТИ ЛИШЕ ОДНЕ ЧИСЛО БЕЗ ТЕКСТУ. Яка мінімальна вартість проекту на місяць в доларах, включно із заробітною платою та технічними витратами, обов`язково враховуючи кількість працівників (де зарплата одного приблизно 1500 доларів), також орієнтуватись на назву та опис проєкту? де кількості працівників: ' + this.projectForm.value.assignedUsers.length + ';\nназва проєкту: ' + this.projectForm.value.projectName + ';\nопис: ' + this.descriptionText)
-              : ('YOUR RESPOND HAVE TO CONTAIN ONLY ONE NUMBER WITHOUT TEXT. What is the minimum cost of the project per month, including salaries and technical expenses, based on the number of employees, project name and description? where number of employees: ' + this.projectForm.value.assignedUsers.length + ';\nproject name: ' + this.projectForm.value.projectName + ';\nDescription: ' + this.descriptionText)
-          )
-          .pipe(takeUntil(this.unsubscribe))
-          .subscribe(response => {
-              this.projectForm.controls['budget'].setValue(parseInt(response.choices[0].message.content.replace(/[^0-9]/g, '')));
-              this.spinner.hide();
-            },
-            error => {
-              console.log(error);
-              this.spinner.hide();
-            });
+      this.aiService.getAIbudget(
+          this.translocoService.getActiveLang() == 'ua' ?
+            ('ТВОЯ ВІДПОВІДЬ ПОВИННА МІСТИТИ ЛИШЕ ОДНЕ ЧИСЛО БЕЗ ТЕКСТУ. Яка мінімальна вартість проекту на місяць в доларах, включно із заробітною платою та технічними витратами, обов`язково враховуючи кількість працівників (де зарплата одного приблизно 1500 доларів), також орієнтуватись на назву та опис проєкту? де кількості працівників: ' + this.projectForm.value.assignedUsers.length + ';\nназва проєкту: ' + this.projectForm.value.projectName + ';\nопис: ' + this.descriptionText)
+            : ('YOUR RESPOND HAVE TO CONTAIN ONLY ONE NUMBER WITHOUT TEXT. What is the minimum cost of the project per month, including salaries and technical expenses, based on the number of employees, project name and description? where number of employees: ' + this.projectForm.value.assignedUsers.length + ';\nproject name: ' + this.projectForm.value.projectName + ';\nDescription: ' + this.descriptionText)
+        )
+        .pipe(
+          finalize(() => this.spinner.hide()),
+          takeUntil(this.unsubscribe)
+        )
+        .subscribe(response => {
+            this.projectForm.controls['budget'].setValue(parseInt(response.choices[0].message.content.replace(/[^0-9]/g, '')));
+          },
+          error => {
+            console.log(error);
+          });
     }
   }
   

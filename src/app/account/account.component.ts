@@ -6,10 +6,11 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../shared/services/auth.service';
 import {UserService} from '../shared/services/user.service';
-import {Subject, takeUntil} from 'rxjs';
+import {finalize, Subject, takeUntil} from 'rxjs';
 import {UserModel} from '../shared/models/user.model';
 import {faCheck, faEye, faEyeSlash, faPencil, faXmark} from '@fortawesome/free-solid-svg-icons';
 import {RoleEnum} from '../shared/enums';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'account',
@@ -51,10 +52,13 @@ export class AccountComponent implements OnInit, OnDestroy {
               private router: Router,
               private modalService: NgbModal,
               private formBuilder: FormBuilder,
+              private spinner: NgxSpinnerService,
               private authenticationService: AuthService,
               private userService: UserService) {
     this.authenticationService.currentUser
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(x => this.currentUser = x);
   }
   
@@ -79,8 +83,12 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
   
   getCurrentUser() {
+    this.spinner.show();
     this.userService.getCurrentUser()
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(user => {
           this.currentUserData = {
             _id: user._id,
@@ -134,8 +142,12 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.submitted = true;
     if (!this.userSettingsForm.controls[field].errors) {
       this.currentUserData[field] = this.userSettingsForm.controls[field].value;
+      this.spinner.show();
       this.userService.updateUser(this.currentUserData)
-        .pipe(takeUntil(this.unsubscribe))
+        .pipe(
+          finalize(() => this.spinner.hide()),
+          takeUntil(this.unsubscribe)
+        )
         .subscribe(res => {
             this.editStatus = false;
             this.fieldType = field;
@@ -152,8 +164,12 @@ export class AccountComponent implements OnInit, OnDestroy {
   
   resetChanges(field) {
     this.userSettingsForm.controls[field].setValue(this.currentUserData[field]);
+    this.spinner.show();
     this.userService.updateUser(this.currentUserData)
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        finalize(() => this.spinner.hide()),
+        takeUntil(this.unsubscribe)
+      )
       .subscribe(res => {
           this.editStatus = false;
           this.fieldType = field;
@@ -172,8 +188,12 @@ export class AccountComponent implements OnInit, OnDestroy {
   
   isDelete(action, modal) {
     if (action == 'confirm') {
+      this.spinner.show();
       this.userService.deleteUser(this.currentUserData._id)
-        .pipe(takeUntil(this.unsubscribe))
+        .pipe(
+          finalize(() => this.spinner.hide()),
+          takeUntil(this.unsubscribe)
+        )
         .subscribe(response => {
             console.log(response);
             this.authenticationService.logout().subscribe(sub => {
