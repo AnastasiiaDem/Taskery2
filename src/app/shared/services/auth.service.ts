@@ -5,7 +5,7 @@ import {map} from 'rxjs/operators';
 import {UserModel} from '../models/user.model';
 import {TokenStorageService} from './token.service';
 
-const apiUrl = 'http://127.0.0.1:3000/api/auth';
+const apiUrl = 'https://taskery2.vercel.app/api/auth';
 
 const options = {
   headers: {'Content-Type': 'application/json'},
