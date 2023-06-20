@@ -6,9 +6,9 @@
           <div class="card-body" style="padding: 1.5rem!important; text-align: center;">
             <img src="./assets/images/user-circle.svg" alt="" style="margin-top: -20px; height: 150px;">
             <div class="name-block">
-              <p class="p-role">{{currentUserData.role}}</p>
-              <p style="line-height: 25px">{{currentUserData.firstName}} {{currentUserData.lastName}}</p>
-              <p class="p-email">{{currentUserData.email}}</p>
+              <p class="p-role">{{currentUser.role}}</p>
+              <p style="line-height: 25px">{{currentUser.firstName}} {{currentUser.lastName}}</p>
+              <p class="p-email">{{currentUser.email}}</p>
               
               <button class="delete-user" (click)="deleteUser(content)">
                 {{'delete-profile' | transloco}}

@@ -4,7 +4,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {UserModel} from '../models/user.model';
 import {TokenStorageService} from './token.service';
-import {environment} from '../../../environments/environment.prod';
+import {environment} from '../../../environments/environment';
 
 const apiUrl = environment.apiUrl + '/auth';
 

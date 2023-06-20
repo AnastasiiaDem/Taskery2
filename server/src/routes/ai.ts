@@ -1,5 +1,5 @@
 import express from 'express';
-import {getAIBudget, getAIProject, getAITask} from '../src/controllers/aiController';
+import {getAIBudget, getAIProject, getAITask} from '../controllers/aiController';
 
 const ai = require("express").Router();
 

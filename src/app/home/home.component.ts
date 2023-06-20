@@ -49,17 +49,19 @@ export class HomeComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe)
       )
       .subscribe(x => {
-        this.currentUser = {
-          id: x['foundUser']._id,
-          firstName: x['foundUser'].firstName,
-          lastName: x['foundUser'].lastName,
-          email: x['foundUser'].email,
-          password: x['foundUser'].password,
-          role: x['foundUser'].role,
-          sendAssignedEmail: x['foundUser'].sendAssignedEmail,
-          sendTaskEmail: x['foundUser'].sendTaskEmail,
-          sendTaskOverdueEmail: x['foundUser'].sendTaskOverdueEmail
-        };
+        if (!!x) {
+          this.currentUser = {
+            id: x['foundUser']._id,
+            firstName: x['foundUser'].firstName,
+            lastName: x['foundUser'].lastName,
+            email: x['foundUser'].email,
+            password: x['foundUser'].password,
+            role: x['foundUser'].role,
+            sendAssignedEmail: x['foundUser'].sendAssignedEmail,
+            sendTaskEmail: x['foundUser'].sendTaskEmail,
+            sendTaskOverdueEmail: x['foundUser'].sendTaskOverdueEmail
+          };
+        }
       });
   }
   

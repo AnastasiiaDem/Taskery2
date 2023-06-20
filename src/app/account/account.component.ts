@@ -19,15 +19,13 @@ import {NgxSpinnerService} from 'ngx-spinner';
 })
 export class AccountComponent implements OnInit, OnDestroy {
   private readonly unsubscribe: Subject<void> = new Subject();
-  currentUser: UserModel;
   messageText: string;
   message: any;
   userSettingsForm: FormGroup;
   loading = false;
   submitted = false;
   userList: UserModel[] = [];
-  selectedVal: string;
-  currentUserData: { _id: string; firstName: string; lastName: string; email: string; password: string; role: RoleEnum; sendAssignedEmail: boolean; sendTaskEmail: boolean; sendTaskOverdueEmail: boolean; } = {
+  currentUser: { _id: string; firstName: string; lastName: string; email: string; password: string; role: RoleEnum; sendAssignedEmail: boolean; sendTaskEmail: boolean; sendTaskOverdueEmail: boolean; } = {
     _id: '',
     firstName: '',
     lastName: '',
@@ -59,7 +57,28 @@ export class AccountComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.unsubscribe)
       )
-      .subscribe(x => this.currentUser = x);
+      .subscribe(x => {
+        if (!!x) {
+          this.currentUser = {
+            _id: x['foundUser']._id,
+            firstName: x['foundUser'].firstName,
+            lastName: x['foundUser'].lastName,
+            email: x['foundUser'].email,
+            password: x['foundUser'].password,
+            role: x['foundUser'].role,
+            sendAssignedEmail: x['foundUser'].sendAssignedEmail,
+            sendTaskEmail: x['foundUser'].sendTaskEmail,
+            sendTaskOverdueEmail: x['foundUser'].sendTaskOverdueEmail
+          };
+          this.userSettingsForm.setValue(
+            {
+              firstName: this.currentUser.firstName,
+              lastName: this.currentUser.lastName,
+              email: this.currentUser.email,
+              password: this.currentUser.password
+            });
+        }
+      });
   }
   
   ngOnInit() {
@@ -68,7 +87,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.checkIcon = faCheck;
     this.xIcon = faXmark;
     
-    this.getCurrentUser();
     this.userSettingsForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -80,38 +98,6 @@ export class AccountComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
-  }
-  
-  getCurrentUser() {
-    this.spinner.show();
-    this.userService.getCurrentUser()
-      .pipe(
-        finalize(() => this.spinner.hide()),
-        takeUntil(this.unsubscribe)
-      )
-      .subscribe(user => {
-          this.currentUserData = {
-            _id: user._id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            password: user.password,
-            role: user.role,
-            sendAssignedEmail: user.sendAssignedEmail,
-            sendTaskEmail: user.sendTaskEmail,
-            sendTaskOverdueEmail: user.sendTaskOverdueEmail
-          };
-          this.userSettingsForm.setValue(
-            {
-              firstName: this.currentUserData.firstName,
-              lastName: this.currentUserData.lastName,
-              email: this.currentUserData.email,
-              password: this.currentUserData.password
-            });
-        },
-        err => {
-          console.log(err);
-        });
   }
   
   onSubmit() {
@@ -141,9 +127,9 @@ export class AccountComponent implements OnInit, OnDestroy {
   updateField(field) {
     this.submitted = true;
     if (!this.userSettingsForm.controls[field].errors) {
-      this.currentUserData[field] = this.userSettingsForm.controls[field].value;
+      this.currentUser[field] = this.userSettingsForm.controls[field].value;
       this.spinner.show();
-      this.userService.updateUser(this.currentUserData)
+      this.userService.updateUser(this.currentUser)
         .pipe(
           finalize(() => this.spinner.hide()),
           takeUntil(this.unsubscribe)
@@ -163,9 +149,9 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
   
   resetChanges(field) {
-    this.userSettingsForm.controls[field].setValue(this.currentUserData[field]);
+    this.userSettingsForm.controls[field].setValue(this.currentUser[field]);
     this.spinner.show();
-    this.userService.updateUser(this.currentUserData)
+    this.userService.updateUser(this.currentUser)
       .pipe(
         finalize(() => this.spinner.hide()),
         takeUntil(this.unsubscribe)
@@ -189,7 +175,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   isDelete(action, modal) {
     if (action == 'confirm') {
       this.spinner.show();
-      this.userService.deleteUser(this.currentUserData._id)
+      this.userService.deleteUser(this.currentUser._id)
         .pipe(
           finalize(() => this.spinner.hide()),
           takeUntil(this.unsubscribe)

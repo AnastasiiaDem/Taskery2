@@ -37,7 +37,7 @@ const loginUser = async (req: express.Request, res: express.Response) => {
           role: role,
         },
       },
-      ACCESS_TOKEN_SECRET,
+      'access',
       {expiresIn: '15s'}
     );
     
@@ -45,7 +45,7 @@ const loginUser = async (req: express.Request, res: express.Response) => {
       {
         email: foundUser.email,
       },
-      REFRESH_TOKEN_SECRET,
+      "refresh",
       {expiresIn: '1d'}
     );
     

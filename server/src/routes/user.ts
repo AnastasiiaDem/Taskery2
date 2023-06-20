@@ -1,5 +1,5 @@
 import express from 'express';
-import {deleteUser, getAllUsers, getCurrentUser, updateUser} from '../src/controllers/userController';
+import {deleteUser, getAllUsers, getCurrentUser, updateUser} from '../controllers/userController';
 
 const user = require('express').Router();
 

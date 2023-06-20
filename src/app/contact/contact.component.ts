@@ -56,7 +56,19 @@ export class ContactComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.unsubscribe)
       )
-      .subscribe(x => this.currentUser = x);
+      .subscribe(x => {
+        if (!!x) {
+          this.currentUserData = x['foundUser'];
+          this.url = this.router.url;
+          this.contactForm.setValue(
+            {
+              email: x['foundUser'].email,
+              firstName: x['foundUser'].firstName,
+              lastName: x['foundUser'].lastName,
+              description: this.contactForm.value.description
+            });
+        }
+      });
     if (this.authenticationService.currentUserValue) {
       this.showHeader = false;
     }
@@ -68,10 +80,7 @@ export class ContactComponent implements OnInit, OnDestroy {
   
   ngOnInit(): void {
     this.currentLanguage = this.translocoService.getActiveLang();
-  
-    if (this.currentUser) {
-      this.getCurrentUser();
-    }
+    
     this.router.events
       .pipe(
         filter(event => event instanceof NavigationStart)
@@ -92,29 +101,6 @@ export class ContactComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
-  }
-  
-  getCurrentUser() {
-    this.spinner.show();
-    this.userService.getCurrentUser()
-      .pipe(
-        finalize(() => this.spinner.hide()),
-        takeUntil(this.unsubscribe)
-      )
-      .subscribe(user => {
-          this.currentUserData = user;
-          this.url = this.router.url;
-          this.contactForm.setValue(
-            {
-              email: user.email,
-              firstName: user.firstName,
-              lastName: user.lastName,
-              description: this.contactForm.value.description
-            });
-        },
-        err => {
-          console.log(err);
-        });
   }
   
   contactUs() {

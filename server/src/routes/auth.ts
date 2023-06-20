@@ -2,10 +2,10 @@ import express from 'express';
 
 const auth = require("express").Router();
 
-import createUser from '../src/controllers/registerController';
-import loginUser from '../src/controllers/loginController';
-import logoutUser from '../src/controllers/logoutController';
-import refreshToken from '../src/controllers/refreshTokenController';
+import createUser from '../controllers/registerController';
+import loginUser from '../controllers/loginController';
+import logoutUser from '../controllers/logoutController';
+import refreshToken from '../controllers/refreshTokenController';
 
 auth.get('/', (req: express.Request, res: express.Response) => {
   res.send('AUTH');

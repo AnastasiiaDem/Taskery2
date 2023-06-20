@@ -5,7 +5,7 @@ import {
   getCurrentProject,
   getProjects,
   updateProject
-} from '../src/controllers/projectController';
+} from '../controllers/projectController';
 
 const project = require('express').Router();
 

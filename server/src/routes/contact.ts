@@ -1,5 +1,5 @@
 import express from 'express';
-import {deleteRequest, getRequests, sendRequest, sendRespond} from '../src/controllers/contactController';
+import {deleteRequest, getRequests, sendRequest, sendRespond} from '../controllers/contactController';
 
 const contact = require('express').Router();
 
