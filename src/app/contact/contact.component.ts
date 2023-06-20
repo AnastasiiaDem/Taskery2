@@ -60,13 +60,6 @@ export class ContactComponent implements OnInit, OnDestroy {
         if (!!x) {
           this.currentUserData = x['foundUser'];
           this.url = this.router.url;
-          this.contactForm.setValue(
-            {
-              email: x['foundUser'].email,
-              firstName: x['foundUser'].firstName,
-              lastName: x['foundUser'].lastName,
-              description: this.contactForm.value.description
-            });
         }
       });
     if (this.authenticationService.currentUserValue) {
@@ -96,6 +89,14 @@ export class ContactComponent implements OnInit, OnDestroy {
       email: ['', [Validators.required, Validators.email]],
       description: ['', [Validators.required]],
     });
+  
+    this.contactForm.setValue(
+      {
+        email: this.currentUserData.email,
+        firstName: this.currentUserData.firstName,
+        lastName: this.currentUserData.lastName,
+        description: this.contactForm.value.description
+      });
   }
   
   ngOnDestroy() {
