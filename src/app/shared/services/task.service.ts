@@ -2,8 +2,9 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {TaskModel} from '../models/task.model';
+import {environment} from '../../../environments/environment';
 
-const apiUrl = 'https://taskery2.vercel.app/api/task';
+const apiUrl = environment.apiUrl + '/task';
 
 const options = {
   headers: {'Content-Type': 'application/json'},

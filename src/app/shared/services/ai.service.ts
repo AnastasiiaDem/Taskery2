@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
+import {environment} from '../../../environments/environment';
 
-const apiUrl = 'https://taskery2.vercel.app/api/ai';
+const apiUrl = environment.apiUrl + '/ai';
 
 const options = {
   headers: {'Content-Type': 'application/json'},
