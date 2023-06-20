@@ -52,7 +52,6 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe)
       )
       .subscribe(u => {
-          console.log(u.body);
           console.log(u.message);
         },
         err => {

@@ -70,13 +70,6 @@ export class AccountComponent implements OnInit, OnDestroy {
             sendTaskEmail: x['foundUser'].sendTaskEmail,
             sendTaskOverdueEmail: x['foundUser'].sendTaskOverdueEmail
           };
-          this.userSettingsForm.setValue(
-            {
-              firstName: this.currentUser.firstName,
-              lastName: this.currentUser.lastName,
-              email: this.currentUser.email,
-              password: this.currentUser.password
-            });
         }
       });
   }
@@ -93,6 +86,14 @@ export class AccountComponent implements OnInit, OnDestroy {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]+$')]],
     });
+  
+    this.userSettingsForm.setValue(
+      {
+        firstName: this.currentUser.firstName,
+        lastName: this.currentUser.lastName,
+        email: this.currentUser.email,
+        password: this.currentUser.password
+      });
   }
   
   ngOnDestroy() {
