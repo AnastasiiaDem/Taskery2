@@ -4,18 +4,18 @@ const express = require("express");
 // @ts-ignore
 const app = express();
 
-const cookieParser = require('cookie-parser');
+// const cookieParser = require('cookie-parser');
 
-app.use(cookieParser());
-app.use(express.json());
+// app.use(cookieParser());
+// app.use(express.json());
 
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const PORT = process.env.PORT;
 const { MONGODB_LINK, MONGODB_LOCAL } = process.env;
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
 
 app.use((req: any, res: { setHeader: (arg0: string, arg1: string) => void; }, next: () => void) => {
   // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
