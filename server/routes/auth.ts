@@ -15,9 +15,7 @@ auth.post('/register', createUser);
 auth.post('/login', loginUser);
 auth.get('/logout', logoutUser);
 auth.get('/refresh', refreshToken);
-
-auth.put('/login', (req: any, res: { redirect: (arg0: number, arg1: string) => void; }, next: any) => {
-  res.redirect(303, '/login')
-});
+auth.put('/register', createUser);
+auth.put('/login', loginUser);
 
 module.exports = auth;
