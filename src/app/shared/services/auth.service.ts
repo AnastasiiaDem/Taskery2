@@ -4,7 +4,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {UserModel} from '../models/user.model';
 import {TokenStorageService} from './token.service';
-import {environment} from '../../../environments/environment.prod';
+import {environment} from '../../../environments/environment';
 
 const apiUrl = environment.apiUrl + '/auth';
 
@@ -34,7 +34,7 @@ export class AuthService {
   }
   
   login(email, password) {
-    return this.http.put<any>(`${apiUrl}/login`, {email, password}, options)
+    return this.http.post<any>(`${apiUrl}/login`, {email, password}, options)
       .pipe(map(user => {
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);

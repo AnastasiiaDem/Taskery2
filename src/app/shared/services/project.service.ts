@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {ProjectModel} from '../models/project.model';
-import {environment} from '../../../environments/environment.prod';
+import {environment} from '../../../environments/environment';
 
 const apiUrl = environment.apiUrl + '/project';
 

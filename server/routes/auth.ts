@@ -15,7 +15,5 @@ auth.post('/register', createUser);
 auth.post('/login', loginUser);
 auth.get('/logout', logoutUser);
 auth.get('/refresh', refreshToken);
-auth.put('/register', createUser);
-auth.put('/login', loginUser);
 
 module.exports = auth;
