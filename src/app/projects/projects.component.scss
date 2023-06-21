@@ -484,3 +484,7 @@ a {
   margin-bottom: 0.5rem;
   cursor: pointer;
 }
+
+::ng-deep.dropdown-list {
+  margin-top: 0 !important;
+}

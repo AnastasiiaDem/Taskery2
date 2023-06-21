@@ -88,23 +88,29 @@
                   formControlName="assignedUsers">
               </ng-multiselect-dropdown>
             </div>
-            <div class="form-floating"
-                 style="width: 32%; display: flex;justify-content: flex-end; align-items: center; position: relative;">
-              <!--              <p style="margin: 0 10px;">$</p>-->
-              <!--              <div class="form-floating" style="width: 50%">-->
-              <span style="position: absolute;right: 65%;">$</span>
+<!--            <div class="form-floating" style="width: 32%; display: flex;justify-content: flex-end; align-items: center; position: relative;">-->
+<!--              <span style="position: absolute;right: 65%;">$</span>-->
+<!--              <input class="form-control" type="float" placeholder="{{'budget' | transloco}}"-->
+<!--                     inputWithComma-->
+<!--                     [ngModelOptions]="{standalone: true}"-->
+<!--                     [(ngModel)]="projectForm.value.budget" (ngModelChange)="budgetChanged($event)"-->
+<!--                     style="height: 30px;padding: 0.3rem 0.5rem 0.3rem 1.3rem;width: 60%;"-->
+<!--                     [ngClass]="{ 'is-invalid': submitted && projectForm.invalid && f.budget.errors }" required>-->
+<!--              <p class="calc-budget">-->
+<!--                <img src="https://img.icons8.com/material-outlined/96/null/calculator&#45;&#45;v1.png" style="height: 20px;"-->
+<!--                     (click)="calcBudgetAI()"-->
+<!--                     alt="">-->
+<!--                <span class="tooltipcalc">{{'budget-ai' | transloco}}</span>-->
+<!--              </p>-->
+<!--            </div>-->
+            <div class="form-floating" style="width: 32%;align-items: center;display: flex;position: relative;">
+              <span style="position: absolute;right: 65.5%;">$</span>
               <input class="form-control" type="float" placeholder="{{'budget' | transloco}}"
                      inputWithComma
                      [ngModelOptions]="{standalone: true}"
                      [(ngModel)]="projectForm.value.budget" (ngModelChange)="budgetChanged($event)"
-                     style="height: 30px;padding: 0.3rem 0.5rem 0.3rem 1.3rem;width: 60%;"
+                     style="min-height: 30px;height: 30px;padding: 0.3rem 0.5rem 0.3rem 1.5rem;width: 75%;margin-right: 0;margin-left: auto;"
                      [ngClass]="{ 'is-invalid': submitted && projectForm.invalid && f.budget.errors }" required>
-              <p class="calc-budget">
-                <img src="https://img.icons8.com/material-outlined/96/null/calculator--v1.png" style="height: 20px;"
-                     (click)="calcBudgetAI()"
-                     alt="">
-                <span class="tooltipcalc">{{'budget-ai' | transloco}}</span>
-              </p>
             </div>
           </div>
           <button class="btn btn-primary close-button" type="submit"
