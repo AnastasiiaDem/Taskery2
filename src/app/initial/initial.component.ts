@@ -19,17 +19,6 @@ export class InitialComponent implements OnInit, OnDestroy {
   private readonly unsubscribe: Subject<void> = new Subject();
   currentUser: UserModel;
   url;
-  currentUserData: UserModel = {
-    id: 0,
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    role: RoleEnum.TeamMember,
-    sendAssignedEmail: false,
-    sendTaskEmail: false,
-    sendTaskOverdueEmail: false
-  };
   currentLanguage = 'en';
   
   

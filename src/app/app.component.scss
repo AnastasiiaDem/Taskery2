@@ -223,7 +223,7 @@ ngb-carousel .picsum-img-wrapper > img {
 
 .footer {
   text-align: center;
-  font-size: 13px;
+  font-size: 14px;
   width: 100%;
   display: block;
   margin-top: auto;
@@ -231,9 +231,11 @@ ngb-carousel .picsum-img-wrapper > img {
 
   .site {
     margin-top: 3rem;
+    //color: #0065FF;
+  }
+
+  p {
     margin-bottom: 0;
-    font-size: 11px;
-    color: #0065FF;
   }
 }
 

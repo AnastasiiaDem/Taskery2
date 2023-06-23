@@ -233,6 +233,7 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
         },
         err => {
           console.log(err);
+          this.spinner.hide()
         });
   }
   

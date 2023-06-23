@@ -93,7 +93,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .subscribe(sub => {
         this.router.navigate(['/']);
         this.spinner.hide();
-      });
+      },
+        err => {
+          console.log(err);
+          this.spinner.hide()
+        });
   }
   
   ngOnDestroy() {
