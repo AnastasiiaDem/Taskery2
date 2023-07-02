@@ -12,18 +12,18 @@ const options = {
 
 @Injectable()
 export class AIService {
-  
+
   constructor(private http: HttpClient) {
   }
-  
+
   getAIproject(prompt): Observable<any> {
     return this.http.post(`${apiUrl}/project`, {prompt: prompt}, options);
   }
-  
+
   getAIbudget(prompt): Observable<any> {
     return this.http.post(`${apiUrl}/budget`, {prompt: prompt}, options);
   }
-  
+
   getAItask(prompt): Observable<any> {
     return this.http.post(`${apiUrl}/task`, {prompt: prompt}, options);
   }

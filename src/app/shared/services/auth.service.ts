@@ -15,24 +15,24 @@ const options = {
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
-  
+
   private currentUserSubject: BehaviorSubject<UserModel>;
   public currentUser: Observable<UserModel>;
-  
+
   constructor(private http: HttpClient,
               private tokenStorageService: TokenStorageService) {
     this.currentUserSubject = new BehaviorSubject<UserModel>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
   }
-  
+
   public get currentUserValue(): UserModel {
     return this.currentUserSubject.value;
   }
-  
+
   register(body: Object): Observable<any> {
     return this.http.post(`${apiUrl}/register`, body, options);
   }
-  
+
   login(email, password) {
     return this.http.post<any>(`${apiUrl}/login`, {email, password}, options)
       .pipe(map(user => {
@@ -41,7 +41,7 @@ export class AuthService {
         return user;
       }));
   }
-  
+
   logout() {
     return this.http.get<any>(`${apiUrl}/logout`, options)
       .pipe(map(data => {
@@ -51,7 +51,7 @@ export class AuthService {
         return data;
       }));
   }
-  
+
   refreshToken(token: string) {
     return this.http.post(`${apiUrl}/refresh`, {
       refreshToken: token

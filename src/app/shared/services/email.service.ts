@@ -12,10 +12,10 @@ const options = {
 
 @Injectable()
 export class EmailService {
-  
+
   constructor(private http: HttpClient) {
   }
-  
+
   sendEmail(userId, project, task, report, content): Observable<any> {
     return this.http.post(`${apiUrl}/email`, {
       userId: userId,

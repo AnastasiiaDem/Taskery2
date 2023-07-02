@@ -8,7 +8,7 @@
           {{'add-task' | transloco}}
         </button>
       </div>
-      
+
       <div class="d-flex align-items-center">
         <div ngbDropdown class="d-inline-block" placement="left-top" [autoClose]="'outside'"
              style="height: 23px !important;">
@@ -88,7 +88,7 @@
         </button>
       </div>
     </div>
-    
+
     <ejs-kanban #kanban keyField='status'
                 [dataSource]='tasks'
                 [cardSettings]='cardSettings'
@@ -143,12 +143,12 @@
             </div>
           </div>
           <div class="form-floating mb-3">
-            <p class="generate-desc">
-              <img src="https://img.icons8.com/ios-glyphs/90/null/adobe-illustrator.png" style="height: 20px;"
-                   (click)="writeBriefAI()"
-                   alt="">
-              <span class="tooltiptemplate">{{'desc-ai' | transloco}}</span>
-            </p>
+            <!--            <p class="generate-desc">-->
+            <!--              <img src="https://img.icons8.com/ios-glyphs/90/null/adobe-illustrator.png" style="height: 20px;"-->
+            <!--                   (click)="writeBriefAI()"-->
+            <!--                   alt="">-->
+            <!--              <span class="tooltiptemplate">{{'desc-ai' | transloco}}</span>-->
+            <!--            </p>-->
             <quill-editor class="form-control" style="padding: 1rem .75rem; height: 150px;"
                           formControlName="description" placeholder="{{'desc' | transloco}}"
                           [modules]="quillConfig"></quill-editor>
@@ -240,4 +240,5 @@
   </div>
 </ng-template>
 
-<ngx-spinner bdColor="rgb(238 238 238 / 60%)" size="default" color="rgb(15 16 72)" type="ball-beat" [fullScreen]="true"></ngx-spinner>
+<ngx-spinner bdColor="rgb(238 238 238 / 60%)" size="default" color="rgb(15 16 72)" type="ball-beat"
+             [fullScreen]="true"></ngx-spinner>

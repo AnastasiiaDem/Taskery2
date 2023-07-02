@@ -40,7 +40,7 @@
         </tbody>
       </table>
     </div>
-    
+
     <div class="no-content" *ngIf="!projects.length">
       <p>{{'no-data' | transloco}}😢<br>{{'switch-role' | transloco}}</p>
     </div>
@@ -81,28 +81,28 @@
           <div style="display: flex; align-items: center; margin-bottom: 1rem;">
             <div class="form-floating" style="margin-left: 0 !important;width: 68%;">
               <ng-multiselect-dropdown
-                  style="width: 60%;"
-                  [placeholder]="'assign-to' | transloco"
-                  [settings]="dropdownSettings"
-                  [data]="usersData"
-                  formControlName="assignedUsers">
+                style="width: 60%;"
+                [placeholder]="'assign-to' | transloco"
+                [settings]="dropdownSettings"
+                [data]="usersData"
+                formControlName="assignedUsers">
               </ng-multiselect-dropdown>
             </div>
-<!--            <div class="form-floating" style="width: 32%; display: flex;justify-content: flex-end; align-items: center; position: relative;">-->
-<!--              <span style="position: absolute;right: 65%;">$</span>-->
-<!--              <input class="form-control" type="float" placeholder="{{'budget' | transloco}}"-->
-<!--                     inputWithComma-->
-<!--                     [ngModelOptions]="{standalone: true}"-->
-<!--                     [(ngModel)]="projectForm.value.budget" (ngModelChange)="budgetChanged($event)"-->
-<!--                     style="height: 30px;padding: 0.3rem 0.5rem 0.3rem 1.3rem;width: 60%;"-->
-<!--                     [ngClass]="{ 'is-invalid': submitted && projectForm.invalid && f.budget.errors }" required>-->
-<!--              <p class="calc-budget">-->
-<!--                <img src="https://img.icons8.com/material-outlined/96/null/calculator&#45;&#45;v1.png" style="height: 20px;"-->
-<!--                     (click)="calcBudgetAI()"-->
-<!--                     alt="">-->
-<!--                <span class="tooltipcalc">{{'budget-ai' | transloco}}</span>-->
-<!--              </p>-->
-<!--            </div>-->
+            <!--            <div class="form-floating" style="width: 32%; display: flex;justify-content: flex-end; align-items: center; position: relative;">-->
+            <!--              <span style="position: absolute;right: 65%;">$</span>-->
+            <!--              <input class="form-control" type="float" placeholder="{{'budget' | transloco}}"-->
+            <!--                     inputWithComma-->
+            <!--                     [ngModelOptions]="{standalone: true}"-->
+            <!--                     [(ngModel)]="projectForm.value.budget" (ngModelChange)="budgetChanged($event)"-->
+            <!--                     style="height: 30px;padding: 0.3rem 0.5rem 0.3rem 1.3rem;width: 60%;"-->
+            <!--                     [ngClass]="{ 'is-invalid': submitted && projectForm.invalid && f.budget.errors }" required>-->
+            <!--              <p class="calc-budget">-->
+            <!--                <img src="https://img.icons8.com/material-outlined/96/null/calculator&#45;&#45;v1.png" style="height: 20px;"-->
+            <!--                     (click)="calcBudgetAI()"-->
+            <!--                     alt="">-->
+            <!--                <span class="tooltipcalc">{{'budget-ai' | transloco}}</span>-->
+            <!--              </p>-->
+            <!--            </div>-->
             <div class="form-floating" style="width: 32%;align-items: center;display: flex;position: relative;">
               <span style="position: absolute;right: 65.5%;">$</span>
               <input class="form-control" type="float" placeholder="{{'budget' | transloco}}"
@@ -177,7 +177,8 @@
       <div class="card-body" style="padding: 3rem!important;">
         <h5 style="text-align: center;">{{'sure-project' | transloco}}</h5>
         <div style="display: flex; justify-content: space-around; align-items: center; margin-top: 50px;">
-          <button style="font-size: 13px;" class="btn btn-outline-danger" (click)="isDelete('cancel', modal)">{{'cancel' | transloco}}
+          <button style="font-size: 13px;" class="btn btn-outline-danger"
+                  (click)="isDelete('cancel', modal)">{{'cancel' | transloco}}
           </button>
           <button style="font-size: 13px;" class="btn btn-outline-primary" (click)="isDelete('confirm', modal)">
             {{'confirm' | transloco}}
@@ -188,4 +189,5 @@
   </div>
 </ng-template>
 
-<ngx-spinner bdColor="rgb(238 238 238 / 60%)" size="default" color="rgb(15 16 72)" type="ball-beat" [fullScreen]="true"></ngx-spinner>
+<ngx-spinner bdColor="rgb(238 238 238 / 60%)" size="default" color="rgb(15 16 72)" type="ball-beat"
+             [fullScreen]="true"></ngx-spinner>
