@@ -12,6 +12,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ToastrService} from 'ngx-toastr';
 import {RoleEnum} from '../shared/enums';
 import {TranslocoService} from '@ngneat/transloco';
+import {AuthService} from '../shared/services/auth.service';
 
 @Component({
   selector: 'admin',
@@ -49,8 +50,27 @@ export class AdminComponent implements OnInit, OnDestroy {
               private toastr: ToastrService,
               public modalService: NgbModal,
               private translocoService: TranslocoService,
+              private authenticationService: AuthService,
               public contactService: ContactService) {
-    this.getCurrentUser();
+    this.authenticationService.currentUser
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
+      .subscribe(x => {
+        if (!!x) {
+          this.currentUser = {
+            id: x['foundUser']._id,
+            firstName: x['foundUser'].firstName,
+            lastName: x['foundUser'].lastName,
+            email: x['foundUser'].email,
+            password: x['foundUser'].password,
+            role: x['foundUser'].role,
+            sendAssignedEmail: x['foundUser'].sendAssignedEmail,
+            sendTaskEmail: x['foundUser'].sendTaskEmail,
+            sendTaskOverdueEmail: x['foundUser'].sendTaskOverdueEmail
+          };
+        }
+      });
   }
 
   ngOnInit(): void {
@@ -65,29 +85,6 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   scroll(el: HTMLElement) {
     el.scrollIntoView({behavior: 'smooth'});
-  }
-
-  getCurrentUser() {
-    this.userService.getCurrentUser()
-      .pipe(
-        takeUntil(this.unsubscribe)
-      )
-      .subscribe(user => {
-          this.currentUser = {
-            id: user._id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            password: user.password,
-            role: user.role,
-            sendAssignedEmail: user.sendAssignedEmail,
-            sendTaskEmail: user.sendTaskEmail,
-            sendTaskOverdueEmail: user.sendTaskOverdueEmail
-          };
-        },
-        err => {
-          console.log(err);
-        });
   }
 
   getAllUsers() {

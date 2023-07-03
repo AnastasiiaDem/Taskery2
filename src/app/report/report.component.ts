@@ -16,6 +16,7 @@ import {ToastrService} from 'ngx-toastr';
 import {UserService} from '../shared/services/user.service';
 import {DatePipe} from '@angular/common';
 import {TranslocoService} from '@ngneat/transloco';
+import { AuthService } from '../shared/services/auth.service';
 
 
 export type barChartOptions = {
@@ -99,11 +100,27 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
               private elementRef: ElementRef,
               private userService: UserService,
               private translocoService: TranslocoService,
+              private authenticationService: AuthService,
               private spinner: NgxSpinnerService) {
+    this.authenticationService.currentUser
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
+      .subscribe(x => {
+        if (!!x) {
+          this.currentUser = {
+            _id: x['foundUser']._id,
+            firstName: x['foundUser'].firstName,
+            lastName: x['foundUser'].lastName,
+            email: x['foundUser'].email,
+            password: x['foundUser'].password,
+            role: x['foundUser'].role
+          };
+        }
+      });
   }
 
   ngOnInit(): void {
-    this.getCurrentUser();
     this.taskAndProjectData();
   }
 
@@ -166,28 +183,10 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
   }
 
-  getCurrentUser() {
-    this.userService.getCurrentUser()
-      .pipe(
-        takeUntil(this.unsubscribe)
-      )
-      .subscribe(user => {
-          this.currentUser = user;
-        },
-        err => {
-          console.log(err);
-        });
-  }
-
   taskAndProjectData() {
     this.spinner.show();
     this.taskService.getTasks()
       .pipe(
-        finalize(() => {
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1000);
-        }),
         takeUntil(this.unsubscribe)
       )
       .subscribe(res => {
@@ -226,6 +225,9 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
                 this.projects = projectsList.filter(project => this.tasks.find(task => task.projectId == project.id));
                 this.isProjects = !!this.projects.length;
                 this.initChartData();
+                setTimeout(() => {
+                  this.spinner.hide();
+                }, 1000);
               },
               err => {
                 console.log(err);

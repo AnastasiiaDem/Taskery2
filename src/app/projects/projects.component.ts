@@ -23,6 +23,7 @@ import Emoji from 'quill-emoji';
 import Mention from 'quill-mention';
 import {AIService} from '../shared/services/ai.service';
 import {TranslocoService} from '@ngneat/transloco';
+import {AuthService} from '../shared/services/auth.service';
 
 let Quill: any = QuillNamespace;
 
@@ -49,7 +50,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   currentDate;
   private readonly unsubscribe: Subject<void> = new Subject();
   public dropdownSettings: IDropdownSettings = {};
-  currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: RoleEnum; } = {
+  currentUserData = {
     _id: 0,
     firstName: '',
     lastName: '',
@@ -135,7 +136,18 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
               private emailService: EmailService,
               private _focusMonitor: FocusMonitor,
               private translocoService: TranslocoService,
-              private spinner: NgxSpinnerService) {
+              private spinner: NgxSpinnerService,
+              private authenticationService: AuthService) {
+    this.authenticationService.currentUser
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
+      .subscribe(x => {
+        if (!!x) {
+          this.currentUserData = x['foundUser'];
+          this.getAllProjects();
+        }
+      });
   }
 
   get f() {
@@ -155,8 +167,6 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       {id: StatusEnum.onReview, text: StatusEnum.onReview},
       {id: StatusEnum.done, text: StatusEnum.done}
     ];
-    this.getCurrentUser();
-    this.getAllProjects();
     this.getAllUsers();
     this.getAllTasks();
     this.projectForm = this.formBuilder.group({
@@ -255,7 +265,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       )
       .subscribe(res => {
           res.projects.filter(p => {
-            return (p.userId == this.currentUser._id || p.assignedUsers.find(u => u.id == this.currentUser._id));
+            return (p.userId == this.currentUserData._id || p.assignedUsers.find(u => u.id == this.currentUserData._id));
           }).forEach(project => {
             this.projects.push({
               id: project._id,
@@ -325,28 +335,13 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       )
       .subscribe(users => {
           this.usersData = users.filter(user => {
-            return (user.role != RoleEnum.ProjectManager) && (user._id != this.currentUser._id);
+            return (user.role != RoleEnum.ProjectManager) && (user._id != this.currentUserData._id);
           }).map(user => {
             return {
               id: user._id,
               text: user.firstName + ' ' + user.lastName
             };
           });
-        },
-        err => {
-          console.log(err);
-        });
-  }
-
-  getCurrentUser() {
-
-    this.userService.getCurrentUser()
-      .pipe(
-        finalize(() => this.spinner.hide()),
-        takeUntil(this.unsubscribe)
-      )
-      .subscribe(user => {
-          this.currentUser = user;
         },
         err => {
           console.log(err);

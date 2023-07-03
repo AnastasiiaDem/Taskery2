@@ -12,6 +12,7 @@ import {DatePipe} from '@angular/common';
 import {EmailService} from '../shared/services/email.service';
 import {TranslocoService} from '@ngneat/transloco';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {AuthService} from '../shared/services/auth.service';
 
 
 @Component({
@@ -113,6 +114,7 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
               private emailService: EmailService,
               private translocoService: TranslocoService,
               private datepipe: DatePipe,
+              private authenticationService: AuthService,
               private spinner: NgxSpinnerService) {
   }
 
@@ -256,8 +258,10 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
 
   getAllTasks() {
+    this.spinner.show();
     this.taskService.getTasks()
       .pipe(
+        finalize(() => this.spinner.hide()),
         takeUntil(this.unsubscribe)
       )
       .subscribe(res => {
@@ -342,8 +346,10 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
 
   getAllProjects() {
+    this.spinner.show();
     this.projectService.getProjects()
       .pipe(
+        finalize(() => this.spinner.hide()),
         takeUntil(this.unsubscribe)
       )
       .subscribe(res => {

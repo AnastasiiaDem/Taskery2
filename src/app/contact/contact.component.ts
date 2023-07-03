@@ -22,7 +22,6 @@ import {TranslocoService} from '@ngneat/transloco';
 export class ContactComponent implements OnInit, OnDestroy {
 
   private readonly unsubscribe: Subject<void> = new Subject();
-  currentUser: UserModel;
   url;
   currentUserData = {
     id: 0,

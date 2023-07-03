@@ -1,6 +1,6 @@
 <div>
   <div class="w3-animate-opacity" style="margin: 5rem auto 5rem auto; width: 95%;">
-    <div style="margin: 3rem auto 1rem;" *ngIf="currentUser.role == 'ProjectManager'">
+    <div style="margin: 3rem auto 1rem;" *ngIf="currentUserData.role == 'ProjectManager'">
       <button (click)="addProject(addUpdateContent, $event)" class="add-btn">
         <mat-icon class="add-btn-icon">add</mat-icon>
         {{'add-project' | transloco}}
@@ -157,7 +157,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="currentUser.role == 'ProjectManager'" class="card-footer">
+      <div *ngIf="currentUserData.role == 'ProjectManager'" class="card-footer">
         <div class="action-btns">
           <button class="update-task" style="border: 1px solid #fff;" (click)="updateProject(addUpdateContent, modal)">
             {{'update' | transloco}}

@@ -1,5 +1,5 @@
 <div>
-  <div class="w3-animate-opacity" style="margin: 0 auto; width: 95%;">
+  <div class="w3-animate-opacity" style="margin: 0 auto 5rem auto; width: 95%;">
     <div style="display: flex;align-items: center;margin: 3rem 2rem 1rem;justify-content: space-between;">
       <div class="d-flex align-items-center">
         <p class="project-name">{{currentProject?.projectName}}</p>
@@ -82,7 +82,7 @@
             </div>
           </div>
         </div>
-        <button *ngIf="currentUser.role != 'ProjectManager'" [ngClass]="AllIssues ? 'all-tasks' : 'my-tasks'"
+        <button *ngIf="currentUserData.role != 'ProjectManager'" [ngClass]="AllIssues ? 'all-tasks' : 'my-tasks'"
                 style="font-size: 11px; height: 22px; margin-left: 20px;" (click)="showIssues()">
           {{'all-issues' | transloco}}
         </button>

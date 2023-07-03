@@ -1,4 +1,4 @@
-<div style="margin-top: 3rem;">
+<div style="margin: 5rem auto 5rem auto;">
   <div class="form-group form-floating mb-3 select-container"
        style="display: flex;justify-content: space-between;z-index: 1;align-items: flex-end;margin: 0 4rem;">
     <ng-select2 [placeholder]="'project-filter' | transloco"
@@ -8,7 +8,7 @@
                 [allowClear]="true"
                 (valueChanged)="filter($event)">
     </ng-select2>
-    
+
     <button *ngIf="currentUser.role != 'ProjectManager'" [ngClass]="AllIssues ? 'all-tasks' : 'my-tasks'"
             style="font-size: 11px; height: 22px; margin-right: 1rem;" (click)="showIssues(selectedProject)">
       {{'all-issues' | transloco}}
@@ -74,3 +74,5 @@
     </div>
   </div>
 </ng-template>
+
+<ngx-spinner bdColor="rgb(238 238 238 / 60%)" size="default" color="rgb(15 16 72)" type="ball-beat" [fullScreen]="true"></ngx-spinner>

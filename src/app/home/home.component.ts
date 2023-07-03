@@ -30,8 +30,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     sendTaskEmail: false,
     sendTaskOverdueEmail: false
   };
-  currentDate;
-  overdue;
+  currentDate = new Date();
+  overdue = false;
   today;
   upcoming;
   allProjects = [];
@@ -61,6 +61,8 @@ export class HomeComponent implements OnInit, OnDestroy {
             sendTaskEmail: x['foundUser'].sendTaskEmail,
             sendTaskOverdueEmail: x['foundUser'].sendTaskOverdueEmail
           };
+          this.getAllProjects();
+          this.getAllTasks();
         }
       });
   }
@@ -68,8 +70,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.overdue = false;
     this.currentDate = new Date();
-    this.getAllProjects();
-    this.getAllTasks();
   }
 
   ngOnDestroy() {

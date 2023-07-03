@@ -26,6 +26,7 @@ import Emoji from 'quill-emoji';
 import Mention from 'quill-mention';
 import {AIService} from '../shared/services/ai.service';
 import {TranslocoService} from '@ngneat/transloco';
+import {AuthService} from '../shared/services/auth.service';
 
 let Quill: any = QuillNamespace;
 
@@ -62,7 +63,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   filterStatus = false;
   public dropdownSettings: IDropdownSettings = {};
   private readonly unsubscribe: Subject<void> = new Subject();
-  currentUser: { _id: number; firstName: string; lastName: string; email: string; password: string; role: RoleEnum; } = {
+  currentUserData = {
     _id: 0,
     firstName: '',
     lastName: '',
@@ -148,6 +149,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               private _focusMonitor: FocusMonitor,
               private spinner: NgxSpinnerService,
               private translocoService: TranslocoService,
+              private authenticationService: AuthService,
               private elementRef: ElementRef) {
     this.route.params
       .pipe(
@@ -155,6 +157,17 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       )
       .subscribe(param => {
         this.selectedProjectId = param['paramKey'];
+      });
+
+    this.authenticationService.currentUser
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
+      .subscribe(x => {
+        if (!!x) {
+          this.currentUserData = x['foundUser'];
+          this.getAllTasks();
+        }
       });
   }
 
@@ -290,31 +303,16 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       )
       .subscribe(project => {
           this.currentProject = project;
-          this.getCurrentUser();
           this.getAllUsers();
-          this.getAllTasks();
           setTimeout(() => {
             this.tasks = this.tasksList.filter(task => {
-              if (this.currentUser.role == 'ProjectManager') {
+              if (this.currentUserData.role == 'ProjectManager') {
                 return task.projectId == this.selectedProjectId;
               } else {
-                return task.projectId == this.selectedProjectId && task.employeeId == this.currentUser._id;
+                return task.projectId == this.selectedProjectId && task.employeeId == this.currentUserData._id;
               }
             });
           }, 100);
-        },
-        err => {
-          console.log(err);
-        });
-  }
-
-  getCurrentUser() {
-    this.userService.getCurrentUser()
-      .pipe(
-        takeUntil(this.unsubscribe)
-      )
-      .subscribe(user => {
-          this.currentUser = user;
         },
         err => {
           console.log(err);
@@ -353,6 +351,10 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
             deadline: this.currentDate
           };
           this.taskForm.setValue(currentTask);
+          setTimeout(() => {
+            this.kanban.render();
+
+          }, 500);
         },
         err => {
           console.log(err);
@@ -377,11 +379,11 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
           });
 
           this.atValues = [];
-          users.filter(u => u._id != this.currentUser._id || !!this.employeeData.find(usr => usr.id == u._id)).forEach(user => {
+          users.filter(u => u._id != this.currentUserData._id || !!this.employeeData.find(usr => usr.id == u._id)).forEach(user => {
             this.atValues.push({
               id: user._id,
               value: user.firstName + ' ' + user.lastName,
-              link: 'https://mail.google.com/mail/u/' + this.currentUser.email + '/?view=cm&to=' + user.email
+              link: 'https://mail.google.com/mail/u/' + this.currentUserData.email + '/?view=cm&to=' + user.email
             });
           });
           this.firstUserId = this.employeeData[0].id;
@@ -637,10 +639,10 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
         if (this.AllIssues == true) {
           return task.projectId == this.selectedProjectId;
         } else {
-          return task.projectId == this.selectedProjectId && task.employeeId == this.currentUser._id;
+          return task.projectId == this.selectedProjectId && task.employeeId == this.currentUserData._id;
         }
       });
-    }, 100);
+    }, 500);
   }
 
   overdueDateStyle(task) {
