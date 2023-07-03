@@ -19,7 +19,7 @@ import {TranslocoService} from '@ngneat/transloco';
   styleUrls: ['./admin.component.scss'],
 })
 export class AdminComponent implements OnInit, OnDestroy {
-  
+
   private readonly unsubscribe: Subject<void> = new Subject();
   myTasks: { overdue: Array<TaskModel>, today: Array<TaskModel>, upcoming: Array<TaskModel> };
   currentUser: UserModel = {
@@ -42,7 +42,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   submitted = false;
   respondMsg = '';
   answered = false;
-  
+
   constructor(private spinner: NgxSpinnerService,
               public taskService: TaskService,
               public userService: UserService,
@@ -52,26 +52,24 @@ export class AdminComponent implements OnInit, OnDestroy {
               public contactService: ContactService) {
     this.getCurrentUser();
   }
-  
+
   ngOnInit(): void {
     this.getRequests();
     this.getAllUsers();
   }
-  
+
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
-  
+
   scroll(el: HTMLElement) {
     el.scrollIntoView({behavior: 'smooth'});
   }
-  
+
   getCurrentUser() {
-    this.spinner.show();
     this.userService.getCurrentUser()
       .pipe(
-        finalize(() => this.spinner.hide()),
         takeUntil(this.unsubscribe)
       )
       .subscribe(user => {
@@ -91,12 +89,10 @@ export class AdminComponent implements OnInit, OnDestroy {
           console.log(err);
         });
   }
-  
+
   getAllUsers() {
-    this.spinner.show();
     this.userService.getUsers()
       .pipe(
-        finalize(() => this.spinner.hide()),
         takeUntil(this.unsubscribe)
       )
       .subscribe(users => {
@@ -107,12 +103,10 @@ export class AdminComponent implements OnInit, OnDestroy {
           console.log(err);
         });
   }
-  
+
   getRequests() {
-    this.spinner.show();
     this.contactService.getAllRequests()
       .pipe(
-        finalize(() => this.spinner.hide()),
         takeUntil(this.unsubscribe)
       )
       .subscribe(requests => {
@@ -122,14 +116,14 @@ export class AdminComponent implements OnInit, OnDestroy {
           console.log(err);
         });
   }
-  
+
   searchUser() {
     var input, filter, table, tr, td, i, txtValue;
     input = document.getElementById('myInput');
     filter = input.value.toUpperCase();
     table = document.getElementById('myTable');
     tr = table.getElementsByTagName('tr');
-    
+
     for (i = 0; i < tr.length; i++) {
       td = tr[i].getElementsByTagName('td')[this.searchBy.replace(/,/g, '')];
       if (td) {
@@ -142,15 +136,14 @@ export class AdminComponent implements OnInit, OnDestroy {
       }
     }
   }
-  
+
   respond(id, content) {
     this.respondData = this.allRequests.filter(r => r._id == id)[0];
     this.modalService.open(content, {centered: true});
   }
-  
+
   onSubmit(data, modal, task) {
     this.submitted = true;
-    this.spinner.show();
     if (this.respondMsg != '') {
       if (task == 'respond') {
         this.contactService.sendRespond({
@@ -162,7 +155,6 @@ export class AdminComponent implements OnInit, OnDestroy {
             respond: this.respondMsg
           })
           .pipe(
-            finalize(() => this.spinner.hide()),
             takeUntil(this.unsubscribe)
           )
           .subscribe(res => {
@@ -179,7 +171,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       }
     }
   }
-  
+
   deleteRequest(data, modal) {
     this.contactService.deleteRequest(data._id)
       .pipe(

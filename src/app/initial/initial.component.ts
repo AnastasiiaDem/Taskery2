@@ -15,13 +15,13 @@ import {TranslocoService} from '@ngneat/transloco';
   styleUrls: ['./initial.component.scss', '../home/home.component.scss', '../header/header.component.scss', '../app.component.scss'],
 })
 export class InitialComponent implements OnInit, OnDestroy {
-  
+
   private readonly unsubscribe: Subject<void> = new Subject();
   currentUser: UserModel;
   url;
   currentLanguage = 'en';
-  
-  
+
+
   constructor(private router: Router,
               private spinner: NgxSpinnerService,
               private userService: UserService,
@@ -36,10 +36,10 @@ export class InitialComponent implements OnInit, OnDestroy {
       this.router.navigate(['/home']);
     }
   }
-  
+
   ngOnInit(): void {
     this.currentLanguage = this.translocoService.getActiveLang();
-    
+
     this.router.events
       .pipe(
         filter(event => event instanceof NavigationStart)
@@ -49,12 +49,12 @@ export class InitialComponent implements OnInit, OnDestroy {
         }
       );
   }
-  
+
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
-  
+
   contactUs() {
     // if (this.url != '') {
     //   this.url = '/contact';
@@ -66,7 +66,7 @@ export class InitialComponent implements OnInit, OnDestroy {
     }, 510);
     // }
   }
-  
+
   getStarted() {
     this.spinner.show();
     this.router.navigate(['/register']);
@@ -74,7 +74,7 @@ export class InitialComponent implements OnInit, OnDestroy {
       this.spinner.hide();
     }, 950);
   }
-  
+
   changeLanguage(lang: string) {
     this.translocoService.setActiveLang(lang);
     this.currentLanguage = lang;

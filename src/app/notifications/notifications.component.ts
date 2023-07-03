@@ -15,13 +15,13 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   sendAssignedEmail: boolean;
   sendTaskEmail: boolean;
   sendTaskOverdueEmail: boolean;
-  
+
   constructor(private userService: UserService,
               private spinner: NgxSpinnerService) {
   }
-  
+
   ngOnInit() {
-    this.spinner.show();
+
     this.userService.getCurrentUser()
       .pipe(
         finalize(() => this.spinner.hide()),
@@ -37,15 +37,15 @@ export class NotificationsComponent implements OnInit, OnDestroy {
           console.log(err);
         });
   }
-  
+
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
-  
+
   toggleNotification(e, field) {
     this.currentUser[field] = e.checked;
-    this.spinner.show();
+
     this.userService.updateUser(this.currentUser)
       .pipe(
         finalize(() => this.spinner.hide()),

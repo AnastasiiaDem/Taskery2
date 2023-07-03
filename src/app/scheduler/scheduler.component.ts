@@ -20,10 +20,10 @@ import {NgxSpinnerService} from 'ngx-spinner';
   styleUrls: ['./scheduler.component.scss']
 })
 export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
-  
+
   @ViewChild('schedulerReference', {static: false}) scheduler: jqxSchedulerComponent;
   private readonly unsubscribe: Subject<void> = new Subject();
-  
+
   source: any;
   tasks: any[] = [];
   tasksList: any[] = [];
@@ -82,12 +82,10 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
       // {type: 'agendaView', timeRuler: {hidden: false}},
       {type: 'monthView', timeRuler: {hidden: false}},
     ];
-  
+
   ready = () => {
-    this.spinner.show();
     this.userService.getUsers()
       .pipe(
-        finalize(() => this.spinner.hide()),
         takeUntil(this.unsubscribe)
       )
       .subscribe(users => {
@@ -105,7 +103,7 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.getAllProjects();
     this.getAllTasks();
   };
-  
+
   constructor(public taskService: TaskService,
               public userService: UserService,
               private projectService: ProjectsService,
@@ -117,11 +115,11 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
               private datepipe: DatePipe,
               private spinner: NgxSpinnerService) {
   }
-  
+
   ngOnInit(): void {
-  
+
   }
-  
+
   ngAfterViewChecked() {
     const dom: HTMLElement = this.elementRef.nativeElement;
     const dayMap = {
@@ -192,9 +190,9 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
       'Лист': 'Nov',
       'Груд': 'Dec'
     };
-    
+
     this.currentLang = this.translocoService.getActiveLang();
-    
+
     dom.querySelectorAll('.jqx-grid-column-header').forEach(el => {
       if (this.currentLang == 'ua') {
         el.children[0].children[0].innerHTML = el.children[0].children[0].innerHTML.replace(/Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday/g, matched => dayMap[matched]);
@@ -202,7 +200,7 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
         el.children[0].children[0].innerHTML = el.children[0].children[0].innerHTML.replace(/Понеділок|Вівторок|Середа|Четвер|П`ятниця|Субота|Неділя/g, matched => this.getKeyByValue(dayMap, matched));
       }
     });
-    
+
     dom.querySelectorAll('.jqx-scheduler-toolbar-details').forEach(el => {
       if (this.currentLang == 'ua') {
         el.innerHTML = el.innerHTML.replace(/January|February|March|April|May|June|July|August|September|October|November|December/g, matched => monthMap[matched]);
@@ -210,7 +208,7 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
         el.innerHTML = el.innerHTML.replace(/Січень|Лютий|Березень|Квітень|Травень|Червень|Липень|Серпень|Вересень|Жовтень|Листопад|Грудень/g, matched => this.getKeyByValue(monthMap, matched));
       }
     });
-    
+
     dom.querySelectorAll('.jqx-scheduler-month-cell').forEach(el => {
       if (this.currentLang == 'ua') {
         el.innerHTML = el.innerHTML.replace(/Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec/g, matched => monthShortMap[matched]);
@@ -219,16 +217,16 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
       }
     });
   }
-  
+
   getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
   }
-  
+
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
-  
+
   taskDoubleClick(content, event) {
     let taskEmployeeId = this.tasks.find(t => t.id == event.args.appointment.originalData.id).employeeId;
     this.previewData = {
@@ -242,7 +240,7 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
     };
     this.modalService.open(content, {centered: true});
   }
-  
+
   getCurrentUser() {
     this.userService.getCurrentUser()
       .pipe(
@@ -256,7 +254,7 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
           console.log(err);
         });
   }
-  
+
   getAllTasks() {
     this.taskService.getTasks()
       .pipe(
@@ -342,7 +340,7 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
           console.log(err);
         });
   }
-  
+
   getAllProjects() {
     this.projectService.getProjects()
       .pipe(
@@ -366,7 +364,7 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
           console.log(err);
         });
   }
-  
+
   filter(event) {
     this.selectedProject = event;
     if (event !== null) {
@@ -389,7 +387,7 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
       }
       this.scheduler.endAppointmentsUpdate();
     }
-    
+
     if (event == null) {
       this.scheduler.beginAppointmentsUpdate();
       this.tasks.forEach(task => {
@@ -410,7 +408,7 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
       this.scheduler.endAppointmentsUpdate();
     }
   }
-  
+
   dateChanged(event) {
     let updatedTask: TaskModel = {
       id: event.args.appointment.originalData.id,
@@ -422,11 +420,9 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
       status: event.args.appointment.originalData.status
     };
     let currentProject = this.projects.find(p => p._id == updatedTask.projectId);
-    
-    this.spinner.show();
+
     this.taskService.updateTask(updatedTask)
       .pipe(
-        finalize(() => this.spinner.hide()),
         takeUntil(this.unsubscribe)
       )
       .subscribe(data => {
@@ -460,7 +456,7 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
           console.log(err);
         });
   }
-  
+
   email(userId, project, task, type) {
     this.emailService.sendEmail(userId, project, task, '', type)
       .pipe(
@@ -473,7 +469,7 @@ export class SchedulerComponent implements OnInit, AfterViewChecked, OnDestroy {
           console.log(error);
         });
   }
-  
+
   showIssues(selectedProject) {
     this.AllIssues = !this.AllIssues;
     this.filter(selectedProject);

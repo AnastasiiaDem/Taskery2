@@ -20,7 +20,7 @@ import {TranslocoService} from '@ngneat/transloco';
   styleUrls: ['./contact.component.scss', '../home/home.component.scss', '../header/header.component.scss', '../app.component.scss'],
 })
 export class ContactComponent implements OnInit, OnDestroy {
-  
+
   private readonly unsubscribe: Subject<void> = new Subject();
   currentUser: UserModel;
   url;
@@ -41,8 +41,8 @@ export class ContactComponent implements OnInit, OnDestroy {
   loading = false;
   showHeader = true;
   currentLanguage = 'en';
-  
-  
+
+
   constructor(private router: Router,
               private spinner: NgxSpinnerService,
               private userService: UserService,
@@ -66,14 +66,14 @@ export class ContactComponent implements OnInit, OnDestroy {
       this.showHeader = false;
     }
   }
-  
+
   get f() {
     return this.contactForm.controls;
   }
-  
+
   ngOnInit(): void {
     this.currentLanguage = this.translocoService.getActiveLang();
-    
+
     this.router.events
       .pipe(
         filter(event => event instanceof NavigationStart)
@@ -82,14 +82,14 @@ export class ContactComponent implements OnInit, OnDestroy {
           this.url = event.url;
         }
       );
-    
+
     this.contactForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       description: ['', [Validators.required]],
     });
-  
+
     this.contactForm.setValue(
       {
         email: this.currentUserData.email,
@@ -98,19 +98,19 @@ export class ContactComponent implements OnInit, OnDestroy {
         description: this.contactForm.value.description
       });
   }
-  
+
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
-  
+
   contactUs() {
     this.url = '/contact';
     setTimeout(() => {
       this.router.navigate(['/contact']);
     }, 510);
   }
-  
+
   getStarted() {
     this.spinner.show();
     this.router.navigate(['/register']);
@@ -118,12 +118,12 @@ export class ContactComponent implements OnInit, OnDestroy {
       this.spinner.hide();
     }, 950);
   }
-  
+
   onSubmit() {
     this.submitted = true;
-    
+
     this.alertService.clear();
-    
+
     this.contactForm.setValue(
       {
         email: this.contactForm.value.email,
@@ -131,11 +131,11 @@ export class ContactComponent implements OnInit, OnDestroy {
         lastName: this.contactForm.value.lastName,
         description: this.contactForm.value.description
       });
-    
+
     if (this.contactForm.invalid) {
       return;
     }
-    
+
     setTimeout(() => {
       let requestObject: RequestModel = {
         userId: this.currentUserData?._id,
@@ -144,10 +144,10 @@ export class ContactComponent implements OnInit, OnDestroy {
         lastName: this.contactForm.value.lastName,
         description: this.contactForm.value.description
       };
-      
+
       this.loading = true;
-      
-      this.spinner.show();
+
+
       this.contactService.sendRequest(requestObject)
         .pipe(
         finalize(() => this.spinner.hide()),
@@ -172,7 +172,7 @@ export class ContactComponent implements OnInit, OnDestroy {
           });
     }, 1000);
   }
-  
+
   changeLanguage(lang: string) {
     this.translocoService.setActiveLang(lang);
     this.currentLanguage = lang;

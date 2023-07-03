@@ -42,9 +42,9 @@ Quill.register('modules/mention', Mention);
   styleUrls: ['./board.component.scss'],
 })
 export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
-  
+
   @ViewChild('kanban') kanban: KanbanComponent;
-  
+
   taskForm: FormGroup;
   tasks = [];
   tasksList = [];
@@ -86,12 +86,12 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
   initialStatus;
   previewData;
   submitted = false;
-  
+
   aiResponse: any;
   aiData: any = '';
-  
+
   atValues = [];
-  
+
   quillConfig: QuillModules = {
     toolbar: {
       container: [
@@ -106,7 +106,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
         ['clean'],
         ['link', 'image']
       ],
-      
+
     },
     imageCompress: {
       maxWidth: 450
@@ -116,11 +116,11 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       mentionDenotationChars: ['@'],
       source: (searchTerm, renderList, mentionChar) => {
         let values;
-        
+
         if (mentionChar === '@') {
           values = this.atValues;
         }
-        
+
         if (searchTerm.length === 0) {
           renderList(values, searchTerm);
         } else {
@@ -135,7 +135,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     'emoji-textarea': false,
     'emoji-shortname': true,
   };
-  
+
   constructor(private formBuilder: FormBuilder,
               public taskService: TaskService,
               private modalService: NgbModal,
@@ -157,11 +157,11 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
         this.selectedProjectId = param['paramKey'];
       });
   }
-  
+
   get f() {
     return this.taskForm.controls;
   }
-  
+
   ngOnInit() {
     this.dateFilterData = [
       {id: 'equal', text: 'equal'},
@@ -169,7 +169,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       {id: 'before', text: 'before'},
       {id: 'after', text: 'after'}
     ];
-    
+
     this.selectedUser = null;
     this.dateFilterValue = null;
     this.searchText = null;
@@ -191,8 +191,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     setTimeout(() => {
       this.spinner.hide();
     }, 1000);
-    this.currentDate = new Date();
-    
+    this.currentDate = this.datepipe.transform(new Date(), 'YYYY-MM-dd');
     this.calendarIcon = faCalendarDays;
     this.statusData = [
       {id: StatusEnum.todo, text: StatusEnum.todo},
@@ -200,6 +199,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       {id: StatusEnum.onReview, text: StatusEnum.onReview},
       {id: StatusEnum.done, text: StatusEnum.done}
     ];
+
     this.getCurrentProject();
     this.taskForm = this.formBuilder.group({
       id: [''],
@@ -211,29 +211,29 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       deadline: [this.currentDate, [Validators.required]],
     });
   }
-  
+
   ngAfterViewChecked() {
     this._focusMonitor.stopMonitoring(document.getElementById('mat-btn'));
-    
+
     const dom: HTMLElement = this.elementRef.nativeElement;
     dom.querySelectorAll('.e-item-count').forEach(el => {
       el.innerHTML = el.innerHTML.replace('items', '');
     });
-    
+
     dom.querySelectorAll('.e-header-text').forEach(el => {
       $(el).css({'color': '#4D4B54'});
       $(el).css({'font-size': '12px'});
       $(el).css({'font-weight': '800'});
     });
-    
+
     dom.querySelectorAll('.e-header-cells').forEach(el => {
       $(el).css({'background-color': '#F4F5F7'});
     });
-    
+
     dom.querySelectorAll('.e-content-cells').forEach(el => {
       $(el).css({'background-color': '#F4F5F7'});
     });
-    
+
     const monthShortMap = {
       'Jan': 'Січ',
       'Feb': 'Лют',
@@ -260,7 +260,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       'Лист': 'Nov',
       'Груд': 'Dec'
     };
-    
+
     dom.querySelectorAll('.card-deadline').forEach(el => {
       if (this.translocoService.getActiveLang() == 'ua') {
         el.innerHTML = el.innerHTML.replace(/Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec/g, matched => monthShortMap[matched]);
@@ -269,25 +269,23 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       }
     });
   }
-  
+
   getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
   }
-  
+
   getHeaderStyle(title) {
     return title.toUpperCase();
   }
-  
+
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
-  
+
   getCurrentProject() {
-    this.spinner.show();
     this.projectsService.getCurrentProject(this.selectedProjectId)
       .pipe(
-        finalize(() => this.spinner.hide()),
         takeUntil(this.unsubscribe)
       )
       .subscribe(project => {
@@ -309,7 +307,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
           console.log(err);
         });
   }
-  
+
   getCurrentUser() {
     this.userService.getCurrentUser()
       .pipe(
@@ -322,8 +320,9 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
           console.log(err);
         });
   }
-  
+
   getAllTasks() {
+    this.spinner.show();
     this.taskService.getTasks()
       .pipe(
         finalize(() => this.spinner.hide()),
@@ -343,7 +342,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               projectId: task.projectId
             });
           });
-          
+
           let currentTask = {
             id: Math.floor(Math.random() * 100),
             employeeId: this.firstUserId,
@@ -359,7 +358,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
           console.log(err);
         });
   }
-  
+
   getAllUsers() {
     this.userService.getUsers()
       .pipe(
@@ -376,7 +375,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
               }
             });
           });
-          
+
           this.atValues = [];
           users.filter(u => u._id != this.currentUser._id || !!this.employeeData.find(usr => usr.id == u._id)).forEach(user => {
             this.atValues.push({
@@ -391,16 +390,14 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
           console.log(err);
         });
   }
-  
+
   dropStart(event) {
     this.initialStatus = event.data[0].status;
   }
-  
+
   drop(event) {
-    this.spinner.show();
     this.taskService.updateTask(event.data[0])
       .pipe(
-        finalize(() => this.spinner.hide()),
         takeUntil(this.unsubscribe)
       )
       .subscribe(data => {
@@ -434,7 +431,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
           console.log(err);
         });
   }
-  
+
   openModal(content, task) {
     this.addTaskFlag = false;
     this.taskForm.setValue({
@@ -455,21 +452,19 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     };
     this.modalService.open(content, {centered: true});
   }
-  
+
   updateTask(content, modal) {
     this.addTaskFlag = false;
     modal.close();
     this.modalService.open(content, {centered: true});
   }
-  
+
   onSubmit(modal) {
     this.submitted = true;
-    this.spinner.show();
-  
+
     if (!this.addTaskFlag) {
       this.taskService.updateTask(this.taskForm.value)
         .pipe(
-          finalize(() => this.spinner.hide()),
           takeUntil(this.unsubscribe)
         )
         .subscribe(data => {
@@ -497,19 +492,19 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
                   if (taskUser.sendTaskOverdueEmail) {
                     this.email(taskUser._id, this.currentProject, this.taskForm.value, 'taskUpdate');
                   }
-                  
+
                   setTimeout(() => {
                     let parentHTML = document.querySelectorAll('[data-id="' + this.taskForm.value.id + '"]');
                     let descriptionHTML = parentHTML[0].getElementsByClassName('mention');
                     if (!!descriptionHTML.length) {
                       let mentionId = descriptionHTML[0]['dataset'].id;
-                      
+
                       let mentionedUser = users.find(u => u._id === mentionId);
                       if (mentionedUser.sendTaskOverdueEmail) {
                         this.email(mentionedUser._id, this.currentProject, this.taskForm.value, 'mention');
                       }
                     }
-                  }, 500);
+                  }, 1000);
                 },
                 err => {
                   console.log(err);
@@ -558,12 +553,12 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
                   if (taskUser.sendTaskEmail && this.taskForm.value.status == 'To Do') {
                     this.email(taskUser._id, this.currentProject, this.taskForm.value, 'task');
                   }
-                  
+
                   setTimeout(() => {
                     let parentHTML = document.querySelectorAll('[data-id="' + this.taskForm.value.id + '"]');
                     let descriptionHTML = parentHTML[0].getElementsByClassName('mention');
                     let mentionId = descriptionHTML[0]['dataset'].id;
-                    
+
                     let mentionedUser = users.find(u => u._id === mentionId);
                     if (mentionedUser.sendTaskOverdueEmail) {
                       this.email(mentionedUser._id, this.currentProject, this.taskForm.value, 'mention');
@@ -580,7 +575,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
     modal.close();
   }
-  
+
   addTask(content) {
     let currentTask = {
       id: Math.floor(Math.random() * 100),
@@ -595,18 +590,16 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.addTaskFlag = true;
     this.modalService.open(content, {centered: true});
   }
-  
+
   deleteTask(content, modal) {
     modal.close();
     this.modalService.open(content, {centered: true});
   }
-  
+
   isDelete(action, modal) {
     if (action == 'confirm') {
-      this.spinner.show();
       this.taskService.deleteTask(this.taskForm.value.id)
         .pipe(
-          finalize(() => this.spinner.hide()),
           takeUntil(this.unsubscribe)
         )
         .subscribe(data => {
@@ -633,12 +626,11 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       modal.close();
     }
   }
-  
+
   showIssues() {
     this.AllIssues = !this.AllIssues;
     this.tasks = [];
     this.tasksList = [];
-    this.spinner.show();
     this.getAllTasks();
     setTimeout(() => {
       this.tasks = this.tasksList.filter(task => {
@@ -650,25 +642,23 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       });
     }, 100);
   }
-  
+
   overdueDateStyle(task) {
     this.currentDate = this.datepipe.transform(new Date(), 'YYYY-MM-dd');
-    
+
     this.overdue = task.deadline < this.currentDate;
-    
+
     if (this.overdue && task.status != StatusEnum.done) {
       return {'color': '#DF2134'};
     } else {
       return {'color': '#9E9FA1'};
     }
   }
-  
+
   filterMenu() {
     this.filterStatus = !this.filterStatus;
-    this.spinner.show();
     this.userService.getUsers()
       .pipe(
-        finalize(() => this.spinner.hide()),
         takeUntil(this.unsubscribe)
       )
       .subscribe(users => {
@@ -688,7 +678,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
           console.log(err);
         });
   }
-  
+
   selectUser(e) {
     let filterQuery: Query = new Query();
     if (!!e) {
@@ -696,7 +686,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
     this.kanban.query = filterQuery;
   }
-  
+
   search(e) {
     let searchValue: string = (<HTMLInputElement>e.target).value;
     let searchQuery: Query = new Query();
@@ -705,7 +695,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
     this.kanban.query = searchQuery;
   }
-  
+
   dateFilter(e) {
     this.dateFilterValue = e;
     this.date1Value = null;
@@ -729,7 +719,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
     this.filter(e, 'dateFilter');
   }
-  
+
   dateCompare() {
     if (!!this.dateFilterValue) {
       let filterQuery: Query = new Query();
@@ -748,7 +738,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       this.kanban.query = filterQuery;
     }
   }
-  
+
   filter(e, type) {
     if (type == 'employee' && !this.searchText && !this.dateFilterValue && !this.date1Value && !this.date2Value) {
       this.selectUser(e);
@@ -759,32 +749,32 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
     } else {
       if ((type == 'employee' || type == 'search') && !this.dateFilterValue && !this.date1Value && !this.date2Value) {
         let filterQuery: Query = new Query();
-        
+
         if (type == 'employee' && !!e) {
           filterQuery = filterQuery.where('employeeId', 'equal', e);
         } else if (!!this.selectedUser) {
           filterQuery = filterQuery.where('employeeId', 'equal', this.selectedUser);
         }
-        
+
         if (!!this.searchText) {
           filterQuery = filterQuery.search(this.searchText, ['title'], 'contains', true);
         }
         this.kanban.query = filterQuery;
-        
+
       } else {
-        
+
         let filterQuery: Query = new Query();
-        
+
         if (type == 'employee' && !!e) {
           filterQuery = filterQuery.where('employeeId', 'equal', e);
         } else if (!!this.selectedUser) {
           filterQuery = filterQuery.where('employeeId', 'equal', this.selectedUser);
         }
-        
+
         if (!!this.searchText) {
           filterQuery = filterQuery.search(this.searchText, ['title'], 'contains', true);
         }
-        
+
         if (!!this.dateFilterValue) {
           // this.date1Value = null;
           // this.date2Value = null;
@@ -805,7 +795,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.date1Value = null;
             this.date2Value = null;
           }
-          
+
           if (!!this.date1Value && !!this.date2Value) {
             filterQuery = filterQuery.where('deadline', 'greaterthanorequal', this.date1Value);
             filterQuery = filterQuery.where('deadline', 'lessthanorequal', this.date2Value);
@@ -823,12 +813,10 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       }
     }
   }
-  
+
   email(userId, project, task, type) {
-    this.spinner.show();
     this.emailService.sendEmail(userId, project, task, '', type)
       .pipe(
-        finalize(() => this.spinner.hide()),
         takeUntil(this.unsubscribe)
       )
       .subscribe(response => {
@@ -840,7 +828,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
           // this.toastr.error(error);
         });
   }
-  
+
   sort(type) {
     if (type == 'oldest') {
       this.sortSettings = {
@@ -860,15 +848,13 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
       };
     }
   }
-  
+
   writeBriefAI() {
     if (this.taskForm.value.title != '') {
-      this.spinner.show();
       this.aiService.getAItask(this.translocoService.getActiveLang() == 'ua' ?
           'Напишіть загальний опис на задачу, де є мета. Назва задачі: ' + this.taskForm.value.title + '. для проєкту: ' + this.currentProject?.projectName
           : 'Write a brief with a purpose for the task. Task title: ' + this.taskForm.value.title + 'for the project: ' + this.currentProject?.projectName)
         .pipe(
-          finalize(() => this.spinner.hide()),
           takeUntil(this.unsubscribe)
         )
         .subscribe(response => {
@@ -879,7 +865,7 @@ export class BoardComponent implements OnInit, AfterViewChecked, OnDestroy {
           });
     }
   }
-  
+
   findEmployeeName(data) {
     return this.currentProject.assignedUsers.find(employee => employee.id == data.employeeId)?.text;
   }

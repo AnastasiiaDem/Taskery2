@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private readonly unsubscribe: Subject<void> = new Subject();
   fieldTextType: boolean;
   faIcon;
-  
+
   constructor(private formBuilder: FormBuilder,
               private route: ActivatedRoute,
               private router: Router,
@@ -45,40 +45,38 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.router.navigate(['/home']);
     }
   }
-  
+
   ngOnInit() {
     this.faIcon = faEye;
-    
+
     this.loginForm = this.formBuilder.group({
       email: ['', Validators.required],
       password: ['', Validators.required]
     });
     this.returnUrl = '/home';
   }
-  
+
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
-  
+
   get f() {
     return this.loginForm.controls;
   }
-  
+
   onSubmit() {
     this.submitted = true;
-    
+
     this.alertService.clear();
-    
+
     if (this.loginForm.invalid) {
       return;
     }
-    
+
     this.loading = true;
-    this.spinner.show();
     this.authenticationService.login(this.f.email.value, this.f.password.value)
       .pipe(
-        finalize(() => this.spinner.hide()),
         takeUntil(this.unsubscribe),
         first()
       )
@@ -98,7 +96,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.loading = false;
         });
   }
-  
+
   toggleFieldTextType() {
     this.fieldTextType = !this.fieldTextType;
     this.faIcon = this.fieldTextType ? faEyeSlash : faEye;

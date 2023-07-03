@@ -60,9 +60,9 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
   previewData;
   submitted = false;
   descriptionText = '';
-  
+  budget = '0';
   atValues = [];
-  
+
   linkStyle(project) {
     if (project.status == StatusEnum.todo) {
       return {'background': '#EDF9FF'};
@@ -77,7 +77,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       return {'background': '#E8FBED'};
     }
   }
-  
+
   quillConfig: QuillModules = {
     toolbar: {
       container: [
@@ -92,7 +92,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
         ['clean'],
         ['link', 'image']
       ],
-      
+
     },
     imageCompress: {
       maxWidth: 450
@@ -102,11 +102,11 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       mentionDenotationChars: ['@'],
       source: (searchTerm, renderList, mentionChar) => {
         let values;
-        
+
         if (mentionChar === '@') {
           values = this.atValues;
         }
-        
+
         if (searchTerm.length === 0) {
           renderList(values, searchTerm);
         } else {
@@ -121,8 +121,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
     'emoji-textarea': false,
     'emoji-shortname': false,
   };
-  
-  
+
+
   constructor(private formBuilder: FormBuilder,
               private modalService: NgbModal,
               private taskService: TaskService,
@@ -137,14 +137,14 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
               private translocoService: TranslocoService,
               private spinner: NgxSpinnerService) {
   }
-  
+
   get f() {
     return this.projectForm.controls;
   }
-  
+
   ngOnInit() {
     this.currentDate = new Date();
-    
+
     this.spinner.show();
     setTimeout(() => {
       this.spinner.hide();
@@ -169,7 +169,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       updatedAt: [this.currentDate, Validators.required],
       budget: [0, Validators.required]
     });
-    
+
     this.dropdownSettings = {
       singleSelection: false,
       idField: 'id',
@@ -181,7 +181,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       allowSearchFilter: true
     };
   }
-  
+
   ngAfterViewChecked() {
     const dom: HTMLElement = this.elementRef.nativeElement;
     dom.querySelectorAll('.status').forEach(el => {
@@ -199,7 +199,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       }
       $(el).css({'font-weight': '600'});
     });
-    
+
     dom.querySelectorAll('.circle').forEach(el => {
       if (el.innerHTML.includes(StatusEnum.todo)) {
         $(el).css({'background': 'rgb(57 197 255)'});
@@ -214,8 +214,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
         $(el).css({'background': 'rgb(58 224 104)'});
       }
     });
-    
-    
+
+
     const statusMap = {
       'To Do': 'Зробити',
       'In Progress': 'У Процесі',
@@ -226,8 +226,8 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       'На Перевірці': 'On Review',
       'Виконано': 'Done'
     };
-    
-    
+
+
     dom.querySelectorAll('.status-text').forEach(el => {
       if (this.translocoService.getActiveLang() == 'ua') {
         el.innerHTML = el.innerHTML.replace(/To Do|In Progress|On Review|Done/g, matched => statusMap[matched]);
@@ -236,18 +236,18 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       }
     });
   }
-  
+
   getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
   }
-  
+
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
-  
+
   getAllProjects() {
-    this.spinner.show();
+
     this.projectService.getProjects()
       .pipe(
         finalize(() => this.spinner.hide()),
@@ -285,9 +285,9 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
           console.log(err);
         });
   }
-  
+
   getAllTasks() {
-    this.spinner.show();
+
     this.taskService.getTasks()
       .pipe(
         finalize(() => this.spinner.hide()),
@@ -315,9 +315,9 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
           console.log(err);
         });
   }
-  
+
   getAllUsers() {
-    this.spinner.show();
+
     this.userService.getUsers()
       .pipe(
         finalize(() => this.spinner.hide()),
@@ -337,9 +337,9 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
           console.log(err);
         });
   }
-  
+
   getCurrentUser() {
-    this.spinner.show();
+
     this.userService.getCurrentUser()
       .pipe(
         finalize(() => this.spinner.hide()),
@@ -352,7 +352,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
           console.log(err);
         });
   }
-  
+
   addProject(content, e) {
     e.preventDefault();
     this.projects.length = (this.projects.length == undefined) ? 0 : this.projects.length;
@@ -370,21 +370,21 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.addProjectFlag = true;
     this.modalService.open(content, {centered: true});
   }
-  
+
   showUpdatedItem(project) {
     let updateItem = this.projects.find(this.findIndexToUpdate, project.id);
     let index = this.projects.indexOf(updateItem);
     this.projects[index] = project;
   }
-  
+
   findIndexToUpdate(project) {
     return project.id === this;
   }
-  
+
   onSubmit(modal) {
     this.submitted = true;
     if (!this.addProjectFlag) {
-      this.spinner.show();
+
       this.projectService.updateProject(this.projectForm.value)
         .pipe(
           finalize(() => this.spinner.hide()),
@@ -401,7 +401,6 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
             console.log(err);
           });
     } else {
-      this.spinner.show();
       this.projectService.addProject(this.projectForm.value)
         .pipe(
           finalize(() => this.spinner.hide()),
@@ -420,12 +419,13 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
               budget: p.budget || 0
             });
             this.sortProjects();
+            this.submitted = false;
           },
           err => {
             console.log(err);
           });
     }
-    
+
     this.userService.getUsers()
       .pipe(
         finalize(() => this.spinner.hide()),
@@ -444,9 +444,10 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
         });
     modal.close();
   }
-  
+
   openModal(content, project) {
     this.addProjectFlag = false;
+
     this.projectForm.setValue({
       id: project.id || project._id,
       projectName: project.projectName,
@@ -455,14 +456,14 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       assignedUsers: project.assignedUsers,
       createdAt: project.createdAt,
       updatedAt: project.updatedAt,
-      budget: project.budget || 0
+      budget: project.budget
     });
     let assignedList = '';
-    
+
     project.assignedUsers.forEach(u => {
       assignedList += u.text + '<br>';
     });
-    
+
     this.previewData = {
       projectName: project.projectName,
       description: project.description,
@@ -470,22 +471,23 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       assignedUsers: assignedList,
       createdAt: project.createdAt,
       updatedAt: project.updatedAt,
-      budget: project.budget || 0
+      budget: project.budget
     };
+
     this.modalService.open(content, {centered: true});
   }
-  
+
   updateProject(content, modal) {
     this.addProjectFlag = false;
     modal.close();
     this.modalService.open(content, {centered: true});
   }
-  
+
   deleteProject(content, modal) {
     modal.close();
     this.modalService.open(content, {centered: true});
   }
-  
+
   isDelete(action, modal) {
     if (action == 'confirm') {
       this.projectService.deleteProject(this.projectForm.value.id)
@@ -517,7 +519,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       modal.close();
     }
   }
-  
+
   email(userId, project) {
     this.emailService.sendEmail(userId, project, '', '', 'project')
       .pipe(
@@ -533,21 +535,19 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
           // this.toastr.error(error);
         });
   }
-  
+
   sortProjects() {
     this.projects.sort((a, b) => {
       return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
     });
   }
-  
+
   writeBriefAI() {
     if (this.projectForm.value.projectName != '') {
-      this.spinner.show();
       this.aiService.getAIproject((this.translocoService.getActiveLang() == 'ua' ?
           'Напишіть загальний опис на початок проєкту, де є мета. Назва проєкту: '
           : 'Write a brief with a purpose for the start of the project. Project title: ') + this.projectForm.value.projectName)
         .pipe(
-          finalize(() => this.spinner.hide()),
           takeUntil(this.unsubscribe)
         )
         .subscribe(response => {
@@ -558,17 +558,15 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
           });
     }
   }
-  
+
   calcBudgetAI() {
     if (this.projectForm.value.projectName != '') {
-      this.spinner.show();
       this.aiService.getAIbudget(
           this.translocoService.getActiveLang() == 'ua' ?
             ('ТВОЯ ВІДПОВІДЬ ПОВИННА МІСТИТИ ЛИШЕ ОДНЕ ЧИСЛО БЕЗ ТЕКСТУ. Яка мінімальна вартість проекту на місяць в доларах, включно із заробітною платою та технічними витратами, обов`язково враховуючи кількість працівників (де зарплата одного приблизно 1500 доларів), також орієнтуватись на назву та опис проєкту? де кількості працівників: ' + this.projectForm.value.assignedUsers.length + ';\nназва проєкту: ' + this.projectForm.value.projectName + ';\nопис: ' + this.descriptionText)
             : ('YOUR RESPOND HAVE TO CONTAIN ONLY ONE NUMBER WITHOUT TEXT. What is the minimum cost of the project per month, including salaries and technical expenses, based on the number of employees, project name and description? where number of employees: ' + this.projectForm.value.assignedUsers.length + ';\nproject name: ' + this.projectForm.value.projectName + ';\nDescription: ' + this.descriptionText)
         )
         .pipe(
-          finalize(() => this.spinner.hide()),
           takeUntil(this.unsubscribe)
         )
         .subscribe(response => {
@@ -579,11 +577,11 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
           });
     }
   }
-  
+
   budgetChanged(event) {
-    this.projectForm.value.budget = parseInt(this.projectForm.value.budget.replace(/[^0-9]/g, ''));
+    this.projectForm.value.budget = parseInt(this.budget.replace(/[^0-9]/g, ''));
   }
-  
+
   contentChanged(event) {
     this.projectForm.value.description = event.html;
     this.descriptionText = event.text;

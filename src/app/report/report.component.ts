@@ -58,11 +58,11 @@ colorValue;
   styleUrls: ['./report.component.scss']
 })
 export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
-  
+
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
   @ViewChild(BaseChartDirective) pieChart: BaseChartDirective;
   @ViewChild(BaseChartDirective) barChart: BaseChartDirective;
-  
+
   private readonly unsubscribe: Subject<void> = new Subject();
   public barChartOptions: Array<Partial<barChartOptions>> = [];
   public pieChartOptions: Array<Partial<pieChartOptions>> = [];
@@ -89,7 +89,7 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
     status: '',
     projectStart: ''
   };
-  
+
   constructor(public taskService: TaskService,
               public projectService: ProjectsService,
               private emailService: EmailService,
@@ -101,16 +101,15 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
               private translocoService: TranslocoService,
               private spinner: NgxSpinnerService) {
   }
-  
+
   ngOnInit(): void {
-    this.spinner.show();
     this.getCurrentUser();
     this.taskAndProjectData();
   }
-  
+
   ngAfterViewChecked() {
     const dom: HTMLElement = this.elementRef.nativeElement;
-    
+
     const statusMap = {
       'To Do': 'Зробити',
       'In Progress': 'У Процесі',
@@ -121,8 +120,8 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
       'На Перевірці': 'On Review',
       'Виконано': 'Done'
     };
-    
-    
+
+
     dom.querySelectorAll('.apexcharts-legend-text').forEach(el => {
       if (this.translocoService.getActiveLang() == 'ua') {
         el.innerHTML = el.innerHTML.replace(/To Do|In Progress|On Review|Done/g, matched => statusMap[matched]);
@@ -131,27 +130,27 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
       }
     });
   }
-  
+
   getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
   }
-  
+
   ngOnDestroy(): void {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
-  
+
   tasksNumber(p) {
     this.report.numberOfTasks = this.tasks.filter(t => t.projectId == p.id).length;
     return this.report.numberOfTasks;
   }
-  
+
   overdueTasksNumber(p) {
     this.currentDate = new Date();
     this.report.overdueTasks = this.tasks.filter(t => (t.projectId == p.id && t.deadline < this.datepipe.transform(this.currentDate, 'YYYY-MM-dd') && t.status != StatusEnum.done)).length;
     return this.report.overdueTasks;
   }
-  
+
   statusEllipse(p) {
     if (p.status == StatusEnum.todo) {
       return 'Ellipse6';
@@ -166,7 +165,7 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
       return 'Ellipse4';
     }
   }
-  
+
   getCurrentUser() {
     this.userService.getCurrentUser()
       .pipe(
@@ -179,8 +178,9 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
           console.log(err);
         });
   }
-  
+
   taskAndProjectData() {
+    this.spinner.show();
     this.taskService.getTasks()
       .pipe(
         finalize(() => {
@@ -236,7 +236,7 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
           this.spinner.hide()
         });
   }
-  
+
   initChartData() {
     this.projects.forEach((project, idx) => {
       this.pieChartOptions.push({
@@ -307,7 +307,7 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
           horizontalAlign: 'center',
         },
       });
-      
+
       this.barChartOptions.push({
         series: [],
         colors: [
@@ -417,7 +417,7 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
           offsetY: 15
         }
       });
-      
+
       this.barChartOptions[idx].series.push(
         {
           name: 'To Do',
@@ -435,30 +435,30 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
           name: 'Done',
           data: []
         });
-      
+
       Object.keys(StatusEnum).forEach(statusName => {
         let userData = this.tasks.filter(task => task.status == StatusEnum[statusName] && task.projectId == project.id);
-        
+
         let count = [];
-        
+
         project.assignedUsers.forEach(assignedUser => {
           count.push({
             value: userData.filter(u => u.employeeId == assignedUser.id).length,
             user: assignedUser.text
           });
         });
-        
+
         count.forEach(c => {
           this.barChartOptions[idx].series.find(s => s.name === StatusEnum[statusName]).data.push(c.value);
         });
       });
-      
-      
+
+
       project.assignedUsers.forEach(user => {
         this.barChartOptions[idx].xaxis.categories.push(user.text);
       });
-      
-      
+
+
       this.reportData[idx] = this.tasks.filter(task => task.projectId == project.id);
       this.pieData = [
         {
@@ -478,17 +478,17 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
           value: this.reportData[idx].filter(task => task.status == StatusEnum.done).length
         }
       ];
-      
+
       this.pieChartOptions[idx].series = [];
       this.pieData.forEach(data => {
         this.pieChartOptions[idx].series.push(data.value);
       });
-      
-      
+
+
       this.chart?.chart.update();
     });
   }
-  
+
   export(p) {
     project = p;
     if (project.status === StatusEnum.todo) {
@@ -503,7 +503,7 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
     if (project.status === StatusEnum.done) {
       colorValue = 'rgb(58 224 104)';
     }
-    
+
     this.barChartOptions.forEach(bar => {
       bar.chart.toolbar.show = false;
       bar.colors = [
@@ -514,7 +514,7 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
       ];
       bar.title.style.fontSize = '14px';
     });
-    
+
     this.pieChartOptions.forEach(pie => {
       pie.chart.toolbar.show = false;
       pie.colors = [
@@ -525,13 +525,13 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
       ];
       pie.title.style.fontSize = '14px';
     });
-    
+
     this.chart?.chart.update();
-    
+
     setTimeout(() => {
       this.exportStatus = true;
     }, 1900);
-    
+
     setTimeout(() => {
       printDiv(`printBody_${p.id}`);
       this.barChartOptions.forEach(bar => {
@@ -558,14 +558,12 @@ export class ReportComponent implements OnInit, AfterViewChecked, OnDestroy {
       this.exportStatus = false;
     }, 2000);
   }
-  
+
   email(project) {
     this.report.status = project.status;
     this.report.projectStart = this.datepipe.transform(project.createdAt, 'YYYY-MM-dd');
-    this.spinner.show();
     this.emailService.sendEmail(this.currentUser._id, project, '', this.report, 'report')
       .pipe(
-        finalize(() => this.spinner.hide()),
         takeUntil(this.unsubscribe)
       )
       .subscribe(response => {

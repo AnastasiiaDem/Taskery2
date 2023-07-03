@@ -16,7 +16,7 @@ import { AuthService } from '../shared/services/auth.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  
+
   private readonly unsubscribe: Subject<void> = new Subject();
   myTasks: { overdue: Array<any>, today: Array<any>, upcoming: Array<any> };
   currentUser: UserModel = {
@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   upcoming;
   allProjects = [];
   currentUserRole = 'ProjectManager';
-  
+
   constructor(private spinner: NgxSpinnerService,
               public taskService: TaskService,
               public userService: UserService,
@@ -64,19 +64,19 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       });
   }
-  
+
   ngOnInit(): void {
     this.overdue = false;
     this.currentDate = new Date();
     this.getAllProjects();
     this.getAllTasks();
   }
-  
+
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
-  
+
   projectList() {
     this.spinner.show();
     document.getElementById('projectList').click();
@@ -84,20 +84,20 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.spinner.hide();
     }, 950);
   }
-  
+
   scroll(el: HTMLElement) {
     el.scrollIntoView({behavior: 'smooth'});
   }
-  
+
   sortTasks(tasks) {
     tasks.sort((a, b) => {
       return new Date(b.deadline).getTime() - new Date(a.deadline).getTime();
     });
     return tasks;
   }
-  
+
   getAllProjects() {
-    this.spinner.show();
+
     this.projectService.getProjects()
       .pipe(
         finalize(() => this.spinner.hide()),
@@ -113,9 +113,9 @@ export class HomeComponent implements OnInit, OnDestroy {
           console.log(err);
         });
   }
-  
+
   getAllTasks() {
-    this.spinner.show();
+
     this.taskService.getTasks()
       .pipe(
         finalize(() => this.spinner.hide()),
@@ -168,11 +168,11 @@ export class HomeComponent implements OnInit, OnDestroy {
           console.log(err);
         });
   }
-  
+
   hide(type) {
     this[type] = !this[type];
   }
-  
+
   goToList(projectId) {
     this.router.navigateByUrl('/board;paramKey=' + projectId);
   }

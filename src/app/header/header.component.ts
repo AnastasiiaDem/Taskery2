@@ -19,7 +19,7 @@ import {NgxSpinnerService} from 'ngx-spinner';
   styleUrls: ['./header.component.scss', '../app.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  
+
   private readonly unsubscribe: Subject<void> = new Subject();
   messageText: string;
   message: any;
@@ -36,8 +36,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     sendTaskOverdueEmail: false
   };
   currentLanguage = 'en';
-  
-  
+
+
   constructor(private alertService: AlertService,
               private toastr: ToastrService,
               private router: Router,
@@ -67,11 +67,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
         }
       });
   }
-  
+
   get getAbbr() {
     return this.currentUser.firstName.charAt(0) + this.currentUser.lastName.charAt(0);
   }
-  
+
   ngOnInit() {
     this.currentLanguage = this.translocoService.getActiveLang();
     this.router.events
@@ -83,7 +83,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         }
       );
   }
-  
+
   logout() {
     this.spinner.show();
     this.authenticationService.logout()
@@ -99,12 +99,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.spinner.hide()
         });
   }
-  
+
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
-  
+
   goToUserSettings() {
     if (this.url != '/home') {
       this.url = '/account';
@@ -119,7 +119,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }, 910);
     }
   }
-  
+
   goToNotifications() {
     if (this.url != '/home') {
       this.url = '/notifications';
@@ -134,7 +134,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }, 910);
     }
   }
-  
+
   getUpdatedData() {
     this.userService.getCurrentUser()
       .pipe(
@@ -148,14 +148,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
           console.log(err);
         });
   }
-  
+
   home() {
     this.router.navigate(['/home']);
     setTimeout(() => {
       this.url = '/home';
     }, 100);
   }
-  
+
   projectList() {
     if (this.url != '/home') {
       this.url = '/projects';
@@ -167,7 +167,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }, 510);
     }
   }
-  
+
   report() {
     if (this.url != '/home') {
       this.url = '/report';
@@ -179,7 +179,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }, 550);
     }
   }
-  
+
   scheduler() {
     if (this.url != '/home') {
       this.url = '/scheduler';
@@ -191,7 +191,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }, 550);
     }
   }
-  
+
   contactUs() {
     if (this.url != '/home') {
       this.url = '/contact';
@@ -203,7 +203,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }, 550);
     }
   }
-  
+
   changeLanguage(lang: string) {
     this.translocoService.setActiveLang(lang);
     this.currentLanguage = lang;
