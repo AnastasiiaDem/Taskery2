@@ -1,5 +1,5 @@
 <div class="w3-animate-opacity"
-     [ngStyle]="{'margin': isProjects == true ? '3rem auto 1rem auto' : '0', 'width': isProjects == true ? '95%' : '100%'}">
+     [ngStyle]="{'margin': isProjects == true ? '5rem auto 5rem auto' : '0', 'width': isProjects == true ? '95%' : '100%'}">
   <mat-accordion *ngIf="isProjects == true">
     <mat-expansion-panel *ngFor="let project of projects; let i = index">
       <mat-expansion-panel-header>
@@ -110,10 +110,11 @@
       </div>
     </mat-expansion-panel>
   </mat-accordion>
-  
+
   <div class="no-content" *ngIf="isProjects == false">
     <p>{{'no-data' | transloco}}😢</p>
   </div>
 </div>
 
-<ngx-spinner bdColor="rgb(238 238 238 / 60%)" size="default" color="rgb(15 16 72)" type="ball-beat" [fullScreen]="true"></ngx-spinner>
+<ngx-spinner bdColor="rgb(238 238 238 / 60%)" size="default" color="rgb(15 16 72)" type="ball-beat"
+             [fullScreen]="true"></ngx-spinner>

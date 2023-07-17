@@ -350,6 +350,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   addProject(content, e) {
     e.preventDefault();
+    this.budget = '0';
     this.projects.length = (this.projects.length == undefined) ? 0 : this.projects.length;
     let currentProject = {
       id: this.projects.length + 1,
@@ -442,6 +443,7 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   openModal(content, project) {
     this.addProjectFlag = false;
+    this.submitted = false;
 
     this.projectForm.setValue({
       id: project.id || project._id,
@@ -453,6 +455,9 @@ export class ProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
       updatedAt: project.updatedAt,
       budget: project.budget
     });
+
+    this.budget = project.budget;
+
     let assignedList = '';
 
     project.assignedUsers.forEach(u => {
