@@ -105,11 +105,12 @@ export class RegisterComponent implements OnInit, OnDestroy {
       };
 
       this.loading = true;
-
+      this.spinner.show();
       const currentLang = this.translocoService.getActiveLang();
       this.authenticationService.register(userObject)
         .pipe(
           takeUntil(this.unsubscribe),
+          finalize(() => this.spinner.hide()),
           first()
         )
         .subscribe(

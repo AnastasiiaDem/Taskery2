@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subject, takeUntil} from 'rxjs';
+import {finalize, Subject, takeUntil} from 'rxjs';
 import {AlertService} from '../shared/services/alert.service';
 import {ToastrService} from 'ngx-toastr';
 import {UserModel} from '../shared/models/user.model';
@@ -88,15 +88,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.spinner.show();
     this.authenticationService.logout()
       .pipe(
-        takeUntil(this.unsubscribe)
+        takeUntil(this.unsubscribe),
+        finalize(() => this.spinner.show())
       )
       .subscribe(sub => {
-        this.router.navigate(['/']);
-        this.spinner.hide();
-      },
+          this.router.navigate(['/']);
+        },
         err => {
           console.log(err);
-          this.spinner.hide()
         });
   }
 

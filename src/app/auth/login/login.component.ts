@@ -75,9 +75,11 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     this.loading = true;
+    this.spinner.show();
     this.authenticationService.login(this.f.email.value, this.f.password.value)
       .pipe(
         takeUntil(this.unsubscribe),
+        finalize(() => this.spinner.hide()),
         first()
       )
       .subscribe(data => {
