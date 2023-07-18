@@ -18,6 +18,70 @@
   pointer-events: none !important;
 }
 
+.main-content {
+  display: flex;
+  padding: 2rem 4rem;
+
+  .contact-text {
+    font-weight: 400;
+    color: #333333;
+    font-size: 35px;
+    margin: 0;
+  }
+
+  .body-text {
+    width: 56%;
+    font-size: 14px;
+    color: rgba(55, 61, 63, 0.8);
+    font-weight: 500;
+    font-family: "Libre Baskerville", serif;
+    margin-left: auto;
+    text-align: justify;
+    margin-bottom: 0;
+    margin-top: -80px;
+
+    .italic-span {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic;
+      font-size: 15px;
+    }
+  }
+}
+
+.second-head-text, .second-contact-text {
+  font-size: 2.3rem;
+  line-height: 2rem;
+}
+
+.second-head-text {
+  font-size: 2.7rem;
+  line-height: 3rem;
+  font-weight: 900;
+}
+
+.second-contact-text {
+  text-align: right;
+  font-size: 2.3rem;
+  line-height: 2rem;
+}
+
+.second-contact-body-text {
+  font-family: 'Inter', serif;
+  font-size: 15px;
+  color: rgba(55, 61, 63, 0.8);
+  text-align: left;
+  margin-bottom: 0;
+}
+
+.head-undertext {
+  font-size: 20px;
+}
+
+.main-contact-text {
+  padding-left: 7rem;
+  padding-top: 4rem;
+}
+
 .main-content-second {
   .btn {
     color: rgb(87, 78, 252) !important;
