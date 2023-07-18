@@ -3,7 +3,7 @@
     <div class="d-flex align-items-center">
       <div class="nav-item nav-link logo-link">
         <img src="./assets/images/icons8-network-2-64.png" alt="" class="net-icon" routerLink="/">
-        <p class="head-text task-span" [ngClass]="url == '/home' ? 'task-span' : 'transition-task-span'">TASKERY</p>
+        <p class="task-span" [ngClass]="url == '/home' ? 'task-span' : 'transition-task-span'">TASKERY</p>
       </div>
       <div class="nav-item" style="margin-left: 1rem;">
         <button (click)="changeLanguage('en')" class="lang-btn"
@@ -15,7 +15,7 @@
         </button>
       </div>
     </div>
-    <div class="nav-block" style="margin-right: 8rem;" *ngIf="currentUser.role != 'Admin'">
+    <div class="nav-block" style="position: absolute;left: 50%;transform: translate(-50%, 0);" *ngIf="currentUser.role != 'Admin'">
       <a class="nav-item nav-link project-list" (click)="home()">{{'home' | transloco}}</a>
       <a class="nav-item nav-link project-list" id="projectList" (click)="projectList()">{{'project-list' | transloco}}</a>
       <a class="nav-item nav-link report" (click)="scheduler()">{{'scheduler' | transloco}}</a>

@@ -1,5 +1,4 @@
 <div class="w3-animate-opacity">
-  <div class="background background2"></div>
   <div class="main-content">
     <div class="description">
       <div class="main-text">
@@ -12,17 +11,18 @@
         <img src="./assets/images/icons8-double-down-50.png" style="height: 25px;">
       </p>
     </div>
-    <img class="image2" src="./assets/images/hand_image2.avif" alt="">
+    <img class="image2" src="./assets/images/hand_image2.png" alt="">
   </div>
-  
+
   <div class="main-content main-content-second">
+    <div class="background"></div>
     <div class="col-lg-10">
       <p class="second-head-text">{{'second-head-text' | transloco}}</p>
       <p class="second-body-text">{{'second-body-text' | transloco}}</p>
       <p><a (click)="projectList()" class="btn btn-outline-primary px-3" style="margin-left: 10px;">{{'go-to-projects-list' | transloco}}&nbsp;→</a></p>
     </div>
   </div>
-  
+
   <span #daily>
     <div style="margin: 0 4rem 5rem 4rem;padding-top: 2rem;min-height: 400px"
          *ngIf="currentUser.role !== 'ProjectManager'">

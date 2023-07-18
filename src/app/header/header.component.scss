@@ -97,20 +97,15 @@
   align-items: center;
 }
 
-.head-text {
+.task-span {
   font-weight: 900 !important;
   font-family: 'Inter', serif;
-  font-size: 68px;
-  line-height: 80px;
+  font-size: 50px;
   margin: 0;
-}
-
-.task-span {
   position: absolute;
-  top: 13.3rem;
-  left: 9.1rem;
-  width: 325px;
-  color: rgb(76 126 253);
+  top: 11.56rem;
+  left: 5%;
+  color: #4c7efd;
   transition: 0.5s ease-out;
   z-index: 10;
 }
@@ -123,7 +118,6 @@
   transform: translate(-21px, -57px);
   font-size: 15px;
   margin: 0;
-  line-height: 20px;
   transition: 0.5s ease-in;
   z-index: 10;
   top: 6.5rem;
@@ -131,71 +125,23 @@
 }
 
 
-@media (min-width: 1401px) and (max-width: 1560px) {
-  .head-text {
-    font-size: 60px;
-    line-height: 70px;
-  }
-  .transition-task-span {
-    position: absolute;
-    color: #4c7efd;
-    font-weight: 900 !important;
-    font-family: "Inter", serif;
-    transform: translate(-21px, -57px);
-    font-size: 15px;
-    margin: 0;
-    line-height: 20px;
-    transition: 0.5s ease-in;
-    z-index: 10;
-    top: 6.5rem;
-    left: 7.4rem;
-  }
+@media (max-width: 480px) {
+
 }
 
-@media (max-width: 1400px) {
-  .head-text {
-    font-size: 55px;
-    line-height: 60px;
-  }
-  .navbar {
-    padding: 1rem 2rem;
-  }
-  .transition-task-span {
-    position: absolute;
-    color: #4c7efd;
-    font-weight: 900 !important;
-    font-family: "Inter", serif;
-    transform: translate(-21px, -57px);
-    font-size: 15px;
-    margin: 0;
-    line-height: 20px;
-    transition: 0.5s ease-in;
-    z-index: 10;
-    top: 6.5rem;
-    left: 4.4rem;
-  }
+@media (min-width: 481px) and (max-width: 768px) {
+
 }
 
-@media (max-width: 1382px) {
-  .head-text {
-    font-size: 50px;
-    line-height: 55px;
-  }
+@media (min-width: 769px) and (max-width: 1024px) {
   .task-span {
-    left: 6.1rem;
+    font-size: 40px !important;
+    top: 11.6rem !important;
   }
-  .transition-task-span {
-    position: absolute;
-    color: #4c7efd;
-    font-weight: 900 !important;
-    font-family: "Inter", serif;
-    transform: translate(-21px, -57px);
-    font-size: 15px;
-    margin: 0;
-    line-height: 20px;
-    transition: 0.5s ease-in;
-    z-index: 10;
-    top: 6.5rem;
-    left: 4.4rem;
+}
+
+@media (min-width: 1440px) {
+  .task-span {
+    font-size: 60px !important;
   }
 }

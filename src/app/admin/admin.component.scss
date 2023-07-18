@@ -46,7 +46,6 @@
 
   .task-span {
     position: absolute;
-    width: 405px;
     color: rgb(76 126 253);
   }
 
@@ -76,15 +75,18 @@
   }
 
   .image2 {
-    height: 700px;
-    width: 700px;
+    height: auto;
+    width: 45%;
+    position: absolute;
+    right: 4rem;
+    top: 0;
   }
 }
 
 .main-content-second {
   text-align: center;
   display: flex;
-  height: 600px;
+  min-height: 600px;
   align-items: center;
   justify-content: center;
 
@@ -124,7 +126,7 @@
 
 .main-text {
   position: absolute;
-  width: 61%;
+  width: 55%;
   left: 5rem;
   top: 1rem;
 }
@@ -526,85 +528,3 @@ ng-select2 {
   text-align: right;
 }
 
-@media (min-width: 1401px) and (max-width: 1560px) {
-  .main-content {
-
-    .image2 {
-      height: 600px;
-      width: 600px;
-    }
-
-    .head-text {
-      font-size: 50px !important;
-      line-height: 60px !important;
-    }
-
-    .contact-text {
-      font-size: 40px !important;
-      line-height: 55px !important;
-    }
-  }
-}
-
-@media (max-width: 1400px) {
-  .main-content {
-
-    .image2 {
-      height: 550px;
-      width: 550px;
-    }
-
-    .head-text {
-      font-size: 45px !important;
-      line-height: 50px !important;
-    }
-
-    .contact-text {
-      font-size: 35px !important;
-      line-height: 45px !important;
-    }
-  }
-  .main-text {
-    left: 2rem;
-  }
-  .main-contact-text {
-    right: 2rem;
-  }
-}
-
-@media (max-width: 1382px) {
-  .main-content {
-
-    .image2 {
-      height: 500px;
-      width: 500px;
-    }
-
-    .head-text {
-      font-size: 40px !important;
-      line-height: 45px !important;
-    }
-
-    .contact-text {
-      font-size: 30px !important;
-      line-height: 40px !important;
-    }
-
-    .second-head-text, .second-contact-text {
-      font-size: 2.3rem;
-      line-height: 2rem;
-    }
-
-    .second-body-text, .second-contact-body-text {
-      font-size: 13px;
-      margin: -0.5rem auto 2rem auto;
-    }
-
-    .second-contact-body-text {
-      margin-bottom: 0rem;
-    }
-  }
-  .head-undertext {
-    font-size: 20px;
-  }
-}

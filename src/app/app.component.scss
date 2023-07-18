@@ -210,7 +210,7 @@ ngb-carousel .picsum-img-wrapper > img {
       border: solid 2px #fff;
       border-radius: 20px;
       transition: 1s;
-      margin: 1px;
+      width: max-content;
 
       &:hover {
         color: #0D6EFD;
@@ -266,4 +266,29 @@ ng-select2 {
   font-weight: 800;
   font-size: 12px;
   background: none;
+}
+
+
+@media (max-width: 480px) {
+
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+
+}
+
+@media (min-width: 1440px) {
+  .navbar-nav {
+    a {
+      font-size: 20px !important;
+    }
+  }
+
+  .lang-btn {
+    font-size: 15px !important;
+  }
 }
