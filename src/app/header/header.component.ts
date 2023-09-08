@@ -89,7 +89,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.authenticationService.logout()
       .pipe(
         takeUntil(this.unsubscribe),
-        finalize(() => this.spinner.show())
+        finalize(() => this.spinner.hide())
       )
       .subscribe(sub => {
           this.router.navigate(['/']);
