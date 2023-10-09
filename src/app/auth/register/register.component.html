@@ -56,7 +56,7 @@
                        [ngClass]="{ 'is-invalid': submitted && f.password.errors }" required>
                 <label>{{'password' | transloco}}</label>
                 <fa-icon [icon]="faIcon" (click)="toggleFieldTextType()"></fa-icon>
-                
+
                 <mat-error class="error-message" *ngIf="f.password.errors && f.password.errors.minlength">
                   {{'password-length-error' | transloco}}
                   <br>
@@ -85,7 +85,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-6 col-xl-5 ms-xl-auto px-lg-4 text-center text-primary">
+      <div class="col-lg-6 col-xl-5 ms-xl-auto px-lg-4 text-center text-primary z-index-n1 overflow-hidden">
         <img src="./assets/images/the-importance-of-a-website-for-a-business-1768668%20(1).svg" alt=""
              class="business-img">
         <h2 class="mb-4">Taskery.com <br class="d-none d-lg-inline">{{'side-text' | transloco}}</h2>
