@@ -1,5 +1,5 @@
 {
-  "name": "Taskery2",
+  "name": "taskery2",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -29,6 +29,7 @@
     "@ng-bootstrap/ng-bootstrap": "^11.0.0",
     "@ngneat/transloco": "^4.2.2",
     "@syncfusion/ej2-angular-kanban": "^19.4.38",
+    "@vercel/analytics": "^1.1.1",
     "apexcharts": "^3.37.0",
     "bootstrap": "^5.1.3",
     "intl-currency-input": "^1.0.2",
