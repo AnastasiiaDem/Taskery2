@@ -1,27 +1,31 @@
-# Taskery2
+### <span style="font-size: larger;">Taskery</span>
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.1.4.
+#### Overview:
+Taskery is a comprehensive project management application designed to streamline task organization and enhance productivity. With robust features including user authentication, real-time project tracking, task status updates, and report generation, Taskery empowers teams to manage their projects efficiently.
 
-## Development server
+#### Key Features:
+- User authentication system
+- Real-time project and task status tracking
+- Detailed project descriptions
+- Report generation functionality
+- Calendar viewing with English and Ukrainian localization
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+#### Technologies Used:
+- Angular
+- TypeScript
+- RxJS
+- SCSS
+- Bootstrap
+- Node.js
+- MongoDB
+- Syncfusion
+- ApexCharts.js
+- Transloco
+- Quill Rich Text Editor
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+#### How to Run:
+1. Clone the repository: `git clone https://github.com/anastasiiadem/taskery2.git`
+2. Navigate to the project directory: `cd taskery2`
+3. Install dependencies: `npm install`
+4. Start the application: `ng serve`
+5. Access Taskery in your browser at: `http://localhost:4200`
