@@ -23,9 +23,5 @@ Taskery is a comprehensive project management application designed to streamline
 - Transloco
 - Quill Rich Text Editor
 
-#### How to Run:
-1. Clone the repository: `git clone https://github.com/anastasiiadem/taskery2.git`
-2. Navigate to the project directory: `cd taskery2`
-3. Install dependencies: `npm install`
-4. Start the application: `ng serve`
-5. Access Taskery in your browser at: `http://localhost:4200`
+#### How to Access:
+Visit [taskery2.vercel.app](https://taskery2.vercel.app) to explore my portfolio website.
