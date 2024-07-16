@@ -24,4 +24,4 @@ Taskery is a comprehensive project management application designed to streamline
 - Quill Rich Text Editor
 
 #### How to Access:
-Visit [taskery2.vercel.app](https://taskery2.vercel.app) to explore my portfolio website.
+Visit [taskery2.vercel.app](https://taskery2.vercel.app) to manage your projects efficiently.
