@@ -1,27 +1,40 @@
-### <span style="font-size: larger;">Taskery</span>
+# Taskery [Full-Stack Project Management Application]
 
-#### Overview:
-Taskery is a comprehensive project management application designed to streamline task organization and enhance productivity. With robust features including user authentication, real-time project tracking, task status updates, and report generation, Taskery empowers teams to manage their projects efficiently.
+**Taskery** is a full-stack project management web application **designed, built, and defended as a Bachelor’s Capstone (Thesis) in Computer Science**.
 
-#### Key Features:
-- User authentication system
-- Real-time project and task status tracking
-- Detailed project descriptions
-- Report generation functionality
-- Calendar viewing with English and Ukrainian localization
+The project demonstrates real-world application development, including **role-based access control, real-time task tracking, AI-assisted automation, and scalable client–server architecture**.
 
-#### Technologies Used:
-- Angular
-- TypeScript
-- RxJS
-- SCSS
-- Bootstrap
-- Node.js
-- MongoDB
-- Syncfusion
-- ApexCharts.js
-- Transloco
-- Quill Rich Text Editor
+🔗 **Live Demo:** https://taskery2.vercel.app
 
-#### How to Access:
-Visit [taskery2.vercel.app](https://taskery2.vercel.app) to manage your projects efficiently.
+<br>
+
+## 💡 What Problem It Solves
+Taskery helps teams plan, organize, and track project work efficiently by combining visual task management, automated reporting, and intelligent assistance - all in a lightweight, easy-to-use interface.
+
+<br>
+
+## 🧠 Technical Highlights
+- Designed a **scalable three-tier architecture** (client, server, database)
+- Built a modular Angular frontend with **RxJS-based state management**
+- Implemented secure authentication and authorization flows
+- Integrated data visualization using **ApexCharts.js** and **Syncfusion**
+- Developed RESTful backend services with **Node.js** and **MongoDB**
+- Integrated **Quill Rich Text Editor** for rich task descriptions
+
+<br>
+
+## 🛠️ Tech Stack
+**Frontend:** Angular, TypeScript, RxJS, SCSS, Bootstrap  
+**Backend:** Node.js, MongoDB  
+**Libraries & Tools:** ApexCharts.js, Syncfusion, Transloco, Quill Rich Text Editor, Nodemailer, GPT-3 API  
+
+<br>
+
+## ✨ Key Features
+- **AI Assistance:** GPT-3–powered task and project description generation with preliminary budget estimates  
+- **Kanban Task Management:** Drag-and-drop workflow (*To Do, In Progress, On Review, Done*)  
+- **Calendar & Deadlines:** Interactive calendar for tracking and rescheduling tasks  
+- **Role-Based Access:** Separate permissions for Project Managers, Team Members, and Administrators  
+- **Reporting & Analytics:** Real-time productivity charts with export via print or email  
+- **Email Notifications:** Automated alerts for assignments, updates, and missed deadlines (Nodemailer + Gmail)  
+- **Internationalization:** Full English & Ukrainian localization with instant language switching  
